@@ -44,11 +44,7 @@ export function* signInAfterSignUp({ payload: { user, additionalData }}) {
 
 export function* signInWithEmail({ payload: { email, password }}) {
   try {
-    const user = yield call(
-      [auth, auth.signInWithEmailAndPassword],
-      email,
-      password
-    );
+    const { user } = yield auth.signInWithEmailAndPassword(email, password);
     yield getSnapshotFromUserAuth(user);
   } catch(error) {
     yield put(signInFailure(error));
@@ -68,10 +64,7 @@ export function* isUserAuthenticated() {
 
 export function* passwordReset({ payload: { email }}) {
   try {
-    yield call(
-      [auth, auth.sendPasswordResetEmail],
-      email
-    );
+    yield auth.sendPasswordResetEmail(email);
     yield put(passwordResetSuccess());
   } catch(error) {
     yield put(passwordResetFailure(error));

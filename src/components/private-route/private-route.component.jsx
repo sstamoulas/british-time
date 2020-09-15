@@ -1,6 +1,8 @@
 import React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 
+import * as ROUTES from './../../constants/routes';
+
 const PrivateRoute = ({ component: Component, condition, ...rest }) => (
   <Route 
     {...rest} 
@@ -8,7 +10,7 @@ const PrivateRoute = ({ component: Component, condition, ...rest }) => (
       condition ? (
         <Component />
       ) : (
-        <Redirect to='/sign-in' />
+        <Redirect to={ROUTES.SIGN_IN} />
       )
     )} 
   />

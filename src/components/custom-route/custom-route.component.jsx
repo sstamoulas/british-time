@@ -1,23 +1,21 @@
 import React from 'react';
 import {Route, Redirect} from 'react-router-dom';
 
-const CustomRoute = ({path, condition, redirectTo, redirectPage, routePath, routePage}) => (
-  <Route
-    path={path} 
-    render={() => 
+import * as ROUTES from './../../constants/routes';
+
+const CustomRoute = ({ component: Component, condition, ...rest }) => (
+  <Route 
+    {...rest} 
+    render={() => (
       condition ? (
-        <Redirect 
-          to={redirectTo} 
-          component={redirectPage} 
-        /> 
+        <Redirect to={ROUTES.HOME} />
       ) : (
-        <Route 
-          path={routePath} 
-          component={routePage} 
-        />
+        <Component />
       )
-    } 
+    )} 
   />
 )
+
+
 
 export default CustomRoute;

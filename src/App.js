@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {Switch, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -32,66 +32,53 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
 
   return isMounted.current && !isLoading ?
     (
-      <Fragment>
-      {
-          <div>
-            <Navigation />
-            <hr />
-            <Switch>
-              <Route exact path={ROUTES.LANDING} component={LandingPage} />
-              <CustomRoute
-                exact
-                path='/sign-in'
-                condition={currentUser}
-                redirectTo={ROUTES.HOME}
-                redirectPage={HomePage}
-                routePath={ROUTES.SIGN_IN}
-                routePage={SignInAndSignUpPage} 
-              />
-              <CustomRoute
-                exact
-                path='/sign-up'
-                condition={currentUser}
-                redirectTo={ROUTES.HOME}
-                redirectPage={HomePage}
-                routePath={ROUTES.SIGN_UP}
-                routePage={SignUpPage} 
-              />
-              <CustomRoute
-                exact
-                path='/forgot-password' 
-                condition={currentUser}
-                redirectTo={ROUTES.HOME}
-                redirectPage={HomePage}
-                routePath={ROUTES.FORGOT_PASSWORD}
-                routePage={ForgotPasswordPage} 
-              />
-              <PrivateRoute 
-                exact
-                path='/home' 
-                condition={currentUser}
-                component={HomePage}
-              />
-              <PrivateRoute 
-                exact
-                path='/account' 
-                condition={currentUser}
-                component={AccountPage}
-              />
-              <PrivateRoute 
-                exact
-                path='/admin' 
-                condition={currentUser}
-                component={AdminPage}
-              />
-              <Route
-                path='/*' 
-                component={NotFoundPage}
-              />
-            </Switch>
-          </div>
-      }
-      </Fragment>
+      <div>
+        <Navigation />
+        <hr />
+        <Switch>
+          <Route exact path={ROUTES.LANDING} component={LandingPage} />
+          <CustomRoute
+            exact
+            path={ROUTES.SIGN_IN}
+            condition={currentUser}
+            component={SignInAndSignUpPage} 
+          />
+          <CustomRoute
+            exact
+            path={ROUTES.SIGN_UP}
+            condition={currentUser}
+            component={SignUpPage} 
+          />
+          <CustomRoute
+            exact
+            path={ROUTES.FORGOT_PASSWORD}
+            condition={currentUser}
+            component={ForgotPasswordPage} 
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.HOME} 
+            condition={currentUser}
+            component={HomePage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.ACCOUNT}
+            condition={currentUser}
+            component={AccountPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.ADMIN}
+            condition={currentUser}
+            component={AdminPage}
+          />
+          <Route
+            path='/*' 
+            component={NotFoundPage}
+          />
+        </Switch>
+      </div>
     )
   :
     <CustomLoader />

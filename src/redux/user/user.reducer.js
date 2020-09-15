@@ -8,6 +8,22 @@ const INITIAL_STATE = {
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch(action.type) {
+    case UserActionTypes.RESET_ERROR_MESSAGE:
+      return {
+        ...state,
+        error: null,
+      };
+    case UserActionTypes.CHECK_USER_SESSION_START:
+    case UserActionTypes.SIGN_UP_START:
+    case UserActionTypes.SIGN_IN_START:
+    case UserActionTypes.SIGN_OUT_START:
+    case UserActionTypes.PASSWORD_RESET_START:
+      return {
+        ...state,
+        currentUser: null,
+        isLoading: true,
+        error: null,
+      };
     case UserActionTypes.CHECK_USER_SESSION_SUCCESS:
     case UserActionTypes.SIGN_UP_SUCCESS:
     case UserActionTypes.SIGN_IN_SUCCESS:
@@ -17,7 +33,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         isLoading: false,
         error: null,
       };
-    case UserActionTypes.RESET_ERROR_MESSAGE:
     case UserActionTypes.PASSWORD_RESET_SUCCESS:
     case UserActionTypes.SIGN_OUT_SUCCESS:
       return {
