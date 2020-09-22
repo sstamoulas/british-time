@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import { signUpStart, resetErrorMessage } from '../../redux/user/user.actions';
+import { currentUser, userError } from './../../redux/user/user.selectors';
 
 import * as ROLES from './../../constants/roles';
 
@@ -22,13 +24,9 @@ const SignUpPage = ({ currentUser, signUpStart, resetErrorMessage, error }) => {
   }, [resetErrorMessage]);
 
   const onSubmit = event => {
-    const roles = {};
- 
-    if (isAdmin) {
-      roles[ROLES.ADMIN] = ROLES.ADMIN;
-    }
+    const role = ROLES.STUDENT;
 
-    signUpStart({ userName, email, password, roles });
+    signUpStart({ userName, email, password, role });
     event.preventDefault();
   }
  
@@ -96,9 +94,9 @@ const SignUpPage = ({ currentUser, signUpStart, resetErrorMessage, error }) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  currentUser: state.user.currentUser,
-  error: state.user.error,
+const mapStateToProps = createStructuredSelector({
+  currentUser: currentUser,
+  error: userError,
 });
 
 const mapDispatchToProps = (dispatch) => ({

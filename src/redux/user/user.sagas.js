@@ -1,7 +1,9 @@
 import { takeLatest, put, all, call } from 'redux-saga/effects';
 
 import UserActionTypes from './user.types';
+import SystemActionTypes from '../system/system.types';
 
+import { actionStart, actionStop } from './../ui/ui.actions';
 import { 
   signUpSuccess, 
   signUpFailure,
@@ -29,54 +31,71 @@ export function* getSnapshotFromUserAuth(userAuth, additionalData) {
   }
 }
 
-export function* signUp({ payload: { userName, email, password, roles }}) {
+export function* signUp({ type, payload: { userName, email, password, role }}) {
   try {
+    yield put(actionStart(type));
     const { user } = yield auth.createUserWithEmailAndPassword(email, password)
-    yield put(signUpSuccess({ user, additionalData: { userName, roles }}));
+    yield put(signUpSuccess({ user, additionalData: { userName, role }}));
   } catch(error) {
     yield put(signUpFailure(error));
+  } finally {
+    yield put(actionStop(type));
   }
 }
 
-export function* signInAfterSignUp({ payload: { user, additionalData }}) {
+export function* signInAfterSignUp({ type, payload: { user, additionalData }}) {
+  yield put(actionStart(type));
   yield getSnapshotFromUserAuth(user, additionalData);
+  yield put(actionStop(type));
 }
 
-export function* signInWithEmail({ payload: { email, password }}) {
+export function* signInWithEmail({ type, payload: { email, password }}) {
   try {
+    yield put(actionStart(type));
     const { user } = yield auth.signInWithEmailAndPassword(email, password);
     yield getSnapshotFromUserAuth(user);
   } catch(error) {
     yield put(signInFailure(error));
+  } finally {
+    yield put(actionStop(type));
   }
 }
 
-export function* isUserAuthenticated() {
+export function* isUserAuthenticated({ type }) {
   try {
+    yield put(actionStart(type));
     const userAuth = yield getCurrentUser();
     if (!userAuth)
       return yield put(signInSuccess(null));
     yield getSnapshotFromUserAuth(userAuth);
   } catch(error) {
     yield put(signInFailure(error));
+  } finally {
+    yield put(actionStop(type));
   }
 }
 
-export function* passwordReset({ payload: { email }}) {
+export function* passwordReset({ type, payload: { email }}) {
   try {
+    yield put(actionStart(type));
     yield auth.sendPasswordResetEmail(email);
     yield put(passwordResetSuccess());
   } catch(error) {
     yield put(passwordResetFailure(error));
+  } finally {
+    yield put(actionStop(type));
   }
 }
 
-export function* signOut() {
+export function* signOut({ type }) {
   try {
+    yield put(actionStart(type));
     yield auth.signOut();
     yield put(signOutSuccess());
   } catch(error) {
     yield put(signOutFailure(error));
+  } finally {
+    yield put(actionStop(type));
   }
 }
 
@@ -104,6 +123,10 @@ export function* onSignOutStart() {
   yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
 }
 
+export function* onUpdatUserRoleSuccess() {
+  yield takeLatest(SystemActionTypes.UPDATE_USER_ROLE_SUCCESS, isUserAuthenticated);
+}
+
 export function* userSagas() {
   yield all([
     call(onSignUpStart),
@@ -112,5 +135,6 @@ export function* userSagas() {
     call(onPasswordResetStart),
     call(onSignOutStart),
     call(onCheckUserSessionStart),
+    call(onUpdatUserRoleSuccess),
   ]);
 }

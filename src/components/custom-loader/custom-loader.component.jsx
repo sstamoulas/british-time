@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const CustomLoader = () => {
+const CustomLoader = ({ message }) => {
   const [opacity, setOpacity] = useState(0);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const CustomLoader = () => {
       <path d="M130 340 l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" style={{opacity: `${(opacity + 0.05) % 1}`}} />
       <path d="M106 292 l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" style={{opacity: `${(opacity + 0.00) % 1}`}} />
 
-      <text x="50%" y="50%" textAnchor="middle" stroke="#000" strokeWidth="2px" dy=".5em" style={{fontSize: '40px'}}>Loading</text>
+      <text x="50%" y="50%" textAnchor="middle" stroke="#000" strokeWidth="2px" dy=".5em" style={{fontSize: '40px'}}>{message}</text>
       <text x={`${65 + (opacity <= .3 ? 1 : opacity <= .6 ? 2 : 3)}%`} y="50%" textAnchor="middle" stroke="#000" strokeWidth="2px" dy=".5em" style={{fontSize: '40px'}}>
         {opacity === 0 ? '' : opacity <= .3 ? '.' : opacity <= .6 ? '..' : '...'}
       </text>

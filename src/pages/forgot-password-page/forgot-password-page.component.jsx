@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import { passwordResetStart, resetErrorMessage } from '../../redux/user/user.actions';
+import { userError } from './../../redux/user/user.selectors';
  
 const INITIAL_STATE = {
   email: '',
@@ -44,8 +46,8 @@ const ForgotPasswordPage = ({ passwordResetStart, resetErrorMessage, error }) =>
   );
 }
 
-const mapStateToProps = (state) => ({
-  error: state.user.error,
+const mapStateToProps = createStructuredSelector({
+  error: userError,
 });
 
 const mapDispatchToProps = (dispatch) => ({

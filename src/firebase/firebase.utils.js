@@ -43,13 +43,18 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   return userRef;
 }
-
-export const doPasswordReset = email => auth.sendPasswordResetEmail(email);
  
 export const doPasswordUpdate = password =>
     auth.currentUser.updatePassword(password);
 
   // *** User API ***
+
+export const getAllUsers = async () => {
+  const collectionRef = firestore.collection('users');
+  const snapShot = await collectionRef.get();
+
+  return convertCollectionsSnapshotToMap(snapShot);
+}
 
 export const getCurrentUser = () => {
   return new Promise((resolve, reject) => {
@@ -58,6 +63,42 @@ export const getCurrentUser = () => {
       resolve(userAuth);
     }, reject);
   })
+}
+
+export const updateUserRole = async (userId, role) => {
+  const docRef = firestore.collection('users').doc(userId);
+  const snapShot = await docRef.get();
+  const user = snapShot.data();
+
+  try {
+    await docRef.update({
+      ...user,
+      role,
+    });
+  } catch(error) {
+    console.log(`error updating user user/${userId}`, error.message);
+  }
+
+  return docRef;
+}
+
+export const convertCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { createdAt, email, role, userName } = doc.data();
+
+    return {
+      id: doc.id,
+      createdAt,
+      email,
+      role,
+      userName,
+    }
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.email.toLowerCase()] = collection;
+    return accumulator;
+  }, {})
 }
 
 export default firebase;

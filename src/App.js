@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {Switch, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 
 import LandingPage from './pages/landing-page/landing-page.component';
 import NotFoundPage from './pages/not-found-page/not-found-page.component';
@@ -19,6 +20,8 @@ import CustomRoute from './components/custom-route/custom-route.component';
 import * as ROUTES from './constants/routes';
 
 import { checkUserSessionStart } from './redux/user/user.actions';
+import { currentUser } from './redux/user/user.selectors';
+import { isLoading } from './redux/ui/ui.selectors';
 
 const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
   const isMounted = useRef(false);
@@ -81,12 +84,12 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
       </div>
     )
   :
-    <CustomLoader />
+    <CustomLoader message={'Loading'} />
 };
 
-const mapStateToProps = (state) => ({
-  currentUser: state.user.currentUser,
-  isLoading: state.user.isLoading,
+const mapStateToProps = createStructuredSelector({
+  currentUser: currentUser,
+  isLoading: isLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
