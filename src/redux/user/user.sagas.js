@@ -2,6 +2,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 
 import UserActionTypes from './user.types';
 import SystemActionTypes from '../system/system.types';
+import InstructorActionTypes from '../instructor/instructor.types';
 
 import { actionStart, actionStop } from './../ui/ui.actions';
 import { 
@@ -123,8 +124,12 @@ export function* onSignOutStart() {
   yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
 }
 
-export function* onUpdatUserRoleSuccess() {
+export function* onUpdateUserRoleSuccess() {
   yield takeLatest(SystemActionTypes.UPDATE_USER_ROLE_SUCCESS, isUserAuthenticated);
+}
+
+export function* onCreateCourseSuccess() {
+  yield takeLatest(InstructorActionTypes.CREATE_COURSE_SUCCESS, isUserAuthenticated);
 }
 
 export function* userSagas() {
@@ -135,6 +140,7 @@ export function* userSagas() {
     call(onPasswordResetStart),
     call(onSignOutStart),
     call(onCheckUserSessionStart),
-    call(onUpdatUserRoleSuccess),
+    call(onUpdateUserRoleSuccess),
+    call(onCreateCourseSuccess),
   ]);
 }

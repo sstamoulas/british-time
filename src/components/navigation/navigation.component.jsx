@@ -14,19 +14,19 @@ const Navigation = ({ currentUser }) => (
     {
       currentUser ? 
         currentUser.role === ROLES.ADMIN ?
-          <AdminNavigation currentUser={currentUser} /> 
+          <AdminNavigation /> 
         :
         currentUser.role === ROLES.INSTRUCTOR ?
-          <InstructorNavigation currentUser={currentUser} /> 
+          <InstructorNavigation /> 
         :
-          <StudentNavigation currentUser={currentUser} /> 
+          <StudentNavigation /> 
       : 
         <NavigationNonAuth />
     }
   </div>
 );
  
-const AdminNavigation = ({ currentUser }) => (
+const AdminNavigation = () => (
   <ul>
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
@@ -46,7 +46,7 @@ const AdminNavigation = ({ currentUser }) => (
   </ul>
 );
 
-const InstructorNavigation = ({ currentUser }) => (
+const InstructorNavigation = () => (
   <ul>
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
@@ -58,12 +58,15 @@ const InstructorNavigation = ({ currentUser }) => (
       <Link to={ROUTES.ACCOUNT}>Account</Link>
     </li>
     <li>
+      <Link to={ROUTES.INSTRUCTOR}>Instructor</Link>
+    </li>
+    <li>
       <SignOutButton />
     </li>
   </ul>
 );
 
-const StudentNavigation = ({ currentUser }) => (
+const StudentNavigation = () => (
   <ul>
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>

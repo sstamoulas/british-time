@@ -101,4 +101,23 @@ export const convertCollectionsSnapshotToMap = (collections) => {
   }, {})
 }
 
+  // *** Course API ***
+
+export const createCourseDocument = async (userId, courses) => {
+  const courseRef = firestore.doc(`users/${userId}`);
+  const snapShot = await courseRef.get();
+  const user = snapShot.data();
+
+  try {
+    await courseRef.update({
+      ...user,
+      courses,
+    });
+  } catch(error) {
+    console.log('error creating course', error.message);
+  }
+
+  return courseRef;
+}
+
 export default firebase;

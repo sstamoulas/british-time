@@ -40,7 +40,7 @@ export function* updateUserRoleAsync({type, payload: { userId, role }}) {
   }
 }
 
-export function* isUserAdmin({ type }) {
+export function* isAdmin({ type }) {
   const {user: { currentUser: { role }}} = yield select();
 
   if(role === ROLES.ADMIN) {
@@ -65,7 +65,7 @@ export function* onUpdateUserRoleStart() {
 export function* onSignInSuccess() {
   yield takeLatest(
     UserActionTypes.SIGN_IN_SUCCESS, 
-    isUserAdmin
+    isAdmin
   );
 }
 

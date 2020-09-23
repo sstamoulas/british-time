@@ -2,7 +2,7 @@ import SystemActionTypes from './system.types';
 
 const INITIAL_STATE = {
   users: [],
-}
+};
 
 const systemReducer = (state = INITIAL_STATE, action) => {
   switch(action.type) {

@@ -10,7 +10,10 @@ import ForgotPasswordPage from './pages/forgot-password-page/forgot-password-pag
 import HomePage from './pages/home-page/home-page.component';
 import AccountPage from './pages/account-page/account-page.component';
 import AdminPage from './pages/admin-page/admin-page.component';
+import InstructorPage from './pages/instructor-page/instructor-page.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up-page.component';
+import CreateCoursePage from './pages/create-course-page/create-course-page.component';
+import EditCoursePage from './pages/edit-course-page/edit-course-page.component';
 
 import Navigation from './components/navigation/navigation.component';
 import CustomLoader from './components/custom-loader/custom-loader.component';
@@ -18,6 +21,7 @@ import PrivateRoute from './components/private-route/private-route.component';
 import CustomRoute from './components/custom-route/custom-route.component';
 
 import * as ROUTES from './constants/routes';
+import * as ROLES from './constants/roles';
 
 import { checkUserSessionStart } from './redux/user/user.actions';
 import { currentUser } from './redux/user/user.selectors';
@@ -72,8 +76,25 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
           />
           <PrivateRoute 
             exact
+            path={ROUTES.INSTRUCTOR}
+            condition={currentUser.role === ROLES.INSTRUCTOR}
+            component={InstructorPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.CREATE_COURSE}
+            condition={currentUser.role === ROLES.INSTRUCTOR}
+            component={CreateCoursePage}
+          />
+          <PrivateRoute 
+            path={ROUTES.EDIT_COURSE}
+            condition={currentUser.role === ROLES.INSTRUCTOR}
+            component={EditCoursePage}
+          />
+          <PrivateRoute 
+            exact
             path={ROUTES.ADMIN}
-            condition={currentUser}
+            condition={currentUser.role === ROLES.ADMIN}
             component={AdminPage}
           />
           <Route

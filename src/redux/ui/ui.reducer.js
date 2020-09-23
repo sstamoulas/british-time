@@ -2,7 +2,7 @@ import UIActionTypes from './ui.types';
 
 const INITIAL_STATE = {
   actions: [],
-}
+};
 
 const uiReducer = (state = INITIAL_STATE, { type, payload }) => {
   const { actions } = state;
