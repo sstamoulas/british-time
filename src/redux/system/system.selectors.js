@@ -4,7 +4,7 @@ const selectSystem = state => state.system;
 
 export const selectUsers = createSelector(
   [selectSystem],
-  users => users.users
+  system => system.users
 );
 
 export const selectUsersForManaging = createSelector(
@@ -13,7 +13,7 @@ export const selectUsersForManaging = createSelector(
     users ? Object.keys(users).map(key => users[key]) : []
 );
 
-export const selectUsersError = createSelector(
+export const selectSystemError = createSelector(
   [selectSystem],
-  users => users.error
+  system => system.error
 );

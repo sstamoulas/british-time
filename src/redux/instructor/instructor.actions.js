@@ -1,29 +1,45 @@
 import InstructorActionTypes from './instructor.types';
 
-export const createCourseStart = (courseDetails) => ({
-  type: InstructorActionTypes.CREATE_COURSE_START,
-  payload: { courseDetails },
+export const fetchInstructorDetailsStart = () => ({
+  type: InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_START,
 });
 
-export const createCourseSuccess = () => ({
-  type: InstructorActionTypes.CREATE_COURSE_SUCCESS,
+export const fetchInstructorDetailsSuccess = (instructorDetails) => ({
+  type: InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_SUCCESS,
+  payload: instructorDetails,
 });
 
-export const createCourseFailure = (error) => ({
-  type: InstructorActionTypes.CREATE_COURSE_FAILURE,
+export const fetchInstructorDetailsFailure = (error) => ({
+  type: InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_FAILURE,
   payload: error,
 });
 
-export const editCourseStart = (courseDetails) => ({
-  type: InstructorActionTypes.EDIT_COURSE_START,
-  payload: { courseDetails },
+export const createInstructorDetailsStart = (instructorDetails) => ({
+  type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_START,
+  payload: { instructorDetails },
 });
 
-export const editCourseSuccess = () => ({
-  type: InstructorActionTypes.EDIT_COURSE_SUCCESS,
+export const createInstructorDetailsSuccess = ({ instructorDetails }) => ({
+  type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_SUCCESS,
+  payload: { instructorDetails },
 });
 
-export const editCourseFailure = (error) => ({
-  type: InstructorActionTypes.EDIT_COURSE_FAILURE,
+export const createInstructorDetailsFailure = (error) => ({
+  type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_FAILURE,
+  payload: error,
+});
+
+export const updateInstructorDetailsStart = (instructorDetails) => ({
+  type: InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_START,
+  payload: { instructorDetails },
+});
+
+export const updateInstructorDetailsSuccess = (instructorDetails) => ({
+  type: InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_SUCCESS,
+  payload: instructorDetails,
+});
+
+export const updateInstructorDetailsFailure = (error) => ({
+  type: InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_FAILURE,
   payload: error,
 });

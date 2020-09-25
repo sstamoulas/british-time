@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter } from 'react-router-dom';
 
-import { createCourseStart } from '../../redux/instructor/instructor.actions';
+import { createCourseStart } from '../../redux/course/course.actions';
 import { currentUser, userError } from '../../redux/user/user.selectors';
 import * as ROUTES from './../../constants/routes';
  

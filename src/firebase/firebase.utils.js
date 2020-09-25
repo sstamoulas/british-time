@@ -65,7 +65,7 @@ export const getCurrentUser = () => {
   })
 }
 
-export const updateUserRole = async (userId, role) => {
+export const updateUser = async (userId, userDetails) => {
   const docRef = firestore.collection('users').doc(userId);
   const snapShot = await docRef.get();
   const user = snapShot.data();
@@ -73,7 +73,7 @@ export const updateUserRole = async (userId, role) => {
   try {
     await docRef.update({
       ...user,
-      role,
+      ...userDetails,
     });
   } catch(error) {
     console.log(`error updating user user/${userId}`, error.message);
@@ -101,10 +101,76 @@ export const convertCollectionsSnapshotToMap = (collections) => {
   }, {})
 }
 
+  // *** Instructor API ***
+
+export const fetchCurrentInstructor = async (instructorId) => {
+  const instructorRef = firestore.collection('instructors').doc(instructorId);
+  const snapShot = await instructorRef.get();
+
+  return snapShot.data();
+}
+
+export const createInstructorDetailsDocument = async (userId, userName, instructorDetails) => {
+  const instructorRef = firestore.doc(`instructors/${userId}`);
+  const snapShot = await instructorRef.get();
+
+  if(!snapShot.exists) {
+    const createdAt = new Date();
+
+    try {
+      await instructorRef.set({
+        userName,
+        createdAt,
+        ...instructorDetails
+      });
+    } catch(error) {
+      console.log('error creating instructor details', error.message);
+    }
+  }
+
+  return instructorRef;
+}
+
+export const updateInstructorDetailsDocument = async (userId, instructorDetails) => {
+  const instructorRef = firestore.doc(`instructors/${userId}`);
+  const snapShot = await instructorRef.get();
+  const instructor = snapShot.data();
+  const updatedAt = new Date();
+
+  try {
+    await instructorRef.update({
+      ...instructor,
+      updatedAt,
+      ...instructorDetails
+    });
+  } catch(error) {
+    console.log('error updating instructor details', error.message);
+  }
+
+  return instructorRef;
+}
+
   // *** Course API ***
 
 export const createCourseDocument = async (userId, courses) => {
-  const courseRef = firestore.doc(`users/${userId}`);
+  const courseRef = firestore.doc('courses/');
+  const snapShot = await courseRef.get();
+  const user = snapShot.data();
+
+  try {
+    await courseRef.set({
+      ...user,
+      courses,
+    });
+  } catch(error) {
+    console.log('error creating course', error.message);
+  }
+
+  return courseRef;
+}
+
+export const updateCourseDocument = async (userId, courses) => {
+  const courseRef = firestore.doc('courses/');
   const snapShot = await courseRef.get();
   const user = snapShot.data();
 
@@ -114,7 +180,7 @@ export const createCourseDocument = async (userId, courses) => {
       courses,
     });
   } catch(error) {
-    console.log('error creating course', error.message);
+    console.log('error updating course', error.message);
   }
 
   return courseRef;

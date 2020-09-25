@@ -7,11 +7,11 @@ import { actionStart, actionStop } from './../ui/ui.actions';
 import { 
   fetchUsersSuccess, 
   fetchUsersFailure, 
-  updateUserRoleSuccess, 
-  updateUserRoleFailure
+  updateUserSuccess, 
+  updateUserFailure
 } from './system.actions';
 
-import { getAllUsers, updateUserRole } from '../../firebase/firebase.utils';
+import { getAllUsers, updateUser } from '../../firebase/firebase.utils';
 
 import * as ROLES from './../../constants/roles';
 
@@ -27,14 +27,14 @@ export function* fetchUsersAsync({ type }) {
   }
 }
 
-export function* updateUserRoleAsync({type, payload: { userId, role }}) {
+export function* updateUserAsync({type, payload: { userId, userDetails }}) {
   try {
     yield put(actionStart(type));
-    yield call(updateUserRole, userId, role);
+    yield call(updateUser, userId, userDetails);
     const users = yield call(getAllUsers);
-    yield put(updateUserRoleSuccess(users));
+    yield put(updateUserSuccess(users));
   } catch(error) {
-    yield put(updateUserRoleFailure(error));
+    yield put(updateUserFailure(error));
   } finally {
     yield put(actionStop(type));
   }
@@ -55,10 +55,10 @@ export function* onFetchUsersStart() {
   );
 }
 
-export function* onUpdateUserRoleStart() {
+export function* onUpdateUserStart() {
   yield takeLatest(
-    SystemActionTypes.UPDATE_USER_ROLE_START, 
-    updateUserRoleAsync
+    SystemActionTypes.UPDATE_USER_START, 
+    updateUserAsync
   );
 }
 
@@ -72,7 +72,7 @@ export function* onSignInSuccess() {
 export function* systemSagas() {
   yield all([
     call(onFetchUsersStart),
-    call(onUpdateUserRoleStart),
+    call(onUpdateUserStart),
     call(onSignInSuccess),
   ]);
 }

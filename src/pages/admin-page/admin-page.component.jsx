@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import * as ROLES from './../../constants/roles';
-import { updateUserRoleStart } from '../../redux/system/system.actions';
-import { selectUsersForManaging, selectUsersError } from '../../redux/system/system.selectors';
+import { updateUserStart } from '../../redux/system/system.actions';
+import { selectUsersForManaging, selectSystemError } from '../../redux/system/system.selectors';
  
-const AdminPage = ({ users, error, updateUserRoleStart }) => {
+const AdminPage = ({ users, error, updateUserStart }) => {
   const updateUser = ({ target }, user) => {
-    updateUserRoleStart(user.id, target.value);
+    updateUserStart(user.id, {[target.getAttribute('data')]: target.value});
   }
 
   return (
@@ -32,9 +32,9 @@ const AdminPage = ({ users, error, updateUserRoleStart }) => {
                 <tr key={user.email}>
                   <th scope='row'>{user.email}</th>
                   <td>{user.userName}</td>
-                  <td><input type='radio' value='ADMIN' name={`role-${user.id}`} defaultChecked={user.role === ROLES.ADMIN} onChange={(e) => updateUser(e, user)} /></td>
-                  <td><input type='radio' value='INSTRUCTOR' name={`role-${user.id}`} defaultChecked={user.role === ROLES.INSTRUCTOR}  onChange={(e) => updateUser(e, user)} /></td>
-                  <td><input type='radio' value='STUDENT' name={`role-${user.id}`} defaultChecked={user.role === ROLES.STUDENT}  onChange={(e) => updateUser(e, user)} /></td>
+                  <td><input type='radio' value='ADMIN' name={`role-${user.id}`} data='role' defaultChecked={user.role === ROLES.ADMIN} onChange={(e) => updateUser(e, user)} /></td>
+                  <td><input type='radio' value='INSTRUCTOR' name={`role-${user.id}`} data='role' defaultChecked={user.role === ROLES.INSTRUCTOR}  onChange={(e) => updateUser(e, user)} /></td>
+                  <td><input type='radio' value='STUDENT' name={`role-${user.id}`} data='role' defaultChecked={user.role === ROLES.STUDENT}  onChange={(e) => updateUser(e, user)} /></td>
                 </tr>
             ))
           }
@@ -47,11 +47,11 @@ const AdminPage = ({ users, error, updateUserRoleStart }) => {
 
 const mapStateToProps = createStructuredSelector({
   users: selectUsersForManaging,
-  error: selectUsersError,
+  error: selectSystemError,
 });
  
 const mapDispatchToProps = (dispatch) => ({
-  updateUserRoleStart: (userId, role) => dispatch(updateUserRoleStart(userId, role)),
+  updateUserStart: (userId, userDetails) => dispatch(updateUserStart(userId, userDetails)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminPage);

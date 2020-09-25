@@ -3,18 +3,13 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
 
-import { editCourseStart } from '../../redux/instructor/instructor.actions';
+import { updateCourseStart } from '../../redux/course/course.actions';
 import { currentUser, userError } from '../../redux/user/user.selectors';
 import * as ROUTES from './../../constants/routes';
- 
-const INITIAL_STATE = {
-  courseName: '',
-}
 
-const EditCoursePage = ({ history, currentUser, error, editCourseStart }) => {
+const UpdateCoursePage = ({ history, currentUser, error, updateCourseStart }) => {
   let { id } = useParams();
-  console.log(id)
-  const [state, setState] = useState({ ...INITIAL_STATE });
+  const [state, setState] = useState({ ...currentUser.courses[id] });
   const { courseName } = state;
 
   const handleChange = (event) => {
@@ -23,18 +18,17 @@ const EditCoursePage = ({ history, currentUser, error, editCourseStart }) => {
   }
 
   const handleSubmit = (event) => {
-    console.log(state)
-    editCourseStart(state);
+    updateCourseStart(state);
     history.push(ROUTES.INSTRUCTOR);
     event.preventDefault();
   }
 
   return (
     <div>
-      <h1>Edit Course Page</h1>
+      <h1>Edit Course Titled '{courseName}' Page</h1>
       <form onSubmit={handleSubmit}>
         <input type='text' name='courseName' value={courseName} onChange={handleChange} />
-        <input type="submit" value="Create Course" />
+        <input type="submit" value="Update Course" />
       </form>
     </div>
   )
@@ -46,7 +40,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  editCourseStart: (courseDetails) => dispatch(editCourseStart(courseDetails)),
+  updateCourseStart: (courseDetails) => dispatch(updateCourseStart(courseDetails)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(EditCoursePage));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UpdateCoursePage));

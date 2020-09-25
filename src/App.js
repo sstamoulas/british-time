@@ -13,7 +13,7 @@ import AdminPage from './pages/admin-page/admin-page.component';
 import InstructorPage from './pages/instructor-page/instructor-page.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up-page.component';
 import CreateCoursePage from './pages/create-course-page/create-course-page.component';
-import EditCoursePage from './pages/edit-course-page/edit-course-page.component';
+import UpdateCoursePage from './pages/update-course-page/update-course-page.component';
 
 import Navigation from './components/navigation/navigation.component';
 import CustomLoader from './components/custom-loader/custom-loader.component';
@@ -77,24 +77,24 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
           <PrivateRoute 
             exact
             path={ROUTES.INSTRUCTOR}
-            condition={currentUser.role === ROLES.INSTRUCTOR}
+            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
             component={InstructorPage}
           />
           <PrivateRoute 
             exact
             path={ROUTES.CREATE_COURSE}
-            condition={currentUser.role === ROLES.INSTRUCTOR}
+            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
             component={CreateCoursePage}
           />
           <PrivateRoute 
-            path={ROUTES.EDIT_COURSE}
-            condition={currentUser.role === ROLES.INSTRUCTOR}
-            component={EditCoursePage}
+            path={ROUTES.UPDATE_COURSE}
+            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+            component={UpdateCoursePage}
           />
           <PrivateRoute 
             exact
             path={ROUTES.ADMIN}
-            condition={currentUser.role === ROLES.ADMIN}
+            condition={currentUser && currentUser.role === ROLES.ADMIN}
             component={AdminPage}
           />
           <Route

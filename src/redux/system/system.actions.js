@@ -14,17 +14,17 @@ export const fetchUsersFailure = (error) => ({
   payload: error,
 });
 
-export const updateUserRoleStart = (userId, role) => ({
-  type: SystemActionTypes.UPDATE_USER_ROLE_START,
-  payload: { userId, role },
+export const updateUserStart = (userId, userDetails) => ({
+  type: SystemActionTypes.UPDATE_USER_START,
+  payload: { userId, userDetails },
 });
 
-export const updateUserRoleSuccess = (users) => ({
-  type: SystemActionTypes.UPDATE_USER_ROLE_SUCCESS,
+export const updateUserSuccess = (users) => ({
+  type: SystemActionTypes.UPDATE_USER_SUCCESS,
   payload: users,
 });
 
-export const updateUserRoleFailure = (error) => ({
-  type: SystemActionTypes.UPDATE_USER_ROLE_FAILURE,
+export const updateUserFailure = (error) => ({
+  type: SystemActionTypes.UPDATE_USER_FAILURE,
   payload: error,
 });
