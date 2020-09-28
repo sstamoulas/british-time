@@ -25,8 +25,6 @@ export function* createInstructorDetailsAsync({type, payload: { instructorDetail
     const instructorRef = yield call(createInstructorDetailsDocument, id, userName, instructorDetails);
     const instructorSnapshot = yield instructorRef.get();
 
-    console.log(...instructorSnapshot.data())
-
     yield put(createInstructorDetailsSuccess({ id: instructorSnapshot.id, ...instructorSnapshot.data() }));
   } catch(error) {
     yield put(createInstructorDetailsFailure(error));

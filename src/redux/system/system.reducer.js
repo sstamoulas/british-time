@@ -8,12 +8,14 @@ const systemReducer = (state = INITIAL_STATE, action) => {
   switch(action.type) {
     case SystemActionTypes.UPDATE_USER_ROLE_START:
     case SystemActionTypes.FETCH_USERS_START:
+    case SystemActionTypes.FETCH_COURSES_START:
       return {
         ...state,
         error: null,
       };
     case SystemActionTypes.UPDATE_USER_ROLE_SUCCESS:
     case SystemActionTypes.FETCH_USERS_SUCCESS:
+    case SystemActionTypes.FETCH_COURSES_SUCCESS:
       return {
         ...state,
         users: action.payload,
@@ -21,6 +23,7 @@ const systemReducer = (state = INITIAL_STATE, action) => {
       };
     case SystemActionTypes.UPDATE_USER_ROLE_FAILURE:
     case SystemActionTypes.FETCH_USERS_FAILURE:
+    case SystemActionTypes.FETCH_COURSES_FAILURE:
       return {
         ...state,
         error: action.payload,

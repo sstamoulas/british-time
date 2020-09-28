@@ -152,38 +152,62 @@ export const updateInstructorDetailsDocument = async (userId, instructorDetails)
 
   // *** Course API ***
 
-export const createCourseDocument = async (userId, courses) => {
-  const courseRef = firestore.doc('courses/');
-  const snapShot = await courseRef.get();
-  const user = snapShot.data();
+export const getAllCourses = async () => {
+  const collectionRef = firestore.collection('courses');
+  const snapShot = await collectionRef.get();
+
+  return convertCoursesCollectionsSnapshotToMap(snapShot);
+}
+
+export const getCourseById = async (courseId) => {
+  const docRef = firestore.collection('courses').doc(courseId);
+  const snapShot = await docRef.get();
+
+  return snapShot.data();
+}
+
+export const createCourseDocument = async (course) => {
+  const docRef = firestore.collection('courses/').doc();
 
   try {
-    await courseRef.set({
-      ...user,
-      courses,
+    await docRef.set({
+      ...course,
     });
   } catch(error) {
     console.log('error creating course', error.message);
   }
 
-  return courseRef;
+  return docRef;
 }
 
-export const updateCourseDocument = async (userId, courses) => {
-  const courseRef = firestore.doc('courses/');
-  const snapShot = await courseRef.get();
-  const user = snapShot.data();
+export const updateCourseDocument = async (course) => {
+  const docRef = firestore.collection('courses/').doc(course.id);
 
   try {
-    await courseRef.update({
-      ...user,
-      courses,
+    await docRef.update({
+      courseName: course.courseName,
     });
   } catch(error) {
     console.log('error updating course', error.message);
   }
 
-  return courseRef;
+  return docRef;
+}
+
+export const convertCoursesCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { courseName } = doc.data();
+
+    return {
+      id: doc.id,
+      courseName,
+    }
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.id.toLowerCase()] = collection;
+    return accumulator;
+  }, {})
 }
 
 export default firebase;

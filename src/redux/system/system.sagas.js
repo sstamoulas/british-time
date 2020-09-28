@@ -8,7 +8,7 @@ import {
   fetchUsersSuccess, 
   fetchUsersFailure, 
   updateUserSuccess, 
-  updateUserFailure
+  updateUserFailure,
 } from './system.actions';
 
 import { getAllUsers, updateUser } from '../../firebase/firebase.utils';

@@ -1,12 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import * as ROLES from './../../constants/roles';
+import * as ROUTES from './../../constants/routes';
 import { updateUserStart } from '../../redux/system/system.actions';
 import { selectUsersForManaging, selectSystemError } from '../../redux/system/system.selectors';
+import { selectCoursesForManaging } from './../../redux/course/course.selectors';
  
-const AdminPage = ({ users, error, updateUserStart }) => {
+const AdminPage = ({ users, error, courses, updateUserStart }) => {
   const updateUser = ({ target }, user) => {
     updateUserStart(user.id, {[target.getAttribute('data')]: target.value});
   }
@@ -16,6 +19,12 @@ const AdminPage = ({ users, error, updateUserStart }) => {
       <h1>Admin Page</h1>
       <p>The Admin Page is accessible by every signed in user.</p>
       <div>
+        <Link to={ROUTES.CREATE_COURSE}>Create A Course</Link>
+        <ul>
+          {
+            courses.map((course) => <li key={course.id}><Link to={`course/${course.id}`}>{course.courseName}</Link></li>)
+          }
+        </ul>
         <table>
           <thead>
             <tr>
@@ -47,6 +56,7 @@ const AdminPage = ({ users, error, updateUserStart }) => {
 
 const mapStateToProps = createStructuredSelector({
   users: selectUsersForManaging,
+  courses: selectCoursesForManaging,
   error: selectSystemError,
 });
  

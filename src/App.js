@@ -83,12 +83,12 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
           <PrivateRoute 
             exact
             path={ROUTES.CREATE_COURSE}
-            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+            condition={currentUser && currentUser.role === ROLES.ADMIN}
             component={CreateCoursePage}
           />
           <PrivateRoute 
             path={ROUTES.UPDATE_COURSE}
-            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+            condition={currentUser && currentUser.role === ROLES.ADMIN}
             component={UpdateCoursePage}
           />
           <PrivateRoute 

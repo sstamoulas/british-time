@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
 
-import { updateCourseStart } from '../../redux/course/course.actions';
-import { currentUser, userError } from '../../redux/user/user.selectors';
+import { updateCourseStart, fetchCourseByIdStart } from '../../redux/course/course.actions';
+import { selectCoursesForManaging, selectCurrentCourse } from '../../redux/course/course.selectors';
 import * as ROUTES from './../../constants/routes';
 
-const UpdateCoursePage = ({ history, currentUser, error, updateCourseStart }) => {
-  let { id } = useParams();
-  const [state, setState] = useState({ ...currentUser.courses[id] });
+const UpdateCoursePage = ({ history, courses, currentCourse, fetchCourseByIdStart, updateCourseStart }) => {
+  const { courseId } = useParams();
+  const [state, setState] = useState({ ...currentCourse });
   const { courseName } = state;
 
   const handleChange = (event) => {
@@ -19,9 +19,19 @@ const UpdateCoursePage = ({ history, currentUser, error, updateCourseStart }) =>
 
   const handleSubmit = (event) => {
     updateCourseStart(state);
-    history.push(ROUTES.INSTRUCTOR);
+    history.push(ROUTES.ADMIN);
     event.preventDefault();
   }
+
+  const isObjectEmpty = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object
+  }
+
+  useEffect(() => {
+    if(isObjectEmpty(currentCourse)) {
+      fetchCourseByIdStart(courseId);
+    }
+  }, [courseId, currentCourse, fetchCourseByIdStart]);
 
   return (
     <div>
@@ -35,12 +45,13 @@ const UpdateCoursePage = ({ history, currentUser, error, updateCourseStart }) =>
 };
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: currentUser,
-  error: userError,
+  courses: selectCoursesForManaging,
+  currentCourse: selectCurrentCourse,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateCourseStart: (courseDetails) => dispatch(updateCourseStart(courseDetails)),
+  fetchCourseByIdStart: (courseId) => dispatch(fetchCourseByIdStart(courseId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UpdateCoursePage));
