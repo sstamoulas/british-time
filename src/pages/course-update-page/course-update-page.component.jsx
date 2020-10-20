@@ -7,7 +7,7 @@ import { updateCourseStart, fetchCourseByIdStart } from '../../redux/course/cour
 import { selectCoursesForManaging, selectCurrentCourse } from '../../redux/course/course.selectors';
 import * as ROUTES from './../../constants/routes';
 
-const UpdateCoursePage = ({ history, courses, currentCourse, fetchCourseByIdStart, updateCourseStart }) => {
+const CourseUpdatePage = ({ history, courses, currentCourse, fetchCourseByIdStart, updateCourseStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...currentCourse });
   const { courseName } = state;
@@ -54,4 +54,4 @@ const mapDispatchToProps = (dispatch) => ({
   fetchCourseByIdStart: (courseId) => dispatch(fetchCourseByIdStart(courseId)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UpdateCoursePage));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CourseUpdatePage));

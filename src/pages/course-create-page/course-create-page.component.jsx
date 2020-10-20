@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   courseName: '',
 }
 
-const CreateCoursePage = ({ history, createCourseStart }) => {
+const CourseCreatePage = ({ history, createCourseStart }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { courseName } = state;
 
@@ -39,4 +39,4 @@ const mapDispatchToProps = (dispatch) => ({
   createCourseStart: (courseDetails) => dispatch(createCourseStart(courseDetails)),
 })
 
-export default connect(null, mapDispatchToProps)(withRouter(CreateCoursePage));
+export default connect(null, mapDispatchToProps)(withRouter(CourseCreatePage));

@@ -10,4 +10,6 @@ export const ADMIN = '/admin';
 
 export const INSTRUCTOR = '/instructor';
 export const CREATE_COURSE = '/course/new';
-export const UPDATE_COURSE = "/course/:courseId";
+export const UPDATE_COURSE = '/course/:courseId';
+export const CREATE_INSTRUCTOR_COURSE = '/instructor/course/new';
+export const UPDATE_INSTRUCTOR_COURSE = '/instructor/course/:courseId';

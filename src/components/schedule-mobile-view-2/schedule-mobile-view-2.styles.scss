@@ -1,0 +1,95 @@
+$bg: #000;
+$tabs: 7;
+$c-width: 300px;
+$c-height: 500px;
+$marker-width: $c-width/$tabs;
+$indent: 6px;
+$marker-height: 24px;
+$tab-color: #E57373 #81C784 #64B5F6 #9575CD #81C784 #64B5F6 #9575CD;
+$tab-day: 'Mon' 'Tue' 'Wed' 'Thu' 'Fri' 'Sat' 'Sun';
+$easing: cubic-bezier(.11, .65, .04, 1);
+$slide-time: 1.2s;
+$content-time: $slide-time/3;
+
+@mixin transition ($prop, $time) {
+    transition: $prop $time $easing;
+}
+
+body {
+    overflow: hidden;
+    background: $bg;
+    
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: $c-width;
+        height: $c-height;
+        margin: -$c-height/2 0 -$c-width/2;
+        counter-reset: tab-counter $tabs + 1;
+        
+        input[type=radio] {
+            display: none;
+            
+            @for $i from 1 through $tabs { 
+                &:checked + label ~ label:nth-child(#{2*$i}) {
+                    //height: ($tabs - $i)*$marker-height + $indent;
+                    margin-top: 350px;
+
+                    & .content {
+                        @include transition(opacity, $content-time);
+                        opacity: 0;
+                        pointer-events: none;
+                    }
+                }
+                
+                & + label {
+                    position: absolute;
+                    height: 100%;
+                    box-shadow: 0px -2px 4px -2px $bg;
+                    cursor: pointer;
+                    @include transition(margin-top, $slide-time);
+                    
+                    &:nth-child(2) {
+                        box-shadow: none;
+                    }
+
+                    &:nth-child(#{2*$i}) {
+                        $color: nth($tab-color, $tabs - $i + 1);
+                        height: $c-height - ($i - 1)*$marker-height;
+                        width: 100%;
+                        background: $color;
+                        top: percentage(5*$i)/100;
+                        z-index: $i;
+                        
+                        @if ($i > 1) {
+                            &:after {
+                                position: absolute;
+                                content: nth($tab-day, $i);
+                                font-size: 16px;
+                                font-weight: bold;
+                                top: -15px;
+                                left: percentage(($tabs - $i)*(100/$tabs)/100);
+                                width: $marker-width - $indent; 
+                                height: $marker-height;
+                                border-radius: $marker-height/10 $marker-height/10 0 0;
+                                background: $color;
+                                box-shadow: 0px -3px 6px -3px $bg;
+                            }
+                        }
+                    }
+                    
+                    .content {
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        width: $c-width/2;
+                        margin-left: -$c-width/4;
+                        counter-increment: tab-counter -1;
+                        text-align: center;
+                    }
+                }
+            } 
+        }
+    }
+}

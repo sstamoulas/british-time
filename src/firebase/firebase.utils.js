@@ -150,6 +150,103 @@ export const updateInstructorDetailsDocument = async (userId, instructorDetails)
   return instructorRef;
 }
 
+  // *** Instructor Course API ***
+
+export const getAllInstructorCourses = async () => {
+  const collectionRef = firestore.collection('instructor-courses');
+  const snapShot = await collectionRef.get();
+
+  return convertInstructorCoursesCollectionsSnapshotToMap(snapShot);
+}
+
+export const getCoursesByInstructorId = async (instructorId) => {
+  const collectionRef = firestore.collection('instructor-courses');
+  const snapShot = await collectionRef.get();
+
+  const collectionOfInstructorCourses = convertInstructorCoursesCollectionsSnapshotToMap(snapShot);
+  const coursesByInstructorId = Object.entries(collectionOfInstructorCourses)
+    .map(([key, value]) => value)
+    .filter((instructorCourse) => instructorCourse.instructorId === instructorId);
+
+  return coursesByInstructorId;
+}
+
+export const getInstructorCourseByCourseId = async (courseId) => {
+  const docRef = firestore.collection('instructor-courses').doc(courseId);
+  const snapShot = await docRef.get();
+
+  return snapShot.data();
+}
+
+export const createInstructorCourseDetailsDocument = async (instructorId, courseDetails) => {
+  const docRef = firestore.collection('instructor-courses').doc();
+  const snapShot = await docRef.get();
+  const createdAt = new Date();
+
+  if(!snapShot.exists) {
+    try {
+      await docRef.set({
+        ...courseDetails,
+        courseId: courseDetails.id,
+        instructorId,
+        createdAt,
+      });
+    } catch(error) {
+      console.log('error creating instructor course details', error.message);
+    }
+  }
+
+  return docRef;
+}
+
+export const updateInstructorCourseDetailsDocument = async (courseId, courseDetails) => {
+  const docRef = firestore.collection('instructor-courses').doc(courseId);
+  const updatedAt = new Date();
+
+  try {
+    await docRef.update({
+      ...courseDetails,
+      updatedAt,
+    });
+  } catch(error) {
+    console.log('error updating instructor course details', error.message);
+  }
+
+  return docRef;
+}
+
+export const convertInstructorCoursesCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { 
+      courseId, 
+      instructorId, 
+      courseName, 
+      courseDays, 
+      startDate, 
+      endDate, 
+      isVisible, 
+      createdAt,
+    } = doc.data();
+
+    return {
+      id: doc.id,
+      courseId, 
+      instructorId, 
+      courseName, 
+      courseDays, 
+      startDate, 
+      endDate, 
+      isVisible, 
+      createdAt,
+    }
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.id.toLowerCase()] = collection;
+    return accumulator;
+  }, {})
+}
+
   // *** Course API ***
 
 export const getAllCourses = async () => {

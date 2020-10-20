@@ -13,7 +13,13 @@ import {
   updateInstructorDetailsFailure,
 } from './instructor.actions';
 
-import { fetchCurrentInstructor, createInstructorDetailsDocument, updateInstructorDetailsDocument } from '../../firebase/firebase.utils';
+import { fetchCoursesAsync } from './../course/course.sagas';
+
+import { 
+  fetchCurrentInstructor, 
+  createInstructorDetailsDocument, 
+  updateInstructorDetailsDocument,
+} from '../../firebase/firebase.utils';
 
 import * as ROLES from './../../constants/roles';
 
@@ -55,11 +61,12 @@ export function* isInstructor({ type }) {
   if(role === ROLES.INSTRUCTOR) {
     try {
       yield put(actionStart(type));
-      const instructor = yield fetchCurrentInstructor(id);
+      const instructorDetails = yield fetchCurrentInstructor(id);
+      yield fetchCoursesAsync({ type });
 
-      if (!instructor)
+      if (!instructorDetails)
         return yield put(fetchInstructorDetailsSuccess(null));
-      yield put(fetchInstructorDetailsSuccess(instructor));
+      yield put(fetchInstructorDetailsSuccess(instructorDetails));
     } catch(error) {
       yield put(fetchInstructorDetailsFailure(error));
     } finally {

@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { Image } from 'cloudinary-react';
 
-import { createInstructorDetailsStart, updateInstructorDetailsStart } from '../../redux/instructor/instructor.actions';
-import { instructorDetails } from '../../redux/instructor/instructor.selectors';
-import { currentUser } from '../../redux/user/user.selectors';
+import CreateInstructorCourse from './../../components/create-instructor-course/create-instructor-course.component';
+import InstructorCourses from './../../components/instructor-courses/instructor-courses.component';
 
-const InstructorPage = ({ currentUser, instructorDetails, createInstructorDetailsStart, updateInstructorDetailsStart, error }) => {
-  const [state, setState] = useState({ ...instructorDetails });
-  const { bio, rating } = state;
+import { createInstructorDetailsStart, updateInstructorDetailsStart } from './../../redux/instructor/instructor.actions';
+
+
+import { instructorDetails } from './../../redux/instructor/instructor.selectors';
+import { selectCoursesForManaging } from './../../redux/course/course.selectors';
+import { currentUser } from './../../redux/user/user.selectors';
+
+const INITIAL_STATE = {
+  selectedCourseToStart: {},
+}
+
+const InstructorPage = ({ 
+    currentUser, 
+    instructorDetails, 
+    availableCourses,
+    createInstructorDetailsStart, 
+    updateInstructorDetailsStart, 
+    error 
+  }) => {
+  const [state, setState] = useState({ ...INITIAL_STATE, ...instructorDetails });
+  const { bio, rating, selectedCourseToStart } = state;
   const isInvalid = bio === '';
 
   const onSubmit = event => {
@@ -48,6 +66,12 @@ const InstructorPage = ({ currentUser, instructorDetails, createInstructorDetail
     });
   }
 
+  const onSelectChange = (event) => {
+    const { value } = event.target;
+    const selectedIndex = availableCourses.map((course) => course.id).indexOf(value);
+    setState(prevState => ({ ...prevState, selectedCourseToStart: availableCourses[selectedIndex] }));
+  }
+
   return (
     <div>
       <h1>Greetings {currentUser.userName}</h1>
@@ -75,12 +99,19 @@ const InstructorPage = ({ currentUser, instructorDetails, createInstructorDetail
         {error && <p>{error.message}</p>}
       </form>
 
-      <h1>Your Courses</h1>
-      <ul>
+      <h1>Start A New Course</h1>
+      <select onChange={onSelectChange}>
+        <option>Select A Course</option>
         {
-          // currentUser.courses && currentUser.courses.map((course) => <li key={course.id}><Link to={`course/${course.id}`}>{course.courseName}</Link></li>)
+          availableCourses.map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
         }
-      </ul>
+      </select>
+      {
+        selectedCourseToStart.courseName &&
+        <CreateInstructorCourse courseDetails={selectedCourseToStart}/>
+      }
+
+      <InstructorCourses />
     </div>
   )
 };
@@ -88,6 +119,7 @@ const InstructorPage = ({ currentUser, instructorDetails, createInstructorDetail
 const mapStateToProps = createStructuredSelector({
   currentUser: currentUser,
   instructorDetails: instructorDetails,
+  availableCourses: selectCoursesForManaging,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -97,4 +129,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(createInstructorDetailsStart(instructorDetails)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(InstructorPage);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(InstructorPage));

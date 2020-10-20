@@ -4,6 +4,7 @@ import { userSagas } from './user/user.sagas';
 import { systemSagas } from './system/system.sagas';
 import { courseSagas } from './course/course.sagas';
 import { instructorSagas } from './instructor/instructor.sagas';
+import { instructorCourseSagas } from './instructor-course/instructor-course.sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -11,5 +12,6 @@ export default function* rootSaga() {
     call(systemSagas),
     call(courseSagas),
     call(instructorSagas),
+    call(instructorCourseSagas),
   ]);
 }
