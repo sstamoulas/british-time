@@ -5,6 +5,8 @@ import InstructorCourseActionTypes from './instructor-course.types';
 
 import { actionStart, actionStop } from './../ui/ui.actions';
 import { 
+  fetchAllCoursesSuccess,
+  fetchAllCoursesFailure,
   fetchInstructorCourseDetailsSuccess,
   fetchInstructorCourseDetailsFailure,
   fetchInstructorCourseDetailsByCourseIdSuccess,
@@ -16,6 +18,7 @@ import {
 } from './instructor-course.actions';
 
 import { 
+  getAllInstructorCourses,
   getCoursesByInstructorId,
   getInstructorCourseByCourseId,
   createInstructorCourseDetailsDocument,
@@ -23,6 +26,19 @@ import {
 } from '../../firebase/firebase.utils';
 
 import * as ROLES from './../../constants/roles';
+
+export function* fetchAllCoursesAsync({ type }) {
+  try {
+    yield put(actionStart(type));
+    const coursesRef = yield call(getAllInstructorCourses);
+
+    yield put(fetchAllCoursesSuccess({ ...coursesRef }));
+  } catch(error) {
+    yield put(fetchAllCoursesFailure(error));
+  } finally {
+    yield put(actionStop(type));
+  }
+}
 
 export function* fetchInstructorCourseDetailsAsync({ type }) {
   const {user: { currentUser: { id }}} = yield select();
@@ -69,10 +85,12 @@ export function* createInstructorCourseDetailsAsync({type, payload: { courseDeta
 }
 
 export function* updateInstructorCourseDetailsAsync({type, payload: { courseId, courseDetails }}) {
+  const {user: { currentUser: { id }}} = yield select();
+  
   try {
     yield put(actionStart(type));
     yield call(updateInstructorCourseDetailsDocument, courseId, courseDetails);
-    const instructorCourseRef = yield call(getInstructorCourseByCourseId, courseId);
+    const instructorCourseRef = yield call(getCoursesByInstructorId, id);
 
     yield put(updateInstructorCourseDetailsSuccess({ ...instructorCourseRef }));
   } catch(error) {
@@ -94,6 +112,13 @@ export function* onSignInSuccess() {
   yield takeLatest(
     UserActionTypes.SIGN_IN_SUCCESS, 
     isInstructor
+  );
+}
+
+export function* onFetchAllCoursesStart() {
+  yield takeLatest(
+    InstructorCourseActionTypes.FETCH_ALL_COURSES_START,
+    fetchAllCoursesAsync
   );
 }
 
@@ -128,6 +153,7 @@ export function* onUpdateInstructorCourseDetailsStart() {
 export function* instructorCourseSagas() {
   yield all([
     call(onSignInSuccess),
+    call(onFetchAllCoursesStart),
     call(onFetchInstructorCourseDetailsStart),
     call(onCreateInstructorCourseDetailsStart),
     call(onUpdateInstructorCourseDetailsStart),

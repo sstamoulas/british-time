@@ -7,7 +7,16 @@ export const instructorCourses = createSelector(
   instructorCourses => instructorCourses.instructorCourses
 );
 
+export const selectInstructorCoursesForManaging = createSelector(
+  [instructorCourses],
+  courses =>
+    courses ? Object.entries(courses).map(([index, instructorCourse]) => instructorCourse) : []
+);
+
 export const selectedCourseDetails = createSelector(
   [selectInstructorCourses],
   instructorCourses => instructorCourses.courseDetails
 );
+
+
+Object.entries(instructorCourses)

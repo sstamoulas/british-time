@@ -307,4 +307,215 @@ export const convertCoursesCollectionsSnapshotToMap = (collections) => {
   }, {})
 }
 
+  // *** Lesson API ***
+
+export const getLessonsByCourseId = async (instructorCourseId) => {
+  const docRef = firestore.collection('lessons').doc(instructorCourseId).collection('lesson');
+  const snapShot = await docRef.get();
+
+  return convertLessonsDocSnapshotToMap(snapShot);
+}
+
+export const getLessonByLessonId = async (instructorCourseId, lessonId) => {
+  const docRef = firestore.collection('lessons').doc(instructorCourseId).collection('lesson').doc(lessonId);
+  const snapShot = await docRef.get();
+
+  return snapShot.data();
+}
+
+export const createLessonDocument = async (lesson) => {
+  const docRef = firestore.collection('lessons/').doc(lesson.courseId).collection('lesson').doc();
+
+  try {
+    await docRef.set({
+      ...lesson,
+    });
+  } catch(error) {
+    console.log('error creating lesson', error.message);
+  }
+
+  return docRef;
+}
+
+export const updateLessonDocument = async (lessonId, lesson) => {
+  const docRef = firestore.collection('lessons/').doc(lesson.courseId).collection('lesson').doc(lessonId);
+
+  try {
+    await docRef.update({
+      ...lesson,
+    });
+  } catch(error) {
+    console.log('error updating lesson', error.message);
+  }
+
+  return docRef;
+}
+
+export const convertLessonsDocSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { courseId, lessonTitle, lessonText, startDate, dueDate, isVisible, } = doc.data();
+
+    return {
+      id: doc.id,
+      courseId,
+      lessonTitle, 
+      lessonText,
+      startDate,
+      dueDate,
+      isVisible,
+    }
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.id.toLowerCase()] = collection;
+    return accumulator;
+  }, {})
+}
+
+  // *** Student API ***
+
+export const fetchCurrentStudent = async (studentId) => {
+  const studentRef = firestore.collection('students').doc(studentId);
+  const snapShot = await studentRef.get();
+
+  return snapShot.data();
+}
+
+export const createStudentDetailsDocument = async (userId, userName, studentDetails) => {
+  const studentRef = firestore.doc(`students/${userId}`);
+  const snapShot = await studentRef.get();
+
+  if(!snapShot.exists) {
+    const createdAt = new Date();
+
+    try {
+      await studentRef.set({
+        userName,
+        createdAt,
+        ...studentDetails
+      });
+    } catch(error) {
+      console.log('error creating student details', error.message);
+    }
+  }
+
+  return studentRef;
+}
+
+export const updateStudentDetailsDocument = async (userId, studentDetails) => {
+  const studentRef = firestore.doc(`students/${userId}`);
+  const snapShot = await studentRef.get();
+  const student = snapShot.data();
+  const updatedAt = new Date();
+
+  try {
+    await studentRef.update({
+      ...student,
+      updatedAt,
+      ...studentDetails
+    });
+  } catch(error) {
+    console.log('error updating student details', error.message);
+  }
+
+  return studentRef;
+}
+
+  // *** Student Course API ***
+
+export const getAllStudentCourses = async () => {
+  const collectionRef = firestore.collection('student-courses');
+  const snapShot = await collectionRef.get();
+
+  return convertStudentCoursesCollectionsSnapshotToMap(snapShot);
+}
+
+export const getCoursesByStudentId = async (studentId) => {
+  const collectionRef = firestore.collection('student-courses');
+  const snapShot = await collectionRef.get();
+
+  const collectionOfStudentCourses = convertStudentCoursesCollectionsSnapshotToMap(snapShot);
+  const coursesByStudentId = Object.entries(collectionOfStudentCourses)
+    .map(([key, value]) => value)
+    .filter((studentCourse) => studentCourse.studentId === studentId);
+
+  return coursesByStudentId;
+}
+
+export const getStudentCourseByCourseId = async (courseId) => {
+  const docRef = firestore.collection('student-courses').doc(courseId);
+  const snapShot = await docRef.get();
+
+  return snapShot.data();
+}
+
+export const createStudentCourseDetailsDocument = async (studentId, courseDetails) => {
+  const docRef = firestore.collection('student-courses').doc();
+  const snapShot = await docRef.get();
+  const createdAt = new Date();
+
+  if(!snapShot.exists) {
+    try {
+      await docRef.set({
+        ...courseDetails,
+        courseId: courseDetails.id,
+        studentId,
+        createdAt,
+      });
+    } catch(error) {
+      console.log('error creating student course details', error.message);
+    }
+  }
+
+  return docRef;
+}
+
+export const updateStudentCourseDetailsDocument = async (courseId, courseDetails) => {
+  const docRef = firestore.collection('student-courses').doc(courseId);
+  const updatedAt = new Date();
+
+  try {
+    await docRef.update({
+      ...courseDetails,
+      updatedAt,
+    });
+  } catch(error) {
+    console.log('error updating student course details', error.message);
+  }
+
+  return docRef;
+}
+
+export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { 
+      courseId, 
+      studentId, 
+      courseName, 
+      courseDays, 
+      startDate, 
+      endDate, 
+      isVisible, 
+      createdAt,
+    } = doc.data();
+
+    return {
+      id: doc.id,
+      courseId, 
+      studentId, 
+      courseName, 
+      courseDays, 
+      startDate, 
+      endDate, 
+      isVisible, 
+      createdAt,
+    }
+  });
+
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.id.toLowerCase()] = collection;
+    return accumulator;
+  }, {})
+}
+
 export default firebase;

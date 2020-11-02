@@ -9,11 +9,17 @@ import SignUpPage from './pages/sign-up-page/sign-up-page.component';
 import ForgotPasswordPage from './pages/forgot-password-page/forgot-password-page.component';
 import HomePage from './pages/home-page/home-page.component';
 import AccountPage from './pages/account-page/account-page.component';
+import CoursesPage from './pages/courses-page/courses-page.component';
 import AdminPage from './pages/admin-page/admin-page.component';
 import InstructorPage from './pages/instructor-page/instructor-page.component';
+import StudentPage from './pages/student-page/student-page.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up-page.component';
 import CourseCreatePage from './pages/course-create-page/course-create-page.component';
 import CourseUpdatePage from './pages/course-update-page/course-update-page.component';
+import LessonCreatePage from './pages/lesson-create-page/lesson-create-page.component';
+import LessonUpdatePage from './pages/lesson-update-page/lesson-update-page.component';
+import CourseDetailsPage from './pages/course-details-page/course-details-page.component';
+import StudentCoursePage from './pages/student-course-page/student-course-page.component';
 
 import Navigation from './components/navigation/navigation.component';
 import CustomLoader from './components/custom-loader/custom-loader.component';
@@ -96,6 +102,18 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
           />
           <PrivateRoute 
             exact
+            path={ROUTES.CREATE_LESSON}
+            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+            component={LessonCreatePage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.UPDATE_LESSON}
+            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+            component={LessonUpdatePage}
+          />
+          <PrivateRoute 
+            exact
             path={ROUTES.CREATE_COURSE}
             condition={currentUser && currentUser.role === ROLES.ADMIN}
             component={CourseCreatePage}
@@ -111,6 +129,30 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
             path={ROUTES.ADMIN}
             condition={currentUser && currentUser.role === ROLES.ADMIN}
             component={AdminPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.STUDENT}
+            condition={currentUser && currentUser.role === ROLES.STUDENT}
+            component={StudentPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.COURSES}
+            condition={currentUser && currentUser.role === ROLES.STUDENT}
+            component={CoursesPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.DETAILS_COURSE}
+            condition={currentUser && currentUser.role === ROLES.STUDENT}
+            component={CourseDetailsPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.STUDENT_COURSE}
+            condition={currentUser && currentUser.role === ROLES.STUDENT}
+            component={StudentCoursePage}
           />
           <Route
             path='/*' 

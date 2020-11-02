@@ -5,6 +5,9 @@ import { systemSagas } from './system/system.sagas';
 import { courseSagas } from './course/course.sagas';
 import { instructorSagas } from './instructor/instructor.sagas';
 import { instructorCourseSagas } from './instructor-course/instructor-course.sagas';
+import { instructorLessonSagas } from './instructor-lesson/instructor-lesson.sagas';
+import { studentSagas } from './student/student.sagas';
+import { studentCourseSagas } from './student-course/student-course.sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -13,5 +16,8 @@ export default function* rootSaga() {
     call(courseSagas),
     call(instructorSagas),
     call(instructorCourseSagas),
+    call(instructorLessonSagas),
+    call(studentSagas),
+    call(studentCourseSagas),
   ]);
 }

@@ -78,6 +78,12 @@ const StudentNavigation = () => (
       <Link to={ROUTES.ACCOUNT}>Account</Link>
     </li>
     <li>
+      <Link to={ROUTES.COURSES}>Courses</Link>
+    </li>
+    <li>
+      <Link to={ROUTES.STUDENT}>Student</Link>
+    </li>
+    <li>
       <SignOutButton />
     </li>
   </ul>

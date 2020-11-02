@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { withRouter, useParams } from 'react-router-dom';
+import { Link, withRouter, useParams } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import { 
   fetchInstructorCourseDetailsByCourseIdStart, 
   updateInstructorCourseDetailsStart 
 } from './../../redux/instructor-course/instructor-course.actions';
+import { fetchInstructorLessonsStart } from './../../redux/instructor-lesson/instructor-lesson.actions';
+
 import { selectedCourseDetails } from '../../redux/instructor-course/instructor-course.selectors';
+import { instructorLessons } from '../../redux/instructor-lesson/instructor-lesson.selectors';
 
 import './update-instructor-course.styles.scss';
+
+import * as ROUTES from './../../constants/routes';
 
 const INITIAL_STATE = {
   courseName: '',
@@ -27,7 +32,7 @@ const INITIAL_STATE = {
   ],
 }
 
-const UpdateInstructorCourse = ({ history, courseDetails, fetchInstructorCourseDetailsByCourseIdStart, updateInstructorCourseDetailsStart }) => {
+const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart, updateInstructorCourseDetailsStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, ...courseDetails });
   const { courseName, startDate, endDate, isVisible, courseDays } = state;
@@ -39,8 +44,9 @@ const UpdateInstructorCourse = ({ history, courseDetails, fetchInstructorCourseD
   useEffect(() => {
     if(isObjectEmpty(courseDetails)) {
       fetchInstructorCourseDetailsByCourseIdStart(courseId);
+      fetchInstructorLessonsStart(courseId);
     }
-  }, [courseId, courseDetails, fetchInstructorCourseDetailsByCourseIdStart]);
+  }, [courseId, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart]);
 
   const handleChange = (event, dayOfWeek) => {
     const { name, value, checked, type } = event.target;
@@ -71,47 +77,64 @@ const UpdateInstructorCourse = ({ history, courseDetails, fetchInstructorCourseD
 
   const handleSubmit = (event) => {
     updateInstructorCourseDetailsStart(courseId, state);
+    history.push(ROUTES.INSTRUCTOR);
     event.preventDefault();
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type='text' name='courseName' value={courseName} disabled />
-      <input type='date' name='startDate' value={startDate} onChange={handleChange} />
-      <input type='date' name='endDate' value={endDate} onChange={handleChange} />
-      <input type='checkbox' name='isVisible' value={isVisible} checked={isVisible} onChange={handleChange} />
-      {
-        courseDays.map((courseDay) => (
-          <input
-            type='checkbox'
-            name='courseDays'
-            key={courseDay.name}
-            value={courseDay.name}
-            checked={courseDay.isChecked}
-            onChange={handleChange}
-          />
-        ))
-      }
-      {
-        courseDays.map((courseDay) => (
-          courseDay.isChecked &&
-            <div key={courseDay.name}>
-              <h1>{courseDay.name} Schedule</h1>
-              <input type='time' name='startTime' value={courseDay.startTime} onChange={(e) => handleChange(e, courseDay.name)} />
-              <input type='time' name='endTime' value={courseDay.endTime} onChange={(e) => handleChange(e, courseDay.name)} />
-            </div>
-        ))
-      }
-      <input type="submit" value="Update Course" />
-    </form>
+    <Fragment>
+      <form onSubmit={handleSubmit}>
+        <input type='text' name='courseName' value={courseName} disabled />
+        <input type='date' name='startDate' value={startDate} onChange={handleChange} />
+        <input type='date' name='endDate' value={endDate} onChange={handleChange} />
+        <input type='checkbox' name='isVisible' value={isVisible} checked={isVisible} onChange={handleChange} />
+        {
+          courseDays.map((courseDay) => (
+            <input
+              type='checkbox'
+              name='courseDays'
+              key={courseDay.name}
+              value={courseDay.name}
+              checked={courseDay.isChecked}
+              onChange={handleChange}
+            />
+          ))
+        }
+        {
+          courseDays.map((courseDay) => (
+            courseDay.isChecked &&
+              <div key={courseDay.name}>
+                <h1>{courseDay.name} Schedule</h1>
+                <input type='time' name='startTime' value={courseDay.startTime} onChange={(e) => handleChange(e, courseDay.name)} />
+                <input type='time' name='endTime' value={courseDay.endTime} onChange={(e) => handleChange(e, courseDay.name)} />
+              </div>
+          ))
+        }
+        <input type="submit" value="Update Course" />
+      </form>
+      <div>
+        <Link to={`/instructor/course/${courseId}/lesson/new`}>Add New Lesson</Link>
+        <ul>
+        {
+          !isObjectEmpty(instructorLessons) && 
+          instructorLessons.map((instructorLesson) => (
+            <li key={instructorLesson.id}><Link to={`/instructor/course/${courseId}/lesson/${instructorLesson.id}`}>{instructorLesson.lessonTitle}</Link></li>
+          ))
+        }
+        </ul>
+      </div>
+    </Fragment>
   );
 };
 
 const mapStateToProps = createStructuredSelector({
  courseDetails: selectedCourseDetails,
+ instructorLessons: instructorLessons,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchInstructorLessonsStart: (instructorCourseId) => 
+    dispatch(fetchInstructorLessonsStart(instructorCourseId)),
   fetchInstructorCourseDetailsByCourseIdStart: (courseId) =>
     dispatch(fetchInstructorCourseDetailsByCourseIdStart(courseId)),
   updateInstructorCourseDetailsStart: (courseId, courseDetails) => 

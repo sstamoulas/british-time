@@ -6,6 +6,9 @@ import systemReducer from './system/system.reducer';
 import courseReducer from './course/course.reducer';
 import instructorReducer from './instructor/instructor.reducer';
 import instructorCourseReducer from './instructor-course/instructor-course.reducer';
+import instructorLessonReducer from './instructor-lesson/instructor-lesson.reducer';
+import studentReducer from './student/student.reducer';
+import studentCourseReducer from './student-course/student-course.reducer';
 
 const rootReducer = combineReducers({
   ui: uiReducer,
@@ -14,6 +17,9 @@ const rootReducer = combineReducers({
   course: courseReducer,
   instructor: instructorReducer,
   instructorCourses: instructorCourseReducer,
+  instructorLessons: instructorLessonReducer,
+  student: studentReducer,
+  studentCourses: studentCourseReducer,
 });
 
 export default rootReducer;

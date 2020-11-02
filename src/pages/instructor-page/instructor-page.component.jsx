@@ -30,8 +30,12 @@ const InstructorPage = ({
   const { bio, rating, selectedCourseToStart } = state;
   const isInvalid = bio === '';
 
+  const isObjectEmpty = (obj) => {
+    return Object.keys(obj).length === 0 && obj.constructor === Object
+  }
+
   const onSubmit = event => {
-    if(instructorDetails === {}) {
+    if(isObjectEmpty(instructorDetails)) {
       createInstructorDetailsStart({ bio, rating });
     }
     else {

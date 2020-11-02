@@ -32,7 +32,6 @@ const CreateInstructorCourse = ({ courseDetails, createInstructorCourseDetailsSt
   const handleChange = (event, dayOfWeek) => {
     const { name, value, checked, type } = event.target;
 
-    console.log('this is handleChange');
     if(type === 'checkbox') {
       let newArr = [...courseDays];
       const index = courseDays.findIndex(courseDay => courseDay.name === value)
@@ -56,8 +55,6 @@ const CreateInstructorCourse = ({ courseDetails, createInstructorCourseDetailsSt
     createInstructorCourseDetailsStart(state);
     event.preventDefault();
   }
-
-  console.log('this is state: ', state)
 
   return (
     <form onSubmit={handleSubmit}>

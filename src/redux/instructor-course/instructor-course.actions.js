@@ -1,5 +1,19 @@
 import InstructorCourseActionTypes from './instructor-course.types';
 
+export const fetchAllCoursesStart = () => ({
+  type: InstructorCourseActionTypes.FETCH_ALL_COURSES_START,
+});
+
+export const fetchAllCoursesSuccess = (courses) => ({
+  type: InstructorCourseActionTypes.FETCH_ALL_COURSES_SUCCESS,
+  payload: courses,
+});
+
+export const fetchAllCoursesFailure = (error) => ({
+  type: InstructorCourseActionTypes.FETCH_ALL_COURSES_FAILURE,
+  payload: error,
+});
+
 export const fetchInstructorCourseDetailsStart = () => ({
   type: InstructorCourseActionTypes.FETCH_INSTRUCTOR_COURSE_DETAILS_START,
 });
@@ -49,9 +63,9 @@ export const updateInstructorCourseDetailsStart = (courseId, courseDetails) => (
   payload: { courseId, courseDetails },
 });
 
-export const updateInstructorCourseDetailsSuccess = (instructorCourse) => ({
+export const updateInstructorCourseDetailsSuccess = (instructorCourses) => ({
   type: InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_DETAILS_SUCCESS,
-  payload: instructorCourse,
+  payload: instructorCourses,
 });
 
 export const updateInstructorCourseDetailsFailure = (error) => ({
