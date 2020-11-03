@@ -36,6 +36,8 @@ import { checkUserSessionStart } from './redux/user/user.actions';
 import { currentUser } from './redux/user/user.selectors';
 import { isLoading } from './redux/ui/ui.selectors';
 
+import './App.styles.scss';
+
 const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
   const isMounted = useRef(false);
 
@@ -50,7 +52,6 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
     (
       <div>
         <Navigation />
-        <hr />
         <Switch>
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
           <CustomRoute

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -9,20 +9,27 @@ import SignOutButton from './../sign-out/sign-out.component';
 
 import { currentUser } from './../../redux/user/user.selectors';
 
+import './navigation.styles.scss';
+
 const Navigation = ({ currentUser }) => (
-  <div>
-    {
-      currentUser ? 
-        currentUser.role === ROLES.ADMIN ?
-          <AdminNavigation /> 
-        :
-        currentUser.role === ROLES.INSTRUCTOR ?
-          <InstructorNavigation /> 
-        :
-          <StudentNavigation /> 
-      : 
-        <NavigationNonAuth />
-    }
+  <div className='header'>
+    <div className='container'>
+      <Link to={ROUTES.LANDING} className='logo'>
+        Native Talk
+      </Link>
+      {
+        currentUser ? 
+          currentUser.role === ROLES.ADMIN ?
+            <AdminNavigation /> 
+          :
+          currentUser.role === ROLES.INSTRUCTOR ?
+            <InstructorNavigation /> 
+          :
+            <StudentNavigation /> 
+        : 
+          <NavigationNonAuth />
+      }
+    </div>
   </div>
 );
  
@@ -90,14 +97,14 @@ const StudentNavigation = () => (
 );
 
 const NavigationNonAuth = () => (
-  <ul>
-    <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-    </li>
-  </ul>
+  <div className='sub-container'>
+    <div className='header-gap'>
+      <Link to={ROUTES.SIGN_IN} className='btn btn-medium btn-secondary heading-sm'><span>Log In</span></Link>
+    </div>
+    <div className='header-gap'>
+      <Link to={ROUTES.SIGN_UP} className='btn btn-medium btn-primary heading-sm'><span>Sign Up</span></Link>
+    </div>
+  </div>
 );
 
 const mapStateToProps = createStructuredSelector({
