@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
 
-import { fetchStudentCourseStart, createStudentCourseStart } from '../../redux/student-course/student-course.actions';
+import CourseLessons from '../../components/course-lessons/course-lessons.component';
+
+import { fetchStudentCourseStart } from '../../redux/student-course/student-course.actions';
 
 import { selectedCourseDetails } from '../../redux/student-course/student-course.selectors';
 
@@ -11,6 +13,10 @@ import * as ROUTES from './../../constants/routes';
 
 const isObjectEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object
+}
+
+const isArrayEmpty = (obj) => {
+  return obj.length === 0
 }
 
 const StudentCoursePage = ({ history, courseDetails, fetchStudentCourseStart }) => {
@@ -32,10 +38,7 @@ const StudentCoursePage = ({ history, courseDetails, fetchStudentCourseStart }) 
   return !isObjectEmpty(courseDetails) && (
     <div>
       <h1>Course Details Page</h1>
-      <form onSubmit={handleSubmit}>
-        <div>{courseName}</div>
-        <input type="submit" value="Register Course" />
-      </form>
+      <CourseLessons />
     </div>
   )
 };

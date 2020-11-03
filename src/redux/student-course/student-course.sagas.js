@@ -52,12 +52,12 @@ export function* fetchStudentCourseAsync({ type, payload: { courseId }}) {
   }
 }
 
-export function* createStudentCourseAsync({type, payload: { courseDetails }}) {
+export function* createStudentCourseAsync({type, payload: { courseDetails, courseId }}) {
   const {user: { currentUser: { id }}} = yield select();
 
   try {
     yield put(actionStart(type));
-    yield call(createStudentCourseDetailsDocument, id, courseDetails);
+    yield call(createStudentCourseDetailsDocument, id, courseDetails, courseId);
     const studentCourseRef = yield call(getCoursesByStudentId, id);
 
     yield put(createStudentCourseSuccess({ ...studentCourseRef }));

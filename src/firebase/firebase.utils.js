@@ -449,7 +449,7 @@ export const getStudentCourseByCourseId = async (courseId) => {
   return snapShot.data();
 }
 
-export const createStudentCourseDetailsDocument = async (studentId, courseDetails) => {
+export const createStudentCourseDetailsDocument = async (studentId, courseDetails, courseId) => {
   const docRef = firestore.collection('student-courses').doc();
   const snapShot = await docRef.get();
   const createdAt = new Date();
@@ -458,7 +458,7 @@ export const createStudentCourseDetailsDocument = async (studentId, courseDetail
     try {
       await docRef.set({
         ...courseDetails,
-        courseId: courseDetails.id,
+        instructorCourseId: courseId,
         studentId,
         createdAt,
       });

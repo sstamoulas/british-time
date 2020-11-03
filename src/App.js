@@ -20,6 +20,7 @@ import LessonCreatePage from './pages/lesson-create-page/lesson-create-page.comp
 import LessonUpdatePage from './pages/lesson-update-page/lesson-update-page.component';
 import CourseDetailsPage from './pages/course-details-page/course-details-page.component';
 import StudentCoursePage from './pages/student-course-page/student-course-page.component';
+import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.component';
 
 import Navigation from './components/navigation/navigation.component';
 import CustomLoader from './components/custom-loader/custom-loader.component';
@@ -153,6 +154,12 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
             path={ROUTES.STUDENT_COURSE}
             condition={currentUser && currentUser.role === ROLES.STUDENT}
             component={StudentCoursePage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.STUDENT_LESSON_DETAILS}
+            condition={currentUser && currentUser.role === ROLES.STUDENT}
+            component={StudentLessonPage}
           />
           <Route
             path='/*' 

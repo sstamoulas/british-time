@@ -20,7 +20,6 @@ const CourseDetailsPage = ({ history, courseDetails, fetchInstructorCourseDetail
   const { courseName } = state;
 
   useEffect(() => {
-    console.log(courseDetails, courseId)
     if(isObjectEmpty(courseDetails)) {
       fetchInstructorCourseDetailsByCourseIdStart(courseId);
     }
@@ -49,7 +48,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchInstructorCourseDetailsByCourseIdStart: (courseId) => dispatch(fetchInstructorCourseDetailsByCourseIdStart(courseId)),
-  createStudentCourseStart: (courseDetails) => dispatch(createStudentCourseStart(courseDetails)),
+  createStudentCourseStart: (courseDetails, courseId) => 
+    dispatch(createStudentCourseStart(courseDetails, courseId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CourseDetailsPage));
