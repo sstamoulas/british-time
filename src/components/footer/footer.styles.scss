@@ -1,0 +1,60 @@
+.udlite-footer .footer-section {
+  background: #fff;
+  border-top: 1px solid #dcdacb;
+  padding-left: 2.4rem;
+  padding-right: 2.4rem;
+}
+
+.links {
+  display: flex;
+}
+
+.logo-and-copyright {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6.4rem 0 4.8rem;
+}
+
+.copyright-container {
+  font-size: 1.2rem;
+  padding: 0;
+  height: 100%;
+  top: 50%;
+  color: #73726c;
+}
+
+@media screen and (min-width: 43.81em) {
+  .udlite-footer .footer-section-main {
+    padding-top: 2.4rem;
+  }
+}
+
+@media screen and (min-width: 61.31em) {
+  .udlite-footer .footer-section {
+    padding-left: 3.2rem;
+    padding-right: 3.2rem;
+  }
+}
+
+@media screen and (min-width: 75.06em) {
+  .udlite-footer .footer-section {
+    padding-left: 4.8rem;
+    padding-right: 4.8rem;
+  }
+}
+
+@media screen and (min-width: 43.81em) {
+  .udlite-footer .link-column {
+      flex-basis: 33%;
+      margin-right: 1.6rem;
+      margin-bottom: 0;
+  }
+}
+
+.udlite-in-udheavy .unstyled-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+}

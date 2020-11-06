@@ -23,6 +23,7 @@ import StudentCoursePage from './pages/student-course-page/student-course-page.c
 import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.component';
 
 import Navigation from './components/navigation/navigation.component';
+import Footer from './components/footer/footer.component';
 import CustomLoader from './components/custom-loader/custom-loader.component';
 import PrivateRoute from './components/private-route/private-route.component';
 import CustomRoute from './components/custom-route/custom-route.component';
@@ -50,7 +51,7 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
 
   return isMounted.current && !isLoading ?
     (
-      <div>
+      <div className='main-container'>
         <Navigation />
         <Switch>
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
@@ -167,6 +168,7 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
             component={NotFoundPage}
           />
         </Switch>
+        <Footer />
       </div>
     )
   :

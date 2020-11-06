@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import ForgotPasswordLink from './../../components/forgot-password-link/forgot-password-link.component';
+
 import { signInStart, resetErrorMessage } from '../../redux/user/user.actions';
 import { userError } from './../../redux/user/user.selectors';
+
+import './sign-in-page.styles.scss';
  
 const INITIAL_STATE = {
   email: '',
@@ -30,7 +34,7 @@ const SignInPage = ({ history, signInStart, resetErrorMessage, error }) => {
 
   const isInvalid = password === '' || email === '';
 
-  return (
+  /*
     <form onSubmit={onSubmit}>
       <input
         name="email"
@@ -51,6 +55,32 @@ const SignInPage = ({ history, signInStart, resetErrorMessage, error }) => {
       </button>
 
       {error && <p>{error.message}</p>}
+    </form>
+  */
+
+  return (
+    <form className="signin-form">
+      <div className="manage-fields-wrapper"> 
+        <div className="form-field-container email">
+          <label className="sr-only">Email</label>
+          <div>
+            <input name="email" maxLength="64" minLength="7" placeholder="Email" type="email" className="form-control" value="" />
+          </div>
+        </div> 
+        <div className="form-field-container password"> 
+          <label className="control-label">Password</label> 
+          <div> 
+            <input type="password" name="password" minLength="6" required="" maxLength="64" className="textInput form-control" placeholder="Password" /> 
+          </div>
+        </div>
+      </div>
+      <div className="form-actions"> 
+        <div className="submit-row"> 
+          <input type="submit" name="submit" value="Log In" className="btn btn-primary " />
+          <span>or </span>
+          <ForgotPasswordLink />
+        </div>
+      </div> 
     </form>
   );
 }

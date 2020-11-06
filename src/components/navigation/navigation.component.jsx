@@ -13,7 +13,7 @@ import './navigation.styles.scss';
 
 const Navigation = ({ currentUser }) => (
   <div className='header'>
-    <div className='container'>
+    <div className='nav-container'>
       <Link to={ROUTES.LANDING} className='logo'>
         Native Talk
       </Link>
@@ -97,12 +97,12 @@ const StudentNavigation = () => (
 );
 
 const NavigationNonAuth = () => (
-  <div className='sub-container'>
+  <div className='nav-sub-container'>
     <div className='header-gap'>
-      <Link to={ROUTES.SIGN_IN} className='btn btn-medium btn-secondary heading-sm'><span>Log In</span></Link>
+      <Link to={ROUTES.SIGN_IN} className='nav-btn btn-medium nav-btn-secondary heading-sm'><span>Log In</span></Link>
     </div>
     <div className='header-gap'>
-      <Link to={ROUTES.SIGN_UP} className='btn btn-medium btn-primary heading-sm'><span>Sign Up</span></Link>
+      <Link to={ROUTES.SIGN_UP} className='nav-btn btn-medium nav-btn-primary heading-sm'><span>Sign Up</span></Link>
     </div>
   </div>
 );
