@@ -36,6 +36,9 @@ const SignIn = ({ history, signInStart, resetErrorMessage, error }) => {
 
   return (
     <form className="signin-form" onSubmit={onSubmit}>
+      {
+        error && <div className='alert error'>{error && <p>{error.message}</p>}</div>
+      }
       <div className="manage-fields-wrapper"> 
         <div className="form-field-container email">
           <label className="sr-only">Email</label>
@@ -62,7 +65,7 @@ const SignIn = ({ history, signInStart, resetErrorMessage, error }) => {
               maxLength="64" 
               className="textInput form-control" 
               placeholder="Password" 
-              value={email} 
+              value={password} 
               onChange={onChange}
             /> 
           </div>
@@ -81,8 +84,6 @@ const SignIn = ({ history, signInStart, resetErrorMessage, error }) => {
           <ForgotPasswordLink />
         </div>
       </div> 
-
-      {error && <p>{error.message}</p>}
     </form>
   );
 }

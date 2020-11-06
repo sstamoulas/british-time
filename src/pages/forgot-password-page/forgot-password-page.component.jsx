@@ -37,6 +37,9 @@ const ForgotPasswordPage = ({ passwordResetStart, resetErrorMessage, error }) =>
     <div className="modal-content-wrapper"> 
       <div className="label-header">Forgot Password</div>
       <form className='forgot-password-form' onSubmit={onSubmit}>
+        {
+          error && <div className='alert error'>{error && <p>{error.message}</p>}</div>
+        }
         <div className='form-group'>
           <input
             name="email"
@@ -62,8 +65,6 @@ const ForgotPasswordPage = ({ passwordResetStart, resetErrorMessage, error }) =>
             <Link to={ROUTES.SIGN_IN} className="forgot-password-link">Sign In</Link>
           </div>
         </div> 
-
-        {error && <p>{error.message}</p>}
       </form>
     </div>
   );

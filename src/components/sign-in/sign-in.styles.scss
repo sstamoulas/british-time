@@ -7,6 +7,22 @@
   position: relative;
 }
 
+.error {
+    background-color: #faebeb;
+    border-color: transparent;
+    color: #521822;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.alert {
+    padding: 16px;
+    margin-bottom: 21px;
+    border: 1px solid transparent;
+    text-align: left;
+    position: relative;
+}
+
 .form-field-container {
   label {
     position: absolute;
