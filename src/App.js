@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import LandingPage from './pages/landing-page/landing-page.component';
 import NotFoundPage from './pages/not-found-page/not-found-page.component';
 import SignUpPage from './pages/sign-up-page/sign-up-page.component';
+import SignInPage from './pages/sign-in-page/sign-in-page.component';
 import ForgotPasswordPage from './pages/forgot-password-page/forgot-password-page.component';
 import HomePage from './pages/home-page/home-page.component';
 import AccountPage from './pages/account-page/account-page.component';
@@ -13,7 +14,6 @@ import CoursesPage from './pages/courses-page/courses-page.component';
 import AdminPage from './pages/admin-page/admin-page.component';
 import InstructorPage from './pages/instructor-page/instructor-page.component';
 import StudentPage from './pages/student-page/student-page.component';
-import SignInAndSignUpPage from './pages/sign-in-and-sign-up-page/sign-in-and-sign-up-page.component';
 import CourseCreatePage from './pages/course-create-page/course-create-page.component';
 import CourseUpdatePage from './pages/course-update-page/course-update-page.component';
 import LessonCreatePage from './pages/lesson-create-page/lesson-create-page.component';
@@ -59,7 +59,7 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
             exact
             path={ROUTES.SIGN_IN}
             condition={currentUser}
-            component={SignInAndSignUpPage} 
+            component={SignInPage} 
           />
           <CustomRoute
             exact

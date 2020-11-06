@@ -99,7 +99,7 @@ const StudentNavigation = () => (
 const NavigationNonAuth = () => (
   <div className='nav-sub-container'>
     <div className='header-gap'>
-      <Link to={ROUTES.SIGN_IN} className='nav-btn btn-medium nav-btn-secondary heading-sm'><span>Log In</span></Link>
+      <Link to={ROUTES.SIGN_IN} className='nav-btn btn-medium nav-btn-secondary heading-sm'><span>Sign In</span></Link>
     </div>
     <div className='header-gap'>
       <Link to={ROUTES.SIGN_UP} className='nav-btn btn-medium nav-btn-primary heading-sm'><span>Sign Up</span></Link>

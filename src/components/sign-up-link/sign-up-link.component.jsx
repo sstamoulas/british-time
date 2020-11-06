@@ -7,7 +7,7 @@ import * as ROUTES from '../../constants/routes';
 import './sign-up-link.styles.scss';
  
 const SignUpLink = () => (
-  <div className="login-footer">
+  <div className="sign-in-footer">
     Don't have an account?&nbsp;
     <Link to={ROUTES.SIGN_UP} className="sign-up-link">Sign Up</Link>
   </div>
