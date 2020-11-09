@@ -14,12 +14,12 @@ import './footer.styles.scss';
 const Footer = ({ currentUser }) => {
   const dt = new Date();
   const currentYear = dt.getFullYear();
-  
+
   return (
     <footer className="udlite-footer ud-app-loader udlite-in-udheavy ud-app-loaded">
       <div className="footer-section footer-section-main">
         <div className="links">
-          <ul className="unstyled-list link-column ">
+          <ul className="unstyled-list link-column">
             <li>
               <a className="link udlite-text-sm ud-ufb-notice-click-event">
               Udemy for Business
@@ -69,7 +69,7 @@ const Footer = ({ currentUser }) => {
               </a>
             </li>
           </ul>
-          <ul className="unstyled-list link-column ">
+          <ul className="unstyled-list link-column">
             <li>
               <a className="link udlite-text-sm">
               Terms

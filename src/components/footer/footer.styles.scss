@@ -3,10 +3,7 @@
   border-top: 1px solid #dcdacb;
   padding-left: 2.4rem;
   padding-right: 2.4rem;
-}
-
-.links {
-  display: flex;
+  padding-top: 2rem;
 }
 
 .logo-and-copyright {
@@ -22,6 +19,18 @@
   height: 100%;
   top: 50%;
   color: #73726c;
+}
+
+.udlite-footer .link {
+    display: block;
+    padding: .4rem 0;
+}
+
+.udlite-in-udheavy .unstyled-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: none;
 }
 
 @media screen and (min-width: 43.81em) {
@@ -52,9 +61,8 @@
   }
 }
 
-.udlite-in-udheavy .unstyled-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-width: none;
+@media screen and (min-width: 43.81em) {
+  .udlite-footer .links {
+      display: flex;
+  }
 }
