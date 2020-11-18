@@ -39,7 +39,7 @@
 
 .logo {
   flex-shrink: 0;
-  padding-right: 1.2rem;
+  padding-right: 5rem;
   align-items: center;
   display: flex;
   color: #0f7c90;
@@ -343,4 +343,8 @@ a {
 
 .mobile-nav--nav-section li {
   line-height: 1.4;
+}
+
+.mobile-nav--nav-section~.mobile-nav--nav-section-heading, .mobile-nav--nav-section+.mobile-nav--nav-section {
+  border-top: 1px solid #dcdacb;
 }

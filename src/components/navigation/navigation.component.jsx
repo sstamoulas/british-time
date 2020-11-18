@@ -47,6 +47,14 @@ const Navigation = ({ currentUser }) => {
                   </Link>
                 </li>
               </ul>
+              <div className="udlite-heading-sm mobile-nav--nav-section-heading"></div>
+              <ul className="unstyled-list udlite-block-list mobile-nav--nav-section">
+                <li>
+                  <Link to={ROUTES.COURSES} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                    <span className="udlite-block-list-item-content">Courses</span>
+                  </Link>
+                </li>
+              </ul>
             </div>
           </nav>
           <button type="button" className="udlite-btn udlite-btn-large udlite-btn-secondary udlite-btn-round udlite-heading-md udlite-btn-icon udlite-btn-icon-large udlite-btn-icon-round side-drawer--close-btn close-button--close-btn" onClick={clickHandler}>
