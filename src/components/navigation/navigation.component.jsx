@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -54,6 +54,62 @@ const Navigation = ({ currentUser }) => {
                     <span className="udlite-block-list-item-content">Courses</span>
                   </Link>
                 </li>
+                {
+                  currentUser && 
+                  (
+                    <Fragment>
+                      <li>
+                        <Link to={ROUTES.LANDING} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                          <span className="udlite-block-list-item-content">Landing</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to={ROUTES.HOME} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                          <span className="udlite-block-list-item-content">Home</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to={ROUTES.ACCOUNT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                          <span className="udlite-block-list-item-content">Account</span>
+                        </Link>
+                      </li>
+                    </Fragment>
+                  )
+                }
+                {
+                  currentUser && 
+                  currentUser.role === ROLES.ADMIN && 
+                  (
+                    <li>
+                      <Link to={ROUTES.ADMIN} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                        <span className="udlite-block-list-item-content">Admin</span>
+                      </Link>
+                    </li>
+                  )
+                }
+                {
+                  currentUser && 
+                  currentUser.role === ROLES.INSTRUCTOR && 
+                  (
+                    <li>
+                      <Link to={ROUTES.INSTRUCTOR} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                        <span className="udlite-block-list-item-content">Instructor</span>
+                      </Link>
+                    </li>
+                  )
+                }
+                {
+                  currentUser && 
+                  currentUser.role !== ROLES.ADMIN && 
+                  currentUser.role !== ROLES.INSTRUCTOR && 
+                  (
+                    <li>
+                      <Link to={ROUTES.STUDENT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                        <span className="udlite-block-list-item-content">Student</span>
+                      </Link>
+                    </li>
+                  )
+                }
               </ul>
             </div>
           </nav>
@@ -84,7 +140,7 @@ const Navigation = ({ currentUser }) => {
 }
  
 const AdminNavigation = () => (
-  <ul>
+  <ul className="unstyled-list udlite-block-list d-flex">
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
     </li>
@@ -104,7 +160,7 @@ const AdminNavigation = () => (
 );
 
 const InstructorNavigation = () => (
-  <ul>
+  <ul className="unstyled-list udlite-block-list d-flex">
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
     </li>
@@ -124,7 +180,7 @@ const InstructorNavigation = () => (
 );
 
 const StudentNavigation = () => (
-  <ul>
+  <ul className="unstyled-list udlite-block-list d-flex">
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
     </li>

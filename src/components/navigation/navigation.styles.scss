@@ -8,8 +8,6 @@
   color: #3c3b37;
   margin: 0;
   font-family: sf pro text,-apple-system,BlinkMacSystemFont,Roboto,segoe ui,Helvetica,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
-
-
 }
 
 .nav-container {
@@ -25,6 +23,10 @@
   font-weight: 400;
   line-height: 1.4;
   font-size: 1.4rem;
+
+  li {
+    padding: 10px;
+  }
 }
 
 @media screen and (max-width: 43.81em) {
@@ -79,7 +81,7 @@
   align-items: center;
 }
 
-@media (max-width: 50em) {
+@media (max-width: 700px) {
   .header-mobile {
     display: block;
     background: #fff;
@@ -235,7 +237,7 @@ a {
   white-space: normal;
 }
 
-.udlite-in-udheavy .unstyled-list {
+.unstyled-list {
   list-style: none;
   margin: 0;
   padding: 0;

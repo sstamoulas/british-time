@@ -1,5 +1,31 @@
 .carousel {
   padding: 0 30px;
+  position: relative;
+}
+
+.carousel-width {
+  margin: 0 auto;
+  width: 291px;
+
+  @media (min-width: 576px) {
+    margin: 0 auto;
+    width: 522px;
+  }
+
+  @media (min-width: 768px) {
+    margin: 0 auto;
+    width: 753px;
+  }
+
+  @media (min-width: 992px) {
+    margin: 0 auto;
+    width: 984px;
+  }
+
+  @media (min-width: 1200px) {
+    margin: 0 auto;
+    width: 1215px;
+  }
 }
 
 .carousel__button--prev,
@@ -15,6 +41,9 @@
 
   &:before {
     content: '\21e6';
+    position: absolute;
+    top: 13px;
+    left: 15px;
   }
 }
 
@@ -23,16 +52,21 @@
 
   &:before {
     content: '\21e8';
+    position: absolute;
+    top: 13px;
+    left: 15px;
   }
 }
 
 .carousel__container {
+  position: relative;
   overflow: hidden;
   height: 300px;
 }
 
 .carousel__list {
   left: 0;
+  margin-left: 1px;
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -413,4 +447,25 @@ img {
     border: 0;
 }
 
+.carousel--button--21JBZ {
+    position: absolute;
+    transform: translateY(-50%);
+    top: 50%;
+    background-color: white;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.08);
+}
 
+.udlite-btn-icon-round {
+    border-radius: 50%;
+}
+
+.udlite-btn-large {
+    height: 4.8rem;
+    z-index: 10;
+}
+
+.udlite-btn-icon-large {
+    padding: 0 1.2rem;
+    width: 4.8rem;
+}
