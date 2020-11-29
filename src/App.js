@@ -55,6 +55,8 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
         <Navigation />
         <Switch>
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
+          <Route exact path={ROUTES.COURSES} component={CoursesPage} />
+          <Route exact path={ROUTES.DETAILS_COURSE} component={CourseDetailsPage} />
           <CustomRoute
             exact
             path={ROUTES.SIGN_IN}
@@ -138,18 +140,6 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
             path={ROUTES.STUDENT}
             condition={currentUser && currentUser.role === ROLES.STUDENT}
             component={StudentPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.COURSES}
-            condition={currentUser && currentUser.role === ROLES.STUDENT}
-            component={CoursesPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.DETAILS_COURSE}
-            condition={currentUser && currentUser.role === ROLES.STUDENT}
-            component={CourseDetailsPage}
           />
           <PrivateRoute 
             exact

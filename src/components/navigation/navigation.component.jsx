@@ -36,21 +36,34 @@ const Navigation = ({ currentUser }) => {
           <nav className="side-drawer--drawer-container">
             <div className="mobile-nav--nav side-drawer--drawer-content">
               <ul className="unstyled-list udlite-block-list mobile-nav--nav-section">
-                <li>
-                  <Link to={ROUTES.SIGN_IN} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
-                    <span className="udlite-block-list-item-content">Log in</span>
-                  </Link>
-                </li>
-                <li>
-                  <Link to={ROUTES.SIGN_UP} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
-                    <span className="udlite-block-list-item-content">Sign up</span>
-                  </Link>
-                </li>
+                {
+                  !currentUser && (
+                    <Fragment>
+                      <li>
+                        <Link to={ROUTES.SIGN_IN} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                          <span className="udlite-block-list-item-content">Log in</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to={ROUTES.SIGN_UP} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                          <span className="udlite-block-list-item-content">Sign up</span>
+                        </Link>
+                      </li>
+                    </Fragment>
+                  )
+                }
+                {
+                  currentUser && (
+                    <li>
+                      <SignOutButton />
+                    </li>
+                  )
+                }
               </ul>
               <div className="udlite-heading-sm mobile-nav--nav-section-heading"></div>
               <ul className="unstyled-list udlite-block-list mobile-nav--nav-section">
                 <li>
-                  <Link to={ROUTES.COURSES} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                  <Link to={ROUTES.COURSES} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                     <span className="udlite-block-list-item-content">Courses</span>
                   </Link>
                 </li>
@@ -59,17 +72,17 @@ const Navigation = ({ currentUser }) => {
                   (
                     <Fragment>
                       <li>
-                        <Link to={ROUTES.LANDING} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                        <Link to={ROUTES.LANDING} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                           <span className="udlite-block-list-item-content">Landing</span>
                         </Link>
                       </li>
                       <li>
-                        <Link to={ROUTES.HOME} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                        <Link to={ROUTES.HOME} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                           <span className="udlite-block-list-item-content">Home</span>
                         </Link>
                       </li>
                       <li>
-                        <Link to={ROUTES.ACCOUNT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                        <Link to={ROUTES.ACCOUNT} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                           <span className="udlite-block-list-item-content">Account</span>
                         </Link>
                       </li>
@@ -81,7 +94,7 @@ const Navigation = ({ currentUser }) => {
                   currentUser.role === ROLES.ADMIN && 
                   (
                     <li>
-                      <Link to={ROUTES.ADMIN} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                      <Link to={ROUTES.ADMIN} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                         <span className="udlite-block-list-item-content">Admin</span>
                       </Link>
                     </li>
@@ -92,7 +105,7 @@ const Navigation = ({ currentUser }) => {
                   currentUser.role === ROLES.INSTRUCTOR && 
                   (
                     <li>
-                      <Link to={ROUTES.INSTRUCTOR} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                      <Link to={ROUTES.INSTRUCTOR} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                         <span className="udlite-block-list-item-content">Instructor</span>
                       </Link>
                     </li>
@@ -104,7 +117,7 @@ const Navigation = ({ currentUser }) => {
                   currentUser.role !== ROLES.INSTRUCTOR && 
                   (
                     <li>
-                      <Link to={ROUTES.STUDENT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                      <Link to={ROUTES.STUDENT} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                         <span className="udlite-block-list-item-content">Student</span>
                       </Link>
                     </li>
@@ -142,16 +155,24 @@ const Navigation = ({ currentUser }) => {
 const AdminNavigation = () => (
   <ul className="unstyled-list udlite-block-list d-flex">
     <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
+      <Link to={ROUTES.LANDING} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Landing</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.HOME}>Home</Link>
+      <Link to={ROUTES.HOME} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Home</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.ACCOUNT}>Account</Link>
+      <Link to={ROUTES.ACCOUNT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Account</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.ADMIN}>Admin</Link>
+      <Link to={ROUTES.ADMIN} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Admin</span>
+      </Link>
     </li>
     <li>
       <SignOutButton />
@@ -162,16 +183,24 @@ const AdminNavigation = () => (
 const InstructorNavigation = () => (
   <ul className="unstyled-list udlite-block-list d-flex">
     <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
+      <Link to={ROUTES.LANDING} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Landing</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.HOME}>Home</Link>
+      <Link to={ROUTES.HOME} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Home</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.ACCOUNT}>Account</Link>
+      <Link to={ROUTES.ACCOUNT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Account</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.INSTRUCTOR}>Instructor</Link>
+      <Link to={ROUTES.INSTRUCTOR} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Instructor</span>
+      </Link>
     </li>
     <li>
       <SignOutButton />
@@ -182,19 +211,29 @@ const InstructorNavigation = () => (
 const StudentNavigation = () => (
   <ul className="unstyled-list udlite-block-list d-flex">
     <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
+      <Link to={ROUTES.LANDING} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Landing</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.HOME}>Home</Link>
+      <Link to={ROUTES.HOME} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Home</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.ACCOUNT}>Account</Link>
+      <Link to={ROUTES.ACCOUNT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Account</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.COURSES}>Courses</Link>
+      <Link to={ROUTES.COURSES} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Courses</span>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.STUDENT}>Student</Link>
+      <Link to={ROUTES.STUDENT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Student</span>
+      </Link>
     </li>
     <li>
       <SignOutButton />

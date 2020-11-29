@@ -5,7 +5,6 @@ import { createStructuredSelector } from 'reselect';
 
 import * as ROUTES from './../../constants/routes';
 import * as ROLES from './../../constants/roles';
-import SignOutButton from './../sign-out/sign-out.component';
 
 import { currentUser } from './../../redux/user/user.selectors';
 

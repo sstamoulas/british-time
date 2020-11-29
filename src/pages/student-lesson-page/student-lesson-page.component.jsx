@@ -29,8 +29,6 @@ const StudentLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart 
     event.preventDefault();
   }
 
-  console.log(lessonDetails)
-
   return !isObjectEmpty(lessonDetails) && (
     <div>
       <h1>Lesson Details Page</h1>

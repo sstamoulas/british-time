@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import './carousel.styles.scss';
 
-const Carousel = ({ type }) => {
+const Carousel = ({ type, courses }) => {
   let carouselContainer, carouselList, carouselItem, carouselButton;
   
   useEffect(() => {
@@ -16,7 +16,7 @@ const Carousel = ({ type }) => {
     setItemWidth();
 
     carouselButton.forEach((elem) => elem.addEventListener("click", slide));
-  }, [])
+  }, [carouselContainer, carouselList, carouselItem, carouselButton])
 
   let setItemWidth = function(){
     carouselList.removeAttribute("style");
@@ -24,9 +24,6 @@ const Carousel = ({ type }) => {
     carouselList.style.width = `${curWidth}px`;
 
     carouselButton.forEach((elem) => {
-      console.log(carouselList.offsetLeft)
-
-
       elem.style.top = '25%';
       if(elem.dataset.dir === 'prev') {
         elem.style.left = '9px';
@@ -64,17 +61,17 @@ const Carousel = ({ type }) => {
         <div className="carousel__container js-carousel-container">
           <div className={`carousel__list js-carousel-list-${type}`}>
           {
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((number) => (
-              <div key={number} data-index="0" className={`carousel__item slick-slide slick-active slick-current js-carousel-item-${type}`} tabIndex="-1" aria-hidden="false" style={{outline: 'none', width: '231px'}}>
+            courses.map((course) => (
+              <div key={course.id} data-index="0" className={`carousel__item slick-slide slick-active slick-current js-carousel-item-${type}`} tabIndex="-1" aria-hidden="false" style={{outline: 'none', width: '231px'}}>
                 <div>
                   <div data-courseid="637930" className="course-discovery-unit--card-margin--2TVw4 merchandising-course-card--card--2UfMa">
-                    <Link to='/course/an-entire-mba-in-1-courseaward-winning-business-school-prof/' data-purpose="merchandising-course-card-body-637930" target="_self" className="merchandising-course-card--mask--2-b-d">
+                    <Link to={`/course/details/${course.id}`} data-purpose="merchandising-course-card-body-637930" target="_self" className="merchandising-course-card--mask--2-b-d">
                       <div className="merchandising-course-card--card-header--89z8L">
                         <img className="merchandising-course-card--course-image--3G7Kh" alt="" width="240" height="135" src="https://img-b.udemycdn.com/course/240x135/637930_9a22_19.jpg?secure=HCifkE1Mt0Y29igEn4nsRw%3D%3D%2C1605732101" srcSet="https://img-b.udemycdn.com/course/240x135/637930_9a22_19.jpg?secure=HCifkE1Mt0Y29igEn4nsRw%3D%3D%2C1605732101 1x, https://img-a.udemycdn.com/course/480x270/637930_9a22_19.jpg?D9zrv5xSyJOm_g98LgoWkld9pgcFDzSgbrIH_pVAnrdDrrTPaCESbm4qjPSBKCub4BSldXRV5R6NQmN5Vnm6eKfQHRWuLvJIv6McQeIvBeNzdTbgObq4c4uDA7obVuy1 2x" />
                       </div>
                       <div className="merchandising-course-card--card-body--3OpAH">
                         <div>
-                          <div className="merchandising-course-card--course-title--2Ob4m" data-purpose="course-card-title">An Entire MBA in 1 Course:Award Winning Business School Prof</div>
+                          <div className="merchandising-course-card--course-title--2Ob4m" data-purpose="course-card-title">{course.courseName}</div>
                           <span className="course-badge--course-badge--1AN7r">
                             <span data-purpose="badge" className="on-course-card badge badge-accented yellow">
                               <span className="badge-text">Bestseller</span>

@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { signOutStart } from '../../redux/user/user.actions'
  
 const SignOut = ({ signOutStart }) => (
-  <button type="button" onClick={signOutStart}>
-    Sign Out
-  </button>
+  <a onClick={signOutStart} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+    <span className="udlite-block-list-item-content">Sign Out</span>
+  </a>
 );
 
 const mapDispatchToProps = (dispatch) => ({
