@@ -27,8 +27,6 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
     let isMounted = true;
     window.addEventListener('scroll', fixSideBar);
 
-    console.log(sideBarFixed)
-
     return () => {
       isMounted = false;
 
@@ -36,7 +34,6 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
     };
 
     function fixSideBar() {
-      console.log(window.scrollY, sideBarFixed)
       if(window.scrollY >= 360) {
         setSideBarFixed(true);
       }
@@ -57,8 +54,6 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
     history.push(ROUTES.STUDENT);
     event.preventDefault();
   }
-
-  console.log('is sidebar fixed', sideBarFixed)
 
   return !isObjectEmpty(courseDetails) && (
     <div className="paid-course-landing-page__container component-margin">
@@ -130,6 +125,24 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                   <div className="slider-menu__lead">
                     <div className="slider-menu__title" data-purpose="title">English for Beginners: Intensive Spoken English Course</div>
                   </div>
+                  <div className="slider-menu__price-text-container">
+                    <div>
+                      <div className="price-text--container--Ws-fP slider-menu__price-text udlite-clp-price-text" data-purpose="price-text-container">
+                        <div className="price-text--price-part--Tu6MH udlite-clp-discount-price udlite-heading-lg" data-purpose="course-price-text">
+                          <span>
+                            <span>₺27.99</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="slider-menu__buy-button">
+                    <div>
+                      <button type="button" data-purpose="buy-this-course-button" className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4">
+                        <span>Add to Cart</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -138,7 +151,35 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
       </div>
       <div className="top-container dark-background">
         <div className="dark-background-inner-position-container">
-          <div className=" dark-background-inner-text-container">
+          <div className="dark-background-inner-text-container">
+
+
+
+            <div className="course-landing-page__introduction-asset__main">
+              <div className="clp-component-render">
+                <div className="clp-component-render">
+                  <div className="ud-component--course-landing-page-udlite--introduction-asset">
+                    <div className="intro-asset--wrapper--zDTjg">
+                      <div className="intro-asset--asset--1eSsi" data-purpose="introduction-asset">
+                        <button type="button" className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md udlite-custom-focus-visible intro-asset--placeholder--16yPA" aria-label="Play course preview">
+                          <span className="intro-asset--img-aspect--1UbeZ">
+                            <img src="https://img-a.udemycdn.com/course/240x135/1526882_ea81_43.jpg?Blh_hd-OCzQ-5VAZrNu-On0hBfAeGkXqAkRn3uAFOQFPQG4IH1g4cTp1bl1kaoQPp_mMWIs8-MMNu-k2C6eUhy9MGNumZ7fU4r20QSmMjmIRcdJQgZIqWj5zEhA3i9wFCQ" srcSet="https://img-a.udemycdn.com/course/240x135/1526882_ea81_43.jpg?Blh_hd-OCzQ-5VAZrNu-On0hBfAeGkXqAkRn3uAFOQFPQG4IH1g4cTp1bl1kaoQPp_mMWIs8-MMNu-k2C6eUhy9MGNumZ7fU4r20QSmMjmIRcdJQgZIqWj5zEhA3i9wFCQ 1x, https://img-a.udemycdn.com/course/480x270/1526882_ea81_43.jpg?0JFWJQXz-bAdqqSpJtLLG20V12NxyXZ_WEBaCZZq4VcKbDFnef5K1AHoEpBTw-N8pYhefRKEq0dX05OMt5COUOIpP9k-xlNvhI9cx8f51EnzePmnKWde_zDvlVGP7LA-ww 2x" alt="" width="240" height="135" />
+                          </span>
+                          <span className="intro-asset--overlay--3Z3co intro-asset--gradient--Od7zs">
+                          </span>
+                          <span className="udlite-play-overlay">
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+
             <div className="course-landing-page__main-content"></div>
             <div className="course-landing-page__main-content">
               <div className="clp-component-render">
@@ -157,7 +198,7 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                         <div className="ud-component--course-landing-page-udlite--instructor-links">
                           <div className="instructor-links--instructor-links--3d8_F" data-purpose="instructor-name-top">
                             <span className="instructor-links--names--7UPZj">
-                              <span className="udlite-text-sm">Created by</span>
+                              <span className="udlite-text-sm">Created by &nbsp;</span>
                               <a className="udlite-btn udlite-btn-large udlite-btn-link udlite-heading-md udlite-text-sm udlite-instructor-links" data-position="1" href="#instructor-1">
                                 <span>Logus Online</span>
                               </a>
