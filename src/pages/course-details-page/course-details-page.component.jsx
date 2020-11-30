@@ -138,7 +138,7 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                   </div>
                   <div className="slider-menu__buy-button">
                     <div>
-                      <button type="button" data-purpose="buy-this-course-button" className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4">
+                      <button type="button" className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4" onClick={handleClick}>
                         <span>Add to Cart</span>
                       </button>
                     </div>
