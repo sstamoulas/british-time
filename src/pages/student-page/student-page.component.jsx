@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -10,6 +10,12 @@ import { createStudentDetailsStart, updateStudentDetailsStart } from './../../re
 
 import { studentDetails } from './../../redux/student/student.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
+
+import './student-page.styles.scss';
+
+// need to add hasImage flag
+// Also if a course is activated for a user 
+// it shoulld not show in the search results to activate a new course.
 
 const StudentPage = ({ 
     currentUser, 
@@ -36,6 +42,10 @@ const StudentPage = ({
 
     event.preventDefault();
   }
+
+  const onClick = event => {
+    document.querySelector(".img-upload").click();
+  }
  
   const onChange = event => {
     const { name, value } = event.target;
@@ -43,8 +53,6 @@ const StudentPage = ({
   };
 
   const onUpload = (event) => {
-    console.dir(event.target.files[0]);
-
     const data = new FormData();
     data.append('file', event.target.files[0]);
     data.append('upload_preset', 'wapzyikz');
@@ -64,17 +72,32 @@ const StudentPage = ({
 
   return (
     <div>
-      <h1>Greetings {currentUser.userName}</h1>
-      <p>The Student Page is accessible by only the Student in Question.</p>
-      <form onSubmit={onSubmit}>
-        <input 
-          type='file' 
-          name='image' 
-          onChange={onUpload} 
-        />
-        <Image cloudName="everest-logix" publicId={`british-time/${currentUser.id}`} width="300" height="300" crop="scale" />
+      <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
+        <div className='d-flex justify-center mb'>
+        {     
+          true ?
+            <span className='person' onClick={onClick}></span>
+          :
+            <Image 
+              className='p-default'
+              cloudName="everest-logix" 
+              publicId={`british-time/${currentUser.id}`} 
+              width="300" 
+              height="300" 
+              crop="scale" 
+              onClick={onClick}
+            />
+        }
+          <input 
+            type='file' 
+            name='image' 
+            className='img-upload hide'
+            onChange={onUpload} 
+          />
+        </div>
         <textarea 
           name='bio' 
+          className='m-default mx-7 p-2'
           rows='11' 
           cols='50' 
           defaultValue={bio}
@@ -82,7 +105,11 @@ const StudentPage = ({
           placeholder='Add Your Bio...'
         >
         </textarea>
-        <button disabled={isInvalid} type="submit">
+        <button 
+          disabled={isInvalid} 
+          type="submit"
+          className='m-default mx-7 p-2'
+        >
           Submit Details
         </button>
 
