@@ -73,7 +73,7 @@ const StudentPage = ({
   return (
     <div>
       <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
-        <div className='d-flex justify-center mb'>
+        <div className='d-flex justify-center my'>
         {     
           true ?
             <span className='person' onClick={onClick}></span>

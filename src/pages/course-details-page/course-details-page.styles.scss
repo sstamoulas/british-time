@@ -659,8 +659,10 @@ p, h1, h2, h3, h4, h5, h6, ul, ol {
   max-width: 60rem;
 }
 
-li+li {
-  margin-top: .4rem;
+.paid-course-landing-page__container {
+  li+li {
+    margin-top: .4rem;
+  }
 }
 
 ul, ol {

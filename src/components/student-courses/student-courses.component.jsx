@@ -16,14 +16,14 @@ const StudentCourses = ({ currentUser, studentCourses }) => (
       Object.keys(studentCourses).length ?
         Object.entries(studentCourses).map(([index, studentCourse]) => (
           <div key={studentCourse.id} role="presentation" tabIndex="-1" className="card card--learning" data-purpose="enrolled-course-card">
-            <a href="/course-dashboard-redirect/?course_id=519442" className="card--learning__image" tabIndex="-1">
+            <Link to={`/student/course/${studentCourse.id}`} className="card--learning__image" tabIndex="-1">
               <div className="card__image play-button-trigger">
                 <img className="course-image" alt="The Complete Ruby on Rails Developer Course" width="240" height="135" src="https://img-a.udemycdn.com/course/240x135/519442_63fe_2.jpg?TDnbuuMj5fWR7YpsiBKzn6JUpIO3nCDfIcd6FDcghxdhMwz2VK6ygl0CuzsNgkE-3JXcRMiGVV4EXv-EMf26ZpsWpQPOgGHd-olcl-ZAHEn_7ro8f07XtLYLndYord4" srcSet="https://img-a.udemycdn.com/course/240x135/519442_63fe_2.jpg?TDnbuuMj5fWR7YpsiBKzn6JUpIO3nCDfIcd6FDcghxdhMwz2VK6ygl0CuzsNgkE-3JXcRMiGVV4EXv-EMf26ZpsWpQPOgGHd-olcl-ZAHEn_7ro8f07XtLYLndYord4 1x" />
                 <div className="play-button">
                 </div>
               </div>
-            </a>
-            <Link className='card--learning__details' to={`student/course/${studentCourse.id}`}>
+            </Link>
+            <Link className='card--learning__details' to={`/student/course/${studentCourse.id}`}>
               <div className="card__details">
                 <strong className="details__name">{studentCourse.courseName}</strong>
                 <div className="details__instructor">Rob Percival<span>, Web Developer And Teacher</span></div>
