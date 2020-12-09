@@ -49,22 +49,28 @@ const StudentCoursePage = ({ history, courseDetails, fetchStudentCourseStart }) 
       const header = document.querySelector('.header');
       const footer = document.querySelector('.udlite-footer');
 
+      console.log(window.innerHeight, window.innerHeight - 57, sideBarHeight, footer.offsetTop)
+
       // if the footer is visible then the bottom of the sidebar should not 
       // overlap the top of the footer
       if(window.innerHeight + window.scrollY >= footer.offsetTop) {
-        setSideBarHeight(window.innerHeight + window.scrollY - footer.offsetTop);
+        setSideBarHeight(footer.offsetTop - window.scrollY);
       }
-      // if the footer and the header are not visible then the sidebar should extend
-      // to the top and bottom of the page
-      else if(window.scrollY >= header.getBoundingClientRect().height) {
+      // if the footer is not visible then the sidebar should extend
+      // to the bottom of the page
+      else {
         setSideBarHeight(0);
+      }
+
+      // if the header is not visible then the sidebar should extend
+      // to the top of the page
+      if(window.scrollY >= header.getBoundingClientRect().height) {
         setSideBarTop(0);
       }
       // otherwise the top of the sidebar should not overlap the bottom of the 
-      // header and always stay at the top of the page if the header is not visibile
+      // header
       else {
         setSideBarTop(header.getBoundingClientRect().height - window.scrollY);
-        setSideBarHeight(header.getBoundingClientRect().height - window.scrollY);
       }
     }
 
@@ -73,7 +79,7 @@ const StudentCoursePage = ({ history, courseDetails, fetchStudentCourseStart }) 
       
       if(courseContentHeight) {
         courseContentHeight.removeAttribute("style");
-        courseContentHeight.style.height = `${window.innerHeight - 57 - sideBarHeight}px`;
+        courseContentHeight.style.height = `${sideBarHeight - 57}px`;
       }
 
       if(window.innerWidth < 992) {
@@ -83,7 +89,7 @@ const StudentCoursePage = ({ history, courseDetails, fetchStudentCourseStart }) 
         setIsSidebarVisible(true);
       }
     }
-  }, [sideBarTop, sideBarHeight, isSidebarVisible]);
+  }, [sideBarTop, sideBarHeight, isSidebarVisible, activeTab]);
 
   useEffect(() => {
     lessonAccordion = document.querySelectorAll('.section--section-heading--2k6aW');
@@ -122,7 +128,7 @@ const StudentCoursePage = ({ history, courseDetails, fetchStudentCourseStart }) 
   const handleClick = (event) => {
     setActiveTab(event.target.textContent)
   }
-  
+
   return !isObjectEmpty(courseDetails) && (
     <div className={`app--column-container--3AItG ${!isSidebarVisible ? 'app--no-sidebar--1naXE' : ''}`}>
       <div className="app--content-column--HC_i1">

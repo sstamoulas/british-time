@@ -54,8 +54,6 @@ const Carousel = ({ type, courses }) => {
     carouselList.style.left = `${moveTo}px`;
   }
 
-  console.log(Array.from({length: 5 - courses.length}))
-
   return (
     <div className="carousel-width">
       <div className="carousel js-carousel">
@@ -131,7 +129,7 @@ const Carousel = ({ type, courses }) => {
             ))
           }
           {
-            courses.length < 5 && Array.from({length: 5 - courses.length}).map((index, course) => (
+            courses.length < 5 && Array.from({length: 5 - courses.length}).map((course, index) => (
               <div key={index} data-index="0" className={`carousel__item slick-slide slick-active slick-current js-carousel-item-${type}`} tabIndex="-1" aria-hidden="false" style={{outline: 'none', width: '231px'}}>
                 <div>
                   <div data-courseid="637930" className="course-discovery-unit--card-margin--2TVw4 merchandising-course-card--card--2UfMa">
@@ -141,7 +139,7 @@ const Carousel = ({ type, courses }) => {
                       </div>
                       <div className="merchandising-course-card--card-body--3OpAH">
                         <div>
-                          <div className="merchandising-course-card--course-title--2Ob4m" data-purpose="course-card-title">{course.courseName}</div>
+                          <div className="merchandising-course-card--course-title--2Ob4m" data-purpose="course-card-title">UNKNOWN</div>
                           <span className="course-badge--course-badge--1AN7r">
                             <span data-purpose="badge" className="on-course-card badge badge-accented yellow">
                               <span className="badge-text">Bestseller</span>
