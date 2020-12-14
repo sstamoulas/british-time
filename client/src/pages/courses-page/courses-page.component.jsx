@@ -34,14 +34,7 @@ const CoursesPage = ({ courses, fetchCoursesStart }) => {
 
   return (
     <div>
-      <p>The Courses Page is accessible by any Student.</p>
-      <select onChange={onSelectChange}>
-        <option value='All'>All</option>
-        {
-          courses.map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
-        }
-      </select>
-      <Courses filterValue={filterValue} />
+      <Courses />
     </div>
   )
 };

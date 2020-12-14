@@ -244,6 +244,9 @@ const StudentNavigation = () => (
 const NavigationNonAuth = () => (
   <div className='nav-sub-container'>
     <div className='header-gap'>
+      <Link to={ROUTES.COURSES} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link"><span className="udlite-block-list-item-content">Courses</span></Link>
+    </div>
+    <div className='header-gap'>
       <Link to={ROUTES.SIGN_IN} className='nav-btn btn-medium nav-btn-secondary heading-sm'><span>Sign In</span></Link>
     </div>
     <div className='header-gap'>

@@ -55,10 +55,10 @@ const InstructorPage = ({
 
     const data = new FormData();
     data.append('file', event.target.files[0]);
-    data.append('upload_preset', 'wapzyikz');
+    // data.append('upload_preset', 'wapzyikz');
     data.append('public_id', currentUser.id);
 
-    fetch('https://api.cloudinary.com/v1_1/everest-logix/image/upload', {
+    fetch('http://localhost:3000/image-upload', {
       method: 'POST',
       body: data
     })

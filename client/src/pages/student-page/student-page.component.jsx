@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -17,6 +17,13 @@ import './student-page.styles.scss';
 // Also if a course is activated for a user 
 // it shoulld not show in the search results to activate a new course.
 
+
+const INITIAL_STATE = {
+  bio: '',
+  hasImage: false,
+  imageLoading: false,
+}
+
 const StudentPage = ({ 
     currentUser, 
     studentDetails, 
@@ -24,17 +31,26 @@ const StudentPage = ({
     updateStudentDetailsStart, 
     error 
   }) => {
-  const [state, setState] = useState({ ...studentDetails });
-  const { bio } = state;
-  const isInvalid = bio === '';
+  const [state, setState] = useState({ ...INITIAL_STATE, ...studentDetails });
+  const { bio, hasImage, imageLoading } = state;
+  const isInvalid = bio === '' && !hasImage;
 
   const isObjectEmpty = (obj) => {
     return Object.keys(obj).length === 0 && obj.constructor === Object
   }
 
+  useEffect(() => {
+    setState(prevState => ({ 
+      ...prevState, 
+      bio: studentDetails.bio, 
+      hasImage: studentDetails.hasImage 
+    }));
+  }, [studentDetails])
+
   const onSubmit = event => {
     if(isObjectEmpty(studentDetails)) {
-      createStudentDetailsStart({ bio });
+      setState(prevState => ({ ...prevState, hasImage: true }));
+      createStudentDetailsStart({ bio, hasImage });
     }
     else {
       updateStudentDetailsStart({ bio });
@@ -55,14 +71,16 @@ const StudentPage = ({
   const onUpload = (event) => {
     const data = new FormData();
     data.append('file', event.target.files[0]);
-    data.append('upload_preset', 'wapzyikz');
     data.append('public_id', currentUser.id);
 
-    fetch('https://api.cloudinary.com/v1_1/everest-logix/image/upload', {
+    setState(prevState => ({ ...prevState, imageLoading: true }));
+
+    fetch('http://localhost:3000/image-upload', {
       method: 'POST',
-      body: data
+      body: data,
     })
     .then((response) => {
+      setState(prevState => ({ ...prevState, imageLoading: false }));
       console.log(response.json());
     })  
     .catch((error) => {
@@ -75,18 +93,21 @@ const StudentPage = ({
       <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
         <div className='d-flex justify-center my'>
         {     
-          true ?
-            <span className='person' onClick={onClick}></span>
+          imageLoading ? 
+            <span>Loading</span>
           :
-            <Image 
-              className='p-default'
-              cloudName="everest-logix" 
-              publicId={`british-time/${currentUser.id}`} 
-              width="300" 
-              height="300" 
-              crop="scale" 
-              onClick={onClick}
-            />
+            hasImage ?
+              <Image 
+                className='p-default'
+                cloudName="everest-logix" 
+                publicId={currentUser.id} 
+                width="300" 
+                height="300" 
+                crop="scale" 
+                onClick={onClick}
+              />
+            :
+              <span className='person' onClick={onClick}></span>
         }
           <input 
             type='file' 
