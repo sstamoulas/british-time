@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
+import { Image } from 'cloudinary-react';
+
+import CourseImage from './../../components/course-image/course-image.component';
 
 import { updateCourseStart, fetchCourseByIdStart } from '../../redux/course/course.actions';
-import { selectCoursesForManaging, selectCurrentCourse } from '../../redux/course/course.selectors';
+import { selectCurrentCourse } from '../../redux/course/course.selectors';
 import * as ROUTES from './../../constants/routes';
 
-const CourseUpdatePage = ({ history, courses, currentCourse, fetchCourseByIdStart, updateCourseStart }) => {
+const isObjectEmpty = (obj) => {
+  return Object.keys(obj).length === 0 && obj.constructor === Object
+}
+
+const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, updateCourseStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...currentCourse });
   const { courseName } = state;
@@ -23,8 +30,56 @@ const CourseUpdatePage = ({ history, courses, currentCourse, fetchCourseByIdStar
     event.preventDefault();
   }
 
-  const isObjectEmpty = (obj) => {
-    return Object.keys(obj).length === 0 && obj.constructor === Object
+  const onUploadCallback = () => {
+    updateCourseStart({...state, hasImage: true });
+  }
+
+  const onFileUpload = (event) => {
+    const data = new FormData();
+    data.append('file', event.target.files[0]);
+
+    fetch('http://localhost:3000/file-upload', {
+      method: 'POST',
+      body: data,
+    })
+    .then((response) => {
+      // setState(prevState => ({ ...prevState, imageLoading: false }));
+      console.log(response.json());
+      // onUploadCallback();
+    })  
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  const onFileDownload = (event) => {
+    const fileName = '2014_YDS_ILKBAHAR_INGILIZCE.pdf';
+    const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx'
+
+    fetch(`http://localhost:3000/file-download?fileName=${fileName}&fileId=${fileId}`, {
+      method: 'GET',
+    })
+    .then((response) => {
+      window.open(response.url)
+    })  
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  const onFileDelete = (event) => {
+    const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx';
+
+    fetch(`http://localhost:3000/file-delete/${fileId}`, {
+      method: 'DELETE',
+    })
+    .then((response) => {
+      // setState(prevState => ({ ...prevState, imageLoading: false }));
+      // onUploadCallback();
+    })  
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   useEffect(() => {
@@ -33,10 +88,18 @@ const CourseUpdatePage = ({ history, courses, currentCourse, fetchCourseByIdStar
     }
   }, [courseId, currentCourse, fetchCourseByIdStart]);
 
-  return (
+  return !isObjectEmpty(currentCourse) && (
     <div>
       <h1>Edit Course Titled '{courseName}' Page</h1>
       <form onSubmit={handleSubmit}>
+        <CourseImage courseId={currentCourse.hasImage ? courseId : courseName} onUploadCallback={onUploadCallback} />
+        <input
+          type='file' 
+          name='image' 
+          onChange={onFileUpload} 
+        />
+        <a onClick={onFileDownload}>Click to download a file</a>
+        <a onClick={onFileDelete}>Click to delete a file</a>
         <input type='text' name='courseName' value={courseName} onChange={handleChange} />
         <input type="submit" value="Update Course" />
       </form>
@@ -45,7 +108,6 @@ const CourseUpdatePage = ({ history, courses, currentCourse, fetchCourseByIdStar
 };
 
 const mapStateToProps = createStructuredSelector({
-  courses: selectCoursesForManaging,
   currentCourse: selectCurrentCourse,
 });
 

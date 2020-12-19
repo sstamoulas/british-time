@@ -13,8 +13,6 @@ import {
   updateStudentDetailsFailure,
 } from './student.actions';
 
-import { fetchCoursesAsync } from './../course/course.sagas';
-
 import { 
   fetchCurrentStudent, 
   createStudentDetailsDocument, 
@@ -62,10 +60,10 @@ export function* isStudent({ type }) {
     try {
       yield put(actionStart(type));
       const studentDetails = yield fetchCurrentStudent(id);
-      yield fetchCoursesAsync({ type });
 
       if (!studentDetails)
         return yield put(fetchStudentDetailsSuccess(null));
+
       yield put(fetchStudentDetailsSuccess(studentDetails));
     } catch(error) {
       yield put(fetchStudentDetailsFailure(error));

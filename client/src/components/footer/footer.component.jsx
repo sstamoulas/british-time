@@ -1,10 +1,9 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import * as ROUTES from './../../constants/routes';
-import * as ROLES from './../../constants/roles';
 
 import { currentUser } from './../../redux/user/user.selectors';
 

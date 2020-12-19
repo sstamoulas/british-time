@@ -6,6 +6,7 @@ import { Image } from 'cloudinary-react';
 
 import CreateInstructorCourse from './../../components/create-instructor-course/create-instructor-course.component';
 import InstructorCourses from './../../components/instructor-courses/instructor-courses.component';
+import ProfileImage from './../../components/profile-image/profile-image.component';
 
 import { createInstructorDetailsStart, updateInstructorDetailsStart } from './../../redux/instructor/instructor.actions';
 
@@ -50,45 +51,30 @@ const InstructorPage = ({
     setState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const onUpload = (event) => {
-    console.dir(event.target.files[0]);
-
-    const data = new FormData();
-    data.append('file', event.target.files[0]);
-    // data.append('upload_preset', 'wapzyikz');
-    data.append('public_id', currentUser.id);
-
-    fetch('http://localhost:3000/image-upload', {
-      method: 'POST',
-      body: data
-    })
-    .then((response) => {
-      console.log(response.json());
-    })  
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-
   const onSelectChange = (event) => {
     const { value } = event.target;
     const selectedIndex = availableCourses.map((course) => course.id).indexOf(value);
     setState(prevState => ({ ...prevState, selectedCourseToStart: availableCourses[selectedIndex] }));
   }
 
+  const onUploadCallback = () => {
+    if(isObjectEmpty(instructorDetails)) {
+      createInstructorDetailsStart({ hasImage: true });
+    }
+    else {
+      updateInstructorDetailsStart({ hasImage: true });
+    }
+  }
+
   return (
     <div>
       <h1>Greetings {currentUser.userName}</h1>
       <p>The Instructor Page is accessible by only the Instructor in Question.</p>
-      <form onSubmit={onSubmit}>
-        <input 
-          type='file' 
-          name='image' 
-          onChange={onUpload} 
-        />
-        <Image cloudName="everest-logix" publicId={`british-time/${currentUser.id}`} width="300" height="300" crop="scale" />
+      <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
+        <ProfileImage hasImage={instructorDetails.hasImage} onUploadCallback={onUploadCallback} />
         <textarea 
           name='bio' 
+          className='m-default mx-7 p-2'
           rows='11' 
           cols='50' 
           defaultValue={bio}
@@ -96,7 +82,11 @@ const InstructorPage = ({
           placeholder='Add Your Bio...'
         >
         </textarea>
-        <button disabled={isInvalid} type="submit">
+        <button 
+          disabled={isInvalid} 
+          type="submit" 
+          className='m-default mx-7 p-2'
+        >
           Submit Details
         </button>
 

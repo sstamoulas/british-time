@@ -282,13 +282,13 @@ export const updateCourseDocument = async (course) => {
 
   try {
     await docRef.update({
-      courseName: course.courseName,
+      ...course,
     });
   } catch(error) {
     console.log('error updating course', error.message);
   }
 
-  return docRef;
+  return course;
 }
 
 export const convertCoursesCollectionsSnapshotToMap = (collections) => {
