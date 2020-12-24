@@ -38,7 +38,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     const data = new FormData();
     data.append('file', event.target.files[0]);
 
-    fetch('http://localhost:3000/file-upload', {
+    fetch('https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/file-upload', {
       method: 'POST',
       body: data,
     })
@@ -50,7 +50,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   const onVideoUpload = async (event) => {
     const data = new FormData();
 
-    fetch('http://localhost:3000/video-upload', {
+    fetch('https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/video-upload', {
       method: 'POST',
     })
     .then((res) => res.json())
@@ -62,7 +62,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     const fileName = '2014_YDS_ILKBAHAR_INGILIZCE.pdf';
     const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx'
 
-    fetch(`http://localhost:3000/file-download?fileName=${fileName}&fileId=${fileId}`, {
+    fetch(`https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/file-download?fileName=${fileName}&fileId=${fileId}`, {
       method: 'GET',
     })
     .then((response) => {
@@ -76,7 +76,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   const onFileDelete = (event) => {
     const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx';
 
-    fetch(`http://localhost:3000/file-delete/${fileId}`, {
+    fetch(`https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/file-delete/${fileId}`, {
       method: 'DELETE',
     })
     .then((response) => {

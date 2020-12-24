@@ -22,7 +22,7 @@ const CourseImage = ({ hasImage, courseId, courseName, onUploadCallback }) => {
 
     setState(prevState => ({ ...prevState, imageLoading: true }));
 
-    fetch('http://localhost:3000/image-upload', {
+    fetch('https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/image-upload', {
       method: 'POST',
       body: data,
     })
