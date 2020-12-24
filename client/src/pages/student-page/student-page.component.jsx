@@ -20,7 +20,6 @@ import './student-page.styles.scss';
 
 const INITIAL_STATE = {
   bio: '',
-  hasImage: false,
   imageLoading: false,
 }
 

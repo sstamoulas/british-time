@@ -34,7 +34,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     updateCourseStart({...state, hasImage: true });
   }
 
-  const onFileUpload = (event) => {
+  const onFileUpload = async (event) => {
     const data = new FormData();
     data.append('file', event.target.files[0]);
 
@@ -42,14 +42,20 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
       method: 'POST',
       body: data,
     })
-    .then((response) => {
-      // setState(prevState => ({ ...prevState, imageLoading: false }));
-      console.log(response.json());
-      // onUploadCallback();
-    })  
-    .catch((error) => {
-      console.log(error);
-    });
+    .then((res) => res.json())
+    .then(({ fileId }) => console.log('result', fileId))
+    .catch((error) => console.log('error: ', error));
+  }
+
+  const onVideoUpload = async (event) => {
+    const data = new FormData();
+
+    fetch('http://localhost:3000/video-upload', {
+      method: 'POST',
+    })
+    .then((res) => res.json())
+    .then(({ fileId }) => console.log('result', fileId))
+    .catch((error) => console.log('error: ', error));
   }
 
   const onFileDownload = (event) => {
@@ -98,6 +104,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
           name='image' 
           onChange={onFileUpload} 
         />
+        <a onClick={onVideoUpload}>Click to upload a video</a>
         <a onClick={onFileDownload}>Click to download a file</a>
         <a onClick={onFileDelete}>Click to delete a file</a>
         <input type='text' name='courseName' value={courseName} onChange={handleChange} />

@@ -1,4 +1,7 @@
 {
+  "functions": {
+    "source": "functions"
+  },
   "hosting": {
     "public": "client/build",
     "ignore": [
@@ -14,6 +17,18 @@
       {
         "source": "/image-upload",
         "function": "image-upload"
+      },
+      {
+        "source": "/file-upload",
+        "function": "file-upload"
+      },
+      {
+        "source": "/file-delete/:fileId",
+        "function": "file-delete/:fileId"
+      },
+      {
+        "source": "/file-download",
+        "function": "file-download"
       },
       {
         "source": "/video-conference",

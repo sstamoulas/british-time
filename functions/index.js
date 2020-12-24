@@ -1,4 +1,4 @@
-//const functions = require('firebase-functions');
+const functions = require('firebase-functions');
 const express = require('express')
 const cors = require('cors')
 const multer = require('multer')
@@ -13,11 +13,20 @@ const bodyParser = require('body-parser');
 const fileUpload = multer()
 const app = express()
 
+app.use(cors());
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
+
 // If modifying these scopes, delete token.json.
 const SCOPES = [
   'https://www.googleapis.com/auth/drive', 
   'https://www.googleapis.com/auth/drive.readonly', 
-  'https://www.googleapis.com/auth/drive.metadata.readonly'
+  'https://www.googleapis.com/auth/drive.metadata.readonly',
+  'https://www.googleapis.com/auth/youtube',
+  'https://www.googleapis.com/auth/youtube.upload',
+  'https://www.googleapis.com/auth/youtube.readonly',
 ];
 
 // The file token.json stores the user's access and refresh tokens, and is
@@ -94,27 +103,16 @@ cloudinary.config({
   api_secret: 'ONhcxrrnvRFOM9M88W1OmOxCNko' 
 });
 
-app.use(cors());
-app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-})); 
-
-// let corsOptions = {
-//   origin: 'http://localhost:3001',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// }
-
-var storage = multer.diskStorage({
+let storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'images')
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname )
+    cb(null, Date.now() + '-' + file.originalname)
   }
 })
 
-var upload = multer({ storage: storage }).single('file')
+let upload = multer({ storage: storage }).single('file')
 
 app.post('/image-upload', (req, res) => {
   upload(req, res, function (err) {
@@ -131,8 +129,10 @@ app.post('/image-upload', (req, res) => {
   })
 })
 
-app.post('/file-upload', (req, res) => {
-  upload(req, res, function (err) {
+app.post('/file-upload', async (req, res) => {
+  req.setTimeout(0);
+
+  upload(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
       return res.status(500).json(err)
     } else if (err) {
@@ -151,8 +151,8 @@ app.post('/file-upload', (req, res) => {
     // Authenticating drive API
     const drive = google.drive({ version: 'v3', auth });
 
-    // Uploading Single image to drive
-    drive.files.create(
+    // Uploading Single file to drive
+    await drive.files.create(
       {
         resource: fileMetadata,
         media: media,
@@ -162,20 +162,21 @@ app.post('/file-upload', (req, res) => {
           // Handle error
           console.error(err.msg);
 
-          return res
+          return await res
             .status(400)
             .json({ errors: [{ msg: 'Server Error try again later' }] });
         } else {
           fs.unlinkSync(req.file.path)
           // if file upload success then return the unique google drive id
           // this must be saved to firebase under the course or lesson id
-          res.status(200).json({
-            fileID: file.data.id,
+          await res.status(200).json({
+            fileId: file.data.id,
+            fileName: req.file.originalname,
           });
         }
       }
     );
-  })
+  });
 });
 
 // Route for downloading an image/file
@@ -218,8 +219,6 @@ app.get('/file-download', (req, res) => {
     async (err, driveResponse) => {
       driveResponse.data
       .on('end', () => {
-        console.log('Done');
-        //const file = './test-file.jpg'; // file path from where node.js will send file to the requested user
         res.download(`${__dirname}/${fileName}`); // Set disposition and send it.
       })
       .on('error', err => {
@@ -238,6 +237,87 @@ app.get('/file-download', (req, res) => {
   );
 });
 
+app.post('/video-upload', (req, res) => {
+  req.setTimeout(0);
+  const youtube = google.youtube({version: 'v3', auth});
+
+  // youtube.channels.list({
+  //   auth: auth,
+  //   part: 'snippet,contentDetails,statistics',
+  //   id: 'UCJOno6HR7QiNfgR8C_lfeFg'
+  // }, function(err, response) {
+  //   if (err) {
+  //     console.log('The API returned an error: ' + err);
+  //     return;
+  //   }
+  //   var channels = response.data.items;
+  //   if (channels.length == 0) {
+  //     console.log('No channel found.');
+  //   } else {
+  //     console.log(channels)
+  //     // console.log('This channel\'s ID is %s. Its title is \'%s\', and ' +
+  //     //             'it has %s views.',
+  //     //             channels[0].id,
+  //     //             channels[0].snippet.title,
+  //     //             channels[0].statistics.viewCount);
+  //   }
+  // });
+
+  // youtube.channels.list(
+  // {
+  //   "part": [
+  //     "snippet,contentDetails,statistics"
+  //   ],
+  //   "id": [
+  //     "UCJOno6HR7QiNfgR8C_lfeFg"
+  //   ]
+  // },
+  youtube.videos.insert(
+    {
+      auth: auth,
+      part: 'snippet, status',
+      resource: {
+        // Video title and description
+        snippet: {
+          title: 'My title',
+          description: 'My description'
+        },
+        // I set to private for tests
+        status: {
+          privacyStatus: 'unlisted'
+        }
+      },
+
+      // Create the readable stream to upload the video
+      media: {
+        body: fs.createReadStream('./images/test.webm') // Change here to your real video
+      }
+    },
+    async (err, file) => {
+      if (err) {
+        // Handle error
+        console.log(err)
+
+        return await res
+          .status(400)
+          .json({ errors: [{ msg: 'Server Error try again later' }] });
+      } else {
+        //fs.unlinkSync(req.file.path)
+        // if file upload success then return the unique google drive id
+        // this must be saved to firebase under the course or lesson id
+
+        console.log('channel details:', file);
+
+        console.log('https://www.youtube.com/watch?v=' + file.data.id);
+        await res.status(200).json({
+          fileId: file.data.id,
+          fileName: '',
+        });
+      }
+    }
+  );
+});
+
 app.get('/video-conference', (req, res) => {
   res.send("Hello from the video-conference")
 })
@@ -246,4 +326,4 @@ app.listen(3000, () => {
   console.log(`Example app listening at http://localhost:${3000}`)
 })
 
-//exports.api = functions.https.onRequest(app)
+exports.api = functions.https.onRequest(app)
