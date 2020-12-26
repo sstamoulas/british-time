@@ -74,9 +74,9 @@ const Footer = ({ currentUser }) => {
               </a>
             </li>
             <li>
-              <a className="link udlite-text-sm">
-              Privacy policy and cookie policy
-              </a>
+              <Link to={ROUTES.PRIVACY_POLICY} className="link udlite-text-sm">
+              Privacy policy
+              </Link>
             </li>
             <li>
               <a className="link udlite-text-sm">

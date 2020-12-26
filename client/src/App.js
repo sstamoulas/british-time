@@ -21,6 +21,7 @@ import LessonUpdatePage from './pages/lesson-update-page/lesson-update-page.comp
 import CourseDetailsPage from './pages/course-details-page/course-details-page.component';
 import StudentCoursePage from './pages/student-course-page/student-course-page.component';
 import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.component';
+import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
 
 import Navigation from './components/navigation/navigation.component';
 import Footer from './components/footer/footer.component';
@@ -57,6 +58,7 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
           <Route exact path={ROUTES.COURSES} component={CoursesPage} />
           <Route exact path={ROUTES.DETAILS_COURSE} component={CourseDetailsPage} />
+          <Route exact path={ROUTES.PRIVACY_POLICY} component={PrivacyPolicyPage} />
           <CustomRoute
             exact
             path={ROUTES.SIGN_IN}
