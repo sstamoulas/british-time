@@ -167,7 +167,7 @@ app.post('/image-upload', async (req, res) => {
 })
 
 app.post('/file-upload', async (req, res) => {
-  //req.setTimeout(0);
+  req.setTimeout(0);
   const busboy = new Busboy({ headers: req.headers });
   const tmpdir = os.tmpdir();
   const fileWrites = [];
@@ -182,11 +182,12 @@ app.post('/file-upload', async (req, res) => {
   });
 
   // This code will process each file uploaded.
-  busboy.on('file', async (file, filename, mimetype) => {
+  busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
     // Note: os.tmpdir() points to an in-memory file system on GCF
     // Thus, any files in it must fit in the instance's memory.
     fileName = filename;
     mimeType = mimetype;
+
     filePath = path.join(tmpdir, filename);
 
     const writeStream = fs.createWriteStream(filePath);
@@ -242,7 +243,6 @@ app.post('/file-upload', async (req, res) => {
             await res.status(200).json({
               fileId: file.data.id,
               fileName: fileName,
-              glCoud: `gcloudName: ${process.env.GCLOUD_PROJECT}`,
             });
           }
         }
