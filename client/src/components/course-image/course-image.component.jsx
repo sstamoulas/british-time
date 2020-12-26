@@ -7,9 +7,13 @@ const INITIAL_STATE = {
   imageLoading: false,
 }
 
-const CourseImage = ({ hasImage, courseId, courseName, onUploadCallback }) => {
+const CourseImage = ({ courseId, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
+  const baseURL = process.env.NODE_ENV === "production" ? 
+    'https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api' 
+  : 
+    'http://localhost:5001/react-firebase-authentic-5bd64/us-central1/api';
 
   const onClick = event => {
     document.querySelector(".img-upload").click();
@@ -22,13 +26,13 @@ const CourseImage = ({ hasImage, courseId, courseName, onUploadCallback }) => {
 
     setState(prevState => ({ ...prevState, imageLoading: true }));
 
-    fetch('https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/image-upload', {
+    fetch(`${baseURL}/image-upload`, {
       method: 'POST',
       body: data,
     })
     .then((response) => {
       setState(prevState => ({ ...prevState, imageLoading: false }));
-      console.log(response.json());
+      console.log('response: ', response.json());
       onUploadCallback();
     })  
     .catch((error) => {
@@ -47,7 +51,7 @@ const CourseImage = ({ hasImage, courseId, courseName, onUploadCallback }) => {
           <Image 
             className='p-default'
             cloudName="everest-logix" 
-            publicId={hasImage ? courseId : courseName} 
+            publicId={courseId} 
             width="300" 
             height="300" 
             crop="scale" 

@@ -18,6 +18,10 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   const { courseId } = useParams();
   const [state, setState] = useState({ ...currentCourse });
   const { courseName } = state;
+  const baseURL = process.env.NODE_ENV === "production" ? 
+    'https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api' 
+  : 
+    'http://localhost:5001/react-firebase-authentic-5bd64/us-central1/api';
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -38,7 +42,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     const data = new FormData();
     data.append('file', event.target.files[0]);
 
-    fetch('https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/file-upload', {
+    fetch(`${baseURL}/file-upload`, {
       method: 'POST',
       body: data,
     })
@@ -50,7 +54,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   const onVideoUpload = async (event) => {
     const data = new FormData();
 
-    fetch('https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/video-upload', {
+    fetch(`${baseURL}/video-upload`, {
       method: 'POST',
     })
     .then((res) => res.json())
@@ -62,7 +66,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     const fileName = '2014_YDS_ILKBAHAR_INGILIZCE.pdf';
     const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx'
 
-    fetch(`https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/file-download?fileName=${fileName}&fileId=${fileId}`, {
+    fetch(`${baseURL}/file-download?fileName=${fileName}&fileId=${fileId}`, {
       method: 'GET',
     })
     .then((response) => {
@@ -76,7 +80,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   const onFileDelete = (event) => {
     const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx';
 
-    fetch(`https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api/file-delete/${fileId}`, {
+    fetch(`${baseURL}/file-delete/${fileId}`, {
       method: 'DELETE',
     })
     .then((response) => {
@@ -86,6 +90,16 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     .catch((error) => {
       console.log(error);
     });
+  }
+
+  const getCloudName = (event) => {
+    fetch(`${baseURL}/video-conference`)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
   useEffect(() => {
@@ -107,6 +121,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
         <a onClick={onVideoUpload}>Click to upload a video</a>
         <a onClick={onFileDownload}>Click to download a file</a>
         <a onClick={onFileDelete}>Click to delete a file</a>
+        <a onClick={getCloudName}>Get Cloud Name</a>
         <input type='text' name='courseName' value={courseName} onChange={handleChange} />
         <input type="submit" value="Update Course" />
       </form>
