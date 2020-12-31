@@ -5,6 +5,7 @@ import { withRouter, useParams } from 'react-router-dom';
 import { Image } from 'cloudinary-react';
 
 import CourseImage from './../../components/course-image/course-image.component';
+import VideoChatContainer from './../../components/video-chat-container/video-chat-container.component';
 
 import { updateCourseStart, fetchCourseByIdStart } from '../../redux/course/course.actions';
 import { selectCurrentCourse } from '../../redux/course/course.selectors';
@@ -111,6 +112,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   return !isObjectEmpty(currentCourse) && (
     <div>
       <h1>Edit Course Titled '{courseName}' Page</h1>
+      <VideoChatContainer />
       <form onSubmit={handleSubmit}>
         <CourseImage courseId={currentCourse.hasImage ? courseId : courseName} onUploadCallback={onUploadCallback} />
         <input

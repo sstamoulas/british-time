@@ -40,8 +40,6 @@ const CourseImage = ({ courseId, onUploadCallback }) => {
     });
   }
 
-  console.log('courseId is ', courseId)
-
   return (
     <div className='d-flex justify-center my'>
       {     
