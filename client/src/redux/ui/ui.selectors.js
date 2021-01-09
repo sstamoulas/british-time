@@ -6,3 +6,8 @@ export const isLoading = createSelector(
   [selectUI],
   ui => !!ui.actions.length
 );
+
+export const isSubLoading = createSelector(
+  [selectUI],
+  ui => !!ui.subActions.length
+);

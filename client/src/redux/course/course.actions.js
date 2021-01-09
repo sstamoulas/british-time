@@ -7,7 +7,6 @@ export const createCourseStart = (courseDetails) => ({
 
 export const createCourseSuccess = (courses) => ({
   type: CourseActionTypes.CREATE_COURSE_SUCCESS,
-  payload: { courses },
 });
 
 export const createCourseFailure = (error) => ({
@@ -22,7 +21,6 @@ export const updateCourseStart = (courseDetails) => ({
 
 export const updateCourseSuccess = (courses) => ({
   type: CourseActionTypes.UPDATE_COURSE_SUCCESS,
-  payload: { courses },
 });
 
 export const updateCourseFailure = (error) => ({

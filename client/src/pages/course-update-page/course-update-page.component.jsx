@@ -5,7 +5,6 @@ import { withRouter, useParams } from 'react-router-dom';
 import { Image } from 'cloudinary-react';
 
 import CourseImage from './../../components/course-image/course-image.component';
-import VideoChatContainer from './../../components/video-chat-container/video-chat-container.component';
 
 import { updateCourseStart, fetchCourseByIdStart } from '../../redux/course/course.actions';
 import { selectCurrentCourse } from '../../redux/course/course.selectors';
@@ -15,10 +14,19 @@ const isObjectEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
+const INITIAL_STATE = {
+  hasImage: false,
+  courseName: '', 
+  headline: '',
+  requirements: [],
+  objectives: [],
+}
+
 const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, updateCourseStart }) => {
   const { courseId } = useParams();
-  const [state, setState] = useState({ ...currentCourse });
-  const { courseName } = state;
+  const [state, setState] = useState({ ...INITIAL_STATE, ...currentCourse });
+  const [objectiveText, setObjectiveText] = useState('');
+  const [requirementText, setRequirementText] = useState('');
   const baseURL = process.env.NODE_ENV === "production" ? 
     'https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api' 
   : 
@@ -26,7 +34,46 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    console.log(name, value)
     setState(prevState => ({ ...prevState, [name]: value }));
+  }
+
+  const handleObjectiveTextChange = (event) => {
+    setObjectiveText(event.target.value);
+  }
+
+  const handleRequirementTextChange = (event) => {
+    setRequirementText(event.target.value);
+  }
+
+  const handleObjectiveAdd = () => {
+    const { objectives } = state;
+    const newObjectives = objectives.concat({ text: objectiveText, id: objectives.length === 0 ? 0 : objectives[objectives.length - 1].id + 1 });
+ 
+    setObjectiveText('');
+    setState(prevState => ({ ...prevState, objectives: newObjectives }));
+  }
+
+  const handleObjectiveRemove = (id) => {
+    const { objectives } = state;
+    const newObjectives = objectives.filter((objective) => objective.id !== id);
+
+    setState(prevState => ({ ...prevState, objectives: newObjectives }));
+  }
+
+  const handleRequirementsAdd = () => {
+    const { requirements } = state;
+    const newRequirements = requirements.concat({ text: requirementText, id: requirements.length === 0 ? 0 : requirements[requirements.length - 1].id + 1 });
+ 
+    setRequirementText('');
+    setState(prevState => ({ ...prevState, requirements: newRequirements }));
+  }
+
+  const handleRequirementsRemove = (id) => {
+    const { requirements } = state;
+    const newRequirements = requirements.filter((objective) => objective.id !== id);
+ 
+    setState(prevState => ({ ...prevState, requirements: newRequirements }));
   }
 
   const handleSubmit = (event) => {
@@ -36,7 +83,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   }
 
   const onUploadCallback = () => {
-    updateCourseStart({...state, hasImage: true });
+    updateCourseStart({...state, id: courseId, hasImage: true });
   }
 
   const onFileUpload = async (event) => {
@@ -107,24 +154,61 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     if(isObjectEmpty(currentCourse)) {
       fetchCourseByIdStart(courseId);
     }
+    else {
+      setState(prevState => ({ ...prevState, ...currentCourse }));
+    }
   }, [courseId, currentCourse, fetchCourseByIdStart]);
 
   return !isObjectEmpty(currentCourse) && (
     <div>
-      <h1>Edit Course Titled '{courseName}' Page</h1>
-      <VideoChatContainer />
+      <h1>Edit Course Titled '{state.courseName}' Page</h1>
       <form onSubmit={handleSubmit}>
-        <CourseImage courseId={currentCourse.hasImage ? courseId : courseName} onUploadCallback={onUploadCallback} />
+        <CourseImage hasImage={state.hasImage} courseId={courseId} onUploadCallback={onUploadCallback} />
         <input
           type='file' 
-          name='image' 
+          name='file' 
           onChange={onFileUpload} 
         />
         <a onClick={onVideoUpload}>Click to upload a video</a>
         <a onClick={onFileDownload}>Click to download a file</a>
         <a onClick={onFileDelete}>Click to delete a file</a>
         <a onClick={getCloudName}>Get Cloud Name</a>
-        <input type='text' name='courseName' value={courseName} onChange={handleChange} />
+        <select name='level' onChange={handleChange}>
+          <option defaultValue hidden> 
+            Select a Level 
+          </option> 
+          <option value="0">Beginner</option>
+          <option value="1">Pre-Intermediate</option>
+          <option value="2">Intermediate</option>
+          <option value="3">Upper-Intermediate</option>
+          <option value="4">Advanced</option>
+        </select>
+        <ul>
+          {state.objectives.map((objective) => (
+            <li key={objective.id}>
+              <span>{objective.text}</span>
+              <input type='button' value='X' onClick={() => handleObjectiveRemove(objective.id)} />
+            </li>
+          ))}
+        </ul>
+        <input type="text" value={objectiveText} onChange={handleObjectiveTextChange} />
+        <button type="button" onClick={handleObjectiveAdd}>
+          Add Objective
+        </button>
+        <ul>
+          {state.requirements.map((requirement) => (
+            <li key={requirement.id}>
+              <span>{requirement.text}</span>
+              <input type='button' value='X' onClick={() => handleRequirementsRemove(requirement.id)} />
+            </li>
+          ))}
+        </ul>
+        <input type="text" value={requirementText} onChange={handleRequirementTextChange} />
+        <button type="button" onClick={handleRequirementsAdd}>
+          Add Requirement
+        </button>
+        <input type='text' name='headline' value={state.headline || ''} onChange={handleChange} />
+        <input type='text' name='courseName' value={state.courseName || ''} onChange={handleChange} />
         <input type="submit" value="Update Course" />
       </form>
     </div>

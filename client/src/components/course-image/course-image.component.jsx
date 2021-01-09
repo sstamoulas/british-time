@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   imageLoading: false,
 }
 
-const CourseImage = ({ courseId, onUploadCallback }) => {
+const CourseImage = ({ hasImage, courseId, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
@@ -46,15 +46,18 @@ const CourseImage = ({ courseId, onUploadCallback }) => {
         imageLoading ? 
           <span>Loading</span>
         :
-          <Image 
-            className='p-default'
-            cloudName="everest-logix" 
-            publicId={courseId} 
-            width="300" 
-            height="300" 
-            crop="scale" 
-            onClick={onClick}
-          />
+          hasImage ?
+            <Image 
+              className='p-default'
+              cloudName="everest-logix" 
+              publicId={courseId} 
+              width="300" 
+              height="300" 
+              crop="scale" 
+              onClick={onClick}
+            />
+          :
+            <span className='person' onClick={onClick}></span>
       }
       <input 
         type='file' 

@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 
 import * as ROLES from './../../constants/roles';
 import * as ROUTES from './../../constants/routes';
+
 import { updateUserStart } from '../../redux/system/system.actions';
 import { selectUsersForManaging, selectSystemError } from '../../redux/system/system.selectors';
 import { selectCoursesForManaging } from './../../redux/course/course.selectors';
@@ -21,7 +22,7 @@ const AdminPage = ({ users, error, courses, updateUserStart }) => {
       <div>
         <Link to={ROUTES.CREATE_COURSE}>Create A Course</Link>
         <ul>
-          {
+          { courses.length && 
             courses.map((course) => <li key={course.id}><Link to={`course/${course.id}`}>{course.courseName}</Link></li>)
           }
         </ul>

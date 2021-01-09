@@ -11,6 +11,8 @@ const courseReducer = (state = INITIAL_STATE, action) => {
     case CourseActionTypes.FETCH_COURSE_BY_ID_START:
     case CourseActionTypes.UPDATE_COURSE_START:
     case CourseActionTypes.CREATE_COURSE_START:
+    case CourseActionTypes.UPDATE_COURSE_SUCCESS:
+    case CourseActionTypes.CREATE_COURSE_SUCCESS:
       return {
         ...state,
         error: null,
@@ -22,11 +24,10 @@ const courseReducer = (state = INITIAL_STATE, action) => {
         error: null,
       };
     case CourseActionTypes.FETCH_COURSES_SUCCESS:
-    case CourseActionTypes.UPDATE_COURSE_SUCCESS:
-    case CourseActionTypes.CREATE_COURSE_SUCCESS:
       return {
         ...state,
         courses: action.payload,
+        currentCourse: {},
         error: null,
       };
     case CourseActionTypes.FETCH_COURSE_BY_ID_FAILURE:

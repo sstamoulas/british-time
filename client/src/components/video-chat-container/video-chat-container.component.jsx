@@ -1,7 +1,10 @@
 import React, { Fragment, useEffect } from 'react'
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
 import { firestore } from './../../firebase/firebase.utils'
 import * as mdc from 'material-components-web';
 
+import { currentUser } from './../../redux/user/user.selectors';
 
 const VideoChatContainer = ({ currentUser, roomToCall }) => {
   useEffect(() => {
@@ -19,7 +22,7 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
       iceCandidatePoolSize: 10,
     };
 
-    let peerConnection = null;
+    let peerConnection = {};
     let localStream = null;
     let remoteStream = null;
     let roomDialog = null;
@@ -41,18 +44,18 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
       const roomRef = await db.collection('rooms').doc();
 
       console.log('Create PeerConnection with configuration: ', configuration);
-      peerConnection = new RTCPeerConnection(configuration);
+      peerConnection[currentUser.id] = new RTCPeerConnection(configuration);
 
       registerPeerConnectionListeners();
 
       localStream.getTracks().forEach(track => {
-        peerConnection.addTrack(track, localStream);
+        peerConnection[currentUser.id].addTrack(track, localStream);
       });
 
       // Code for collecting ICE candidates below
       const callerCandidatesCollection = roomRef.collection('callerCandidates');
 
-      peerConnection.addEventListener('icecandidate', event => {
+      peerConnection[currentUser.id].addEventListener('icecandidate', event => {
         if (!event.candidate) {
           console.log('Got final candidate!');
           return;
@@ -63,8 +66,8 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
       // Code for collecting ICE candidates above
 
       // Code for creating a room below
-      const offer = await peerConnection.createOffer();
-      await peerConnection.setLocalDescription(offer);
+      const offer = await peerConnection[currentUser.id].createOffer();
+      await peerConnection[currentUser.id].setLocalDescription(offer);
       console.log('Created offer:', offer);
 
       const roomWithOffer = {
@@ -80,7 +83,7 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
           '#currentRoom').innerText = `Current room is ${roomRef.id} - You are the caller!`;
       // Code for creating a room above
 
-      peerConnection.addEventListener('track', event => {
+      peerConnection[currentUser.id].addEventListener('track', event => {
         console.log('Got remote track:', event.streams[0]);
         event.streams[0].getTracks().forEach(track => {
           console.log('Add a track to the remoteStream:', track);
@@ -91,10 +94,10 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
       // Listening for remote session description below
       roomRef.onSnapshot(async snapshot => {
         const data = snapshot.data();
-        if (!peerConnection.currentRemoteDescription && data && data.answer) {
+        if (!peerConnection[currentUser.id].currentRemoteDescription && data && data.answer) {
           console.log('Got remote description: ', data.answer);
           const rtcSessionDescription = new RTCSessionDescription(data.answer);
-          await peerConnection.setRemoteDescription(rtcSessionDescription);
+          await peerConnection[currentUser.id].setRemoteDescription(rtcSessionDescription);
         }
       });
       // Listening for remote session description above
@@ -105,7 +108,7 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
           if (change.type === 'added') {
             let data = change.doc.data();
             console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
-            await peerConnection.addIceCandidate(new RTCIceCandidate(data));
+            await peerConnection[currentUser.id].addIceCandidate(new RTCIceCandidate(data));
           }
         });
       });
@@ -135,16 +138,17 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
       console.log('Got room:', roomSnapshot.exists);
 
       if (roomSnapshot.exists) {
+        console.log(roomSnapshot.data())
         console.log('Create PeerConnection with configuration: ', configuration);
-        peerConnection = new RTCPeerConnection(configuration);
+        peerConnection[currentUser.id] = new RTCPeerConnection(configuration);
         registerPeerConnectionListeners();
         localStream.getTracks().forEach(track => {
-          peerConnection.addTrack(track, localStream);
+          peerConnection[currentUser.id].addTrack(track, localStream);
         });
 
         // Code for collecting ICE candidates below
         const calleeCandidatesCollection = roomRef.collection('calleeCandidates');
-        peerConnection.addEventListener('icecandidate', event => {
+        peerConnection[currentUser.id].addEventListener('icecandidate', event => {
           if (!event.candidate) {
             console.log('Got final candidate!');
             return;
@@ -154,7 +158,7 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
         });
         // Code for collecting ICE candidates above
 
-        peerConnection.addEventListener('track', event => {
+        peerConnection[currentUser.id].addEventListener('track', event => {
           console.log('Got remote track:', event.streams[0]);
           event.streams[0].getTracks().forEach(track => {
             console.log('Add a track to the remoteStream:', track);
@@ -165,10 +169,10 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
         // Code for creating SDP answer below
         const offer = roomSnapshot.data().offer;
         console.log('Got offer:', offer);
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await peerConnection.createAnswer();
+        await peerConnection[currentUser.id].setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection[currentUser.id].createAnswer();
         console.log('Created answer:', answer);
-        await peerConnection.setLocalDescription(answer);
+        await peerConnection[currentUser.id].setLocalDescription(answer);
 
         const roomWithAnswer = {
           answer: {
@@ -185,7 +189,7 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
             if (change.type === 'added') {
               let data = change.doc.data();
               console.log(`Got new remote ICE candidate: ${JSON.stringify(data)}`);
-              await peerConnection.addIceCandidate(new RTCIceCandidate(data));
+              await peerConnection[currentUser.id].addIceCandidate(new RTCIceCandidate(data));
             }
           });
         });
@@ -218,8 +222,8 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
         remoteStream.getTracks().forEach(track => track.stop());
       }
 
-      if (peerConnection) {
-        peerConnection.close();
+      if (peerConnection[currentUser.id]) {
+        peerConnection[currentUser.id].close();
       }
 
       document.querySelector('#localVideo').srcObject = null;
@@ -250,22 +254,22 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
     }
 
     function registerPeerConnectionListeners() {
-      peerConnection.addEventListener('icegatheringstatechange', () => {
+      peerConnection[currentUser.id].addEventListener('icegatheringstatechange', () => {
         console.log(
-            `ICE gathering state changed: ${peerConnection.iceGatheringState}`);
+            `ICE gathering state changed: ${peerConnection[currentUser.id].iceGatheringState}`);
       });
 
-      peerConnection.addEventListener('connectionstatechange', () => {
-        console.log(`Connection state change: ${peerConnection.connectionState}`);
+      peerConnection[currentUser.id].addEventListener('connectionstatechange', () => {
+        console.log(`Connection state change: ${peerConnection[currentUser.id].connectionState}`);
       });
 
-      peerConnection.addEventListener('signalingstatechange', () => {
-        console.log(`Signaling state change: ${peerConnection.signalingState}`);
+      peerConnection[currentUser.id].addEventListener('signalingstatechange', () => {
+        console.log(`Signaling state change: ${peerConnection[currentUser.id].signalingState}`);
       });
 
-      peerConnection.addEventListener('iceconnectionstatechange ', () => {
+      peerConnection[currentUser.id].addEventListener('iceconnectionstatechange ', () => {
         console.log(
-            `ICE connection state change: ${peerConnection.iceConnectionState}`);
+            `ICE connection state change: ${peerConnection[currentUser.id].iceConnectionState}`);
       });
     }
 
@@ -334,4 +338,8 @@ const VideoChatContainer = ({ currentUser, roomToCall }) => {
   )
 }
 
-export default VideoChatContainer;
+const mapStateToProps = createStructuredSelector({
+  currentUser: currentUser,
+});
+
+export default connect(mapStateToProps)(VideoChatContainer);
