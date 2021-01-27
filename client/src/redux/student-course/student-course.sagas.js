@@ -42,6 +42,8 @@ export function* fetchStudentCoursesAsync({ type }) {
 export function* fetchStudentCourseAsync({ type, payload: { courseId }}) {
   try {
     yield put(actionStart(type));
+
+    console.log('in saga', courseId)
     const studentCourseRef = yield call(getStudentCourseByCourseId, courseId);
 
     yield put(fetchStudentCourseSuccess({ ...studentCourseRef }));
@@ -52,12 +54,12 @@ export function* fetchStudentCourseAsync({ type, payload: { courseId }}) {
   }
 }
 
-export function* createStudentCourseAsync({type, payload: { courseDetails, courseId }}) {
+export function* createStudentCourseAsync({type, payload: { courseDetails }}) {
   const {user: { currentUser: { id }}} = yield select();
 
   try {
     yield put(actionStart(type));
-    yield call(createStudentCourseDetailsDocument, id, courseDetails, courseId);
+    yield call(createStudentCourseDetailsDocument, id, courseDetails);
     const studentCourseRef = yield call(getCoursesByStudentId, id);
 
     yield put(createStudentCourseSuccess({ ...studentCourseRef }));

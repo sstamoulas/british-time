@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
+import CourseImage from './../course-image/course-image.component';
+
 import { selectInstructorCoursesForManaging } from './../../redux/instructor-course/instructor-course.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
 
@@ -17,7 +19,7 @@ const InstructorCourses = ({ currentUser, instructorCourses }) => (
         <div key={instructorCourse.id} role="presentation" tabIndex="-1" className="card card--learning" data-purpose="enrolled-course-card">
           <Link to={`/instructor/course/${instructorCourse.id}`} className="card--learning__image" tabIndex="-1">
             <div className="card__image play-button-trigger">
-              <img className="course-image" alt="The Complete Ruby on Rails Developer Course" width="240" height="135" src="https://img-a.udemycdn.com/course/240x135/519442_63fe_2.jpg?TDnbuuMj5fWR7YpsiBKzn6JUpIO3nCDfIcd6FDcghxdhMwz2VK6ygl0CuzsNgkE-3JXcRMiGVV4EXv-EMf26ZpsWpQPOgGHd-olcl-ZAHEn_7ro8f07XtLYLndYord4" srcSet="https://img-a.udemycdn.com/course/240x135/519442_63fe_2.jpg?TDnbuuMj5fWR7YpsiBKzn6JUpIO3nCDfIcd6FDcghxdhMwz2VK6ygl0CuzsNgkE-3JXcRMiGVV4EXv-EMf26ZpsWpQPOgGHd-olcl-ZAHEn_7ro8f07XtLYLndYord4 1x" />
+              <CourseImage className="course-image" courseId={instructorCourse.courseName} alt={instructorCourse.courseName}  width="240" height="135" />
               <div className="play-button">
               </div>
             </div>

@@ -18,5 +18,7 @@ export const selectedCourseDetails = createSelector(
   instructorCourses => instructorCourses.courseDetails
 );
 
-
-Object.entries(instructorCourses)
+export const selectCourseInstructors = createSelector(
+  [selectInstructorCourses],
+  instructorCourses => instructorCourses.instructors
+);

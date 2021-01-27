@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, batch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
 
-import { fetchInstructorCourseDetailsByCourseIdStart } from './../../redux/instructor-course/instructor-course.actions';
+import ProfileImage from './../../components/profile-image/profile-image.component';
+import CourseImage from './../../components/course-image/course-image.component';
+
+import { fetchCourseByIdStart } from '../../redux/course/course.actions';
+import { fetchInstructorDetailsStart } from './../../redux/instructor/instructor.actions';
+import { fetchInstructorsByCourseIdStart } from './../../redux/instructor-course/instructor-course.actions';
 import { createStudentCourseStart } from './../../redux/student-course/student-course.actions';
 
-import { selectedCourseDetails } from './../../redux/instructor-course/instructor-course.selectors';
-import { currentUser } from './../../redux/user/user.selectors';
+import { selectCurrentCourse } from '../../redux/course/course.selectors';
+import { selectedCourseDetails, selectCourseInstructors } from './../../redux/instructor-course/instructor-course.selectors';
+import { instructorDetails } from './../../redux/instructor/instructor.selectors';
 
 import * as ROUTES from './../../constants/routes';
 
@@ -17,11 +23,19 @@ const isObjectEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
-const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructorCourseDetailsByCourseIdStart, createStudentCourseStart }) => {
+const CourseDetailsPage = ({ 
+  history, 
+  courseDetails, 
+  instructors, 
+  instructorDetails,
+  fetchCourseByIdStart, 
+  fetchInstructorDetailsStart,
+  fetchInstructorsByCourseIdStart, 
+  createStudentCourseStart 
+}) => {
   const { courseId } = useParams();
-  const [state, setState] = useState({ ...courseDetails });
   const [sideBarFixed, setSideBarFixed] = useState(false);
-  const { courseName } = state;
+  const [selectedInstructor, setSelectedInstructor] = useState({instructorCourseId: Object.keys(instructors)[0], ...instructors[Object.keys(instructors)[0]]});
 
   useEffect(() => {
     let isMounted = true;
@@ -45,12 +59,30 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
 
   useEffect(() => {
     if(isObjectEmpty(courseDetails)) {
-      fetchInstructorCourseDetailsByCourseIdStart(courseId);
+      batch(() => {
+        fetchCourseByIdStart(courseId);
+        fetchInstructorsByCourseIdStart(courseId);
+      });
     }
-  }, [courseId, courseDetails, fetchInstructorCourseDetailsByCourseIdStart])
+    else {
+      fetchInstructorDetailsStart(selectedInstructor.instructorId);
+    }
+  }, [
+    courseId, 
+    courseDetails, 
+    instructors, 
+    selectedInstructor, 
+    fetchCourseByIdStart, 
+    fetchInstructorDetailsStart, 
+    fetchInstructorsByCourseIdStart
+  ])
+
+  const handleChange = (event) => {
+    setSelectedInstructor(instructors[event.target.value])
+  }
 
   const handleClick = (event) => {
-    createStudentCourseStart(state, courseId);
+    createStudentCourseStart({ ...selectedInstructor });
     history.push(ROUTES.STUDENT);
     event.preventDefault();
   }
@@ -69,7 +101,7 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                         <div className="intro-asset--asset--1eSsi" data-purpose="introduction-asset">
                           <button type="button" className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md udlite-custom-focus-visible intro-asset--placeholder--16yPA" aria-label="Play course preview">
                             <span className="intro-asset--img-aspect--1UbeZ">
-                              <img src="https://img-a.udemycdn.com/course/240x135/1526882_ea81_43.jpg?C7lEtYPLnG-mvZ28edzO0MfgEx1kNA89jQ8eC5XoBNelZ8544ucFfuiT7yMf2_fJrcuDkeQ4Vqm-ntCEPfNeRFJi5fHoWx7EU-PcyLJCn5JIRl7foQGTTFdMnvrV0pPxtw" srcSet="https://img-a.udemycdn.com/course/240x135/1526882_ea81_43.jpg?C7lEtYPLnG-mvZ28edzO0MfgEx1kNA89jQ8eC5XoBNelZ8544ucFfuiT7yMf2_fJrcuDkeQ4Vqm-ntCEPfNeRFJi5fHoWx7EU-PcyLJCn5JIRl7foQGTTFdMnvrV0pPxtw 1x, https://img-a.udemycdn.com/course/480x270/1526882_ea81_43.jpg?Dgr3O0PHBIzQ5h_hIFweXEUQ4jcGy7z25ftES8lxTJKd60NLXDA_XpK7b2Po5bf81sMBAEEy5Obc8UT6ecmQJMmf6h-tpyt9tJY3ZGbJVZF_67ytpt43OzH1E-4yF3C_lQ 2x" alt="" width="240" height="135" />
+                              <CourseImage courseId={courseDetails.id} alt="" width="240" height="135" />
                             </span>
                             <span className="intro-asset--overlay--3Z3co intro-asset--gradient--Od7zs"></span>
                             <span className="udlite-play-overlay">
@@ -123,7 +155,7 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
               <div data-purpose="slider-menu-container" className={`course-landing-page_slider-menu-container ${sideBarFixed ? 'sidebar-container--fixed--2xu7a' : ''}`}>
                 <div className="slider-menu" data-purpose="slider-menu">
                   <div className="slider-menu__lead">
-                    <div className="slider-menu__title" data-purpose="title">English for Beginners: Intensive Spoken English Course</div>
+                    <div className="slider-menu__title" data-purpose="title">{courseDetails.courseName}</div>
                   </div>
                   <div className="slider-menu__price-text-container">
                     <div>
@@ -163,7 +195,7 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                       <div className="intro-asset--asset--1eSsi" data-purpose="introduction-asset">
                         <button type="button" className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md udlite-custom-focus-visible intro-asset--placeholder--16yPA" aria-label="Play course preview">
                           <span className="intro-asset--img-aspect--1UbeZ">
-                            <img src="https://img-a.udemycdn.com/course/240x135/1526882_ea81_43.jpg?Blh_hd-OCzQ-5VAZrNu-On0hBfAeGkXqAkRn3uAFOQFPQG4IH1g4cTp1bl1kaoQPp_mMWIs8-MMNu-k2C6eUhy9MGNumZ7fU4r20QSmMjmIRcdJQgZIqWj5zEhA3i9wFCQ" srcSet="https://img-a.udemycdn.com/course/240x135/1526882_ea81_43.jpg?Blh_hd-OCzQ-5VAZrNu-On0hBfAeGkXqAkRn3uAFOQFPQG4IH1g4cTp1bl1kaoQPp_mMWIs8-MMNu-k2C6eUhy9MGNumZ7fU4r20QSmMjmIRcdJQgZIqWj5zEhA3i9wFCQ 1x, https://img-a.udemycdn.com/course/480x270/1526882_ea81_43.jpg?0JFWJQXz-bAdqqSpJtLLG20V12NxyXZ_WEBaCZZq4VcKbDFnef5K1AHoEpBTw-N8pYhefRKEq0dX05OMt5COUOIpP9k-xlNvhI9cx8f51EnzePmnKWde_zDvlVGP7LA-ww 2x" alt="" width="240" height="135" />
+                            <CourseImage hasImage={courseDetails.hasImage} courseId={courseDetails.id} alt="" width="240" height="135" />
                           </span>
                           <span className="intro-asset--overlay--3Z3co intro-asset--gradient--Od7zs">
                           </span>
@@ -186,26 +218,10 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                 <div className="udlite-text-sm clp-lead">
                   <div className="clp-component-render">
                     <h1 className="udlite-heading-xl clp-lead__title clp-lead__title--small" data-purpose="lead-title">
-                      English for Beginners: Intensive Spoken English Course
+                      {courseDetails.courseName}
                     </h1>
-                    <div className="udlite-text-md clp-lead__headline" data-purpose="lead-headline">
+                    <div className="udlite-text-md clp-lead__headline" data-purpose="lead-headline">{courseDetails.headline}
                       English speaking course. 77 Hours of English language speaking, English listening practice. 1000 English language words
-                    </div>
-                  </div>
-                  <div className="clp-lead__element-item">
-                    <div className="clp-component-render">
-                      <div className="clp-component-render">
-                        <div className="ud-component--course-landing-page-udlite--instructor-links">
-                          <div className="instructor-links--instructor-links--3d8_F" data-purpose="instructor-name-top">
-                            <span className="instructor-links--names--7UPZj">
-                              <span className="udlite-text-sm">Created by &nbsp;</span>
-                              <a className="udlite-btn udlite-btn-large udlite-btn-link udlite-heading-md udlite-text-sm udlite-instructor-links" data-position="1" href="#instructor-1">
-                                <span>Logus Online</span>
-                              </a>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -223,48 +239,16 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                  <h2 className="udlite-heading-xl what-you-will-learn--title--hropy">What you'll learn</h2>
                   <div className="what-you-will-learn--content-spacing--3btHJ">
                     <ul className="unstyled-list udlite-block-list what-you-will-learn--objectives-list--2cWZN">
-                      <li>
-                        <div data-purpose="objective" className="udlite-block-list-item udlite-blok-list-item-small udlite-block-list-item-tight udlie-block-list-item-neutral udlite-text-sm">
-                          <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                          <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">You will learn over 1000 vital English words, expressions and idioms, and how to use them in real life.</span></div>
-                        </div>
-                      </li>
-                      <li>
-                        <div data-purpose="objective" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                          <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                          <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">You will learn the most important English grammar wth tons of English-speaking practice.</span></div>
-                       </div>
-                      </li>
-                      <li>
-                        <div data-purpose="objective" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                          <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                          <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">You will learn t think in English and to speak English fluently. (in Intermediate level)</span></div>
-                       </div>
-                     </li>
-                      <li>
-                        <div data-purpose="objective" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                          <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                          <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">You will learn to read in English and o spell English words intuitively</span></div>
-                        </div>
-                      </li>
-                      <li>
-                        <div data-purpose="objective" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-lock-list-item-neutral udlite-text-sm">
-                          <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                          <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objectve-item--ECarc">You will learn to understand movies and TV shows in English.</span></div>
-                        </div>
-                      </li>
-                      <li>
-                        <div data-purpose="objective" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                          <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                          <div className="udlite-block-list-item-content"><span className="what-you-will-lern--objective-item--ECarc">After the course, you can travel the world freely, without a language barrier</span></div>
-                        </div>
-                      </li>
-                      <li>
-                        <div data-purpose="objective" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                          <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                          <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">After the course, you can start preparing for English language tests like TOEFL, IELTS, GMAT etc.</span></div>
-                        </div>
-                      </li>
+                      { courseDetails.objectives &&
+                        courseDetails.objectives.map((courseObjective) => (
+                          <li key={courseObjective.id}>
+                            <div data-purpose="objective" className="udlite-block-list-item udlite-blok-list-item-small udlite-block-list-item-tight udlie-block-list-item-neutral udlite-text-sm">
+                              <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
+                              <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">{courseObjective.text}</span></div>
+                            </div>
+                          </li>
+                        ))
+                      }
                     </ul>
                   </div>
                 </div>
@@ -280,99 +264,18 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                 <div>
                   <h2 className="udlite-heading-xl requirements--title--2j7S2">Requirements</h2>
                   <ul className="unstyled-list udlite-block-list">
-                    <li>
-                      <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                        <svg aria-hidden="true" focusable="false" className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon">
-                        </svg>
-                        <div className="udlite-block-list-item-content">A computer, or a tablet, or a phone with good speakers or headphones. (So you can hear the pronunciation very clearly).</div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                        <svg aria-hidden="true" focusable="false" className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon">
-                        </svg>
-                        <div className="udlite-block-list-item-content">Absolutely no previous knowledge of English is necessary.</div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                        <svg aria-hidden="true" focusable="false" className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon">
-                        </svg>
-                        <div className="udlite-block-list-item-content">4 hours a week to speak English when you won't be disturbed.</div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                        <svg aria-hidden="true" focusable="false" className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon">
-                        </svg>
-                        <div className="udlite-block-list-item-content">Very positive attitude :)</div>
-                      </div>
-                    </li>
+                    { courseDetails.requirements &&
+                      courseDetails.requirements.map((courseRequirement) => (
+                        <li key={courseRequirement.id}>
+                          <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
+                            <svg aria-hidden="true" focusable="false" className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon">
+                            </svg>
+                            <div className="udlite-block-list-item-content">{courseRequirement.text}</div>
+                          </div>
+                        </li>
+                      ))
+                    }
                   </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="course-landing-page__main-content component-margin" data-purpose="curriculum-practice-test"></div>
-        <div className="course-landing-page__main-content component-margin">
-          <div className="clp-component-render">
-            <div className="clp-component-render">
-              <div className="ud-component--course-landing-page-udlite--description">
-                <div className="udlite-text-sm  styles--description--3y4KY" data-purpose="course-description">
-                  <h2 className="udlite-heading-xl styles--description__header--3SNsO">Description</h2>
-                  <div className="show-more--container--1QLmn">
-                    <span id="u411-show-more--1" data-type="checkbox" data-checked="checked" style={{display: 'none'}}></span>
-                    <div style={{maxHeight: '221px'}} className="show-more--content--isg5c show-more--with-gradient--2abmN">
-                      <div>
-                        <div data-purpose="safely-set-inner-html:description:description">
-                          <p><strong>Introducing LOGUS</strong></p>
-                          <p>Your <strong>most powerful and intensive online English language course</strong>.</p>
-                          <p>It is a must-have <strong>English language course for complete beginners</strong> in English, who want to reach the<strong> intermediate level of spoken English</strong> language in the <strong>shortest time possible</strong>.
-                            &nbsp; 
-                          </p>
-                          <p><br /></p>
-                          <p><strong>The killer advantages of English language course LOGUS that blow the competition out of the water:</strong>
-                            &nbsp; 
-                          </p>
-                          <ul>
-                            <li>
-                              <p><strong>It is not a short basic course</strong> of English&nbsp;language. It is a <strong>full beginner to intermediate course of spoken English</strong>. It is specifically designed to help you build all the necessary skills for&nbsp;the real-life day-to-day use.&nbsp; &nbsp; </p>
-                            </li>
-                            <li>
-                              <p>It is a <strong>100% animated</strong> and interactive spoken&nbsp;English language course, which makes it very fun to use.&nbsp; &nbsp; </p>
-                            </li>
-                            <li>
-                              <p>You get over<strong> 77 hours of intensive spoken English language practice</strong>. Each English language lesson lasts about 1 hour and a half.&nbsp; &nbsp; </p>
-                            </li>
-                            <li>
-                              <p>It is <strong>100% communicative</strong> intensive spoken English language course. <strong>You speak English language all the time</strong> and you say over <strong>2000 English words</strong> in each lesson.&nbsp; &nbsp;&nbsp; </p>
-                            </li>
-                            <li>
-                              <p>LOGUS doesn't teach you separate English words. You learn everything only in the context.&nbsp; &nbsp;&nbsp; </p>
-                            </li>
-                            <li>
-                              <p>LOGUS is the only online video course obsessed&nbsp;with perfecting your speech fluency. What good is your knowledge of English grammar and words if you can't speak English fluently? Your fluency is our number 1 priority.&nbsp; &nbsp; </p>
-                            </li>
-                            <li>
-                              <p>English grammar is explained in extremely simple and&nbsp; &nbsp; &nbsp; intuitive way, with tons of examples and many hours of listening and&nbsp; &nbsp; &nbsp; speaking practice.&nbsp; </p>
-                              <p><br /></p>
-                            </li>
-                          </ul>
-                          <p>Needless to say, all English words and English grammar are translated into your native language.
-                            &nbsp; 
-                          </p>
-                          <p>All the vocabulary and grammar are translated into the following languages: English, Spanish Brazilian Portuguese and Hindi.</p>
-                        </div>
-                        <div className="styles--audience--2pZ0S" data-purpose="target-audience">
-                          <h2 className="udlite-heading-xl styles--audience__title--1Sob_">Who this course is for:</h2>
-                          <ul className="styles--audience__list--3NCqY">
-                            <li>It is a must-have English course for complete beginners, who want to reach the intermediate level of spoken English in the shortest time possible.</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -388,31 +291,61 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                     <h2 className="udlite-heading-xl styles--instructors__header--16F_8">Instructor</h2>
                     <div className="instructor--instructor--1wSOF" data-purpose="instructor-bio">
                       <span className="in-page-offset-anchor" id="instructor-1"></span>
+                      <select onChange={handleChange}>
+                        {
+                          Object.entries(instructors).map(([index, instructor]) => (
+                            <option key={index} value={index}>
+                              {
+                                instructor.userName
+                              } 
+                              &nbsp;
+                              - 
+                              &nbsp;
+                              {
+                                instructor.courseDays
+                                .filter((courseDay) => courseDay.isChecked)
+                                .map((courseDay) => courseDay.name.substring(0, 3))
+                                .join('/')
+                              }
+                            </option>
+                          ))
+                        }
+                      </select>
                       <div>
-                        <div className="udlite-heading-lg instructor--instructor__title--34ItB"><a href="/user/logus/">Logus Online</a></div>
-                        <div className="udlite-text-md instructor--instructor__job-title--1HUmd">Online School of the Future</div>
+                        <div className="udlite-heading-lg instructor--instructor__title--34ItB">{instructorDetails.userName}</div>
+                        <div className="udlite-text-md instructor--instructor__job-title--1HUmd">{instructorDetails.jobTitle}</div>
                       </div>
                       <div className="instructor--instructor__image-and-stats--1IqE7">
-                        <a className="instructor--instructor__image-link--9e3fA" href="/user/logus/"><img alt="Logus Online" className="instructor--instructor__image--va-P5 udlite-avatar udlite-avatar-image" width="64" height="64" style={{width: '6.4rem', height: '6.4rem'}} src="https://img-a.udemycdn.com/user/75x75/43210610_e9ab_4.jpg?75S446bgsxJBCqF5vSrcF7g7hdWzm6fp61ldoIdbEBIuP2Mreg1vxwPBSk2BgqQVIhCPZGlbprUTBIGUlh12aO664MLxR6dCKfQatTnpOezLZ0SRfo-WAfsYPtL0" /></a>
+                        <a className="instructor--instructor__image-link--9e3fA">
+                          <ProfileImage 
+                            alt={instructorDetails.userName} 
+                            className="instructor--instructor__image--va-P5 udlite-avatar udlite-avatar-image" 
+                            hasImage={instructorDetails.hasImage}  
+                            publicId={selectedInstructor.instructorId} 
+                            width="64" 
+                            height="64" 
+                            style={{width: '6.4rem', height: '6.4rem'}} 
+                          />
+                        </a>
                         <ul className="unstyled-list udlite-block-list">
                           <li>
                             <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">4.3 Instructor Rating</div>
+                              <div className="udlite-block-list-item-content">{instructorDetails.instructorRating || 'N/A'} Instructor Rating</div>
                             </div>
                           </li>
                           <li>
                             <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">8,912 Reviews</div>
+                              <div className="udlite-block-list-item-content">{instructorDetails.instructorReviews || 0} Reviews</div>
                             </div>
                           </li>
                           <li>
                             <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">41,166 Students</div>
+                              <div className="udlite-block-list-item-content">{instructorDetails.instructorStudents || 0} Students</div>
                             </div>
                           </li>
                           <li>
                             <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">4 Courses</div>
+                              <div className="udlite-block-list-item-content">{instructorDetails.instructorCourses || 0} Courses</div>
                             </div>
                           </li>
                         </ul>
@@ -422,12 +355,7 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
                         <div style={{maxHeight: '146px'}} className="show-more--content--isg5c show-more--with-gradient--2abmN">
                           <div>
                             <div className="udlite-text-sm instructor--instructor__description--1dHxF" data-purpose="description-content">
-                              <p>LOGUS is an innovative online school, which employs only highly skilled and professional teachers and psychologists to create the most efficient courses.</p>
-                              <p>We always think outside the box and we strive to make online self-teaching on par or even higher quality than traditional schools.&nbsp; &nbsp;</p>
-                              <p>Our mission: to make studying literally any topic a very easy and fun process.&nbsp; &nbsp;</p>
-                              <p> We are working hard on implementing the newest AI (artificial intelligence) and AR (augmented reality) technologies to teach literally anything to anyone in the world in the most efficient and fun way possible.&nbsp; &nbsp;
-                                &nbsp; 
-                              </p>
+                              <p>{instructorDetails.bio || 'N/A'}</p>
                             </div>
                           </div>
                         </div>
@@ -445,14 +373,16 @@ const CourseDetailsPage = ({ history, currentUser, courseDetails, fetchInstructo
 };
 
 const mapStateToProps = createStructuredSelector({
-  courseDetails: selectedCourseDetails,
-  currentUser: currentUser,
+  instructors: selectCourseInstructors,
+  courseDetails: selectCurrentCourse,
+  instructorDetails: instructorDetails,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchInstructorCourseDetailsByCourseIdStart: (courseId) => dispatch(fetchInstructorCourseDetailsByCourseIdStart(courseId)),
-  createStudentCourseStart: (courseDetails, courseId) => 
-    dispatch(createStudentCourseStart(courseDetails, courseId)),
+  fetchCourseByIdStart: (courseId) => dispatch(fetchCourseByIdStart(courseId)),
+  fetchInstructorDetailsStart: (instructorId) => dispatch(fetchInstructorDetailsStart(instructorId)),
+  fetchInstructorsByCourseIdStart: (courseId) => dispatch(fetchInstructorsByCourseIdStart(courseId)),
+  createStudentCourseStart: (courseDetails) => dispatch(createStudentCourseStart(courseDetails)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CourseDetailsPage));

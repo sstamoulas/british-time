@@ -3,10 +3,12 @@ import { takeLatest, put, all, call, select } from 'redux-saga/effects';
 import UserActionTypes from './../user/user.types';
 import InstructorCourseActionTypes from './instructor-course.types';
 
-import { actionStart, actionStop } from './../ui/ui.actions';
+import { actionStart, actionStop, subActionStart, subActionStop } from './../ui/ui.actions';
 import { 
   fetchAllCoursesSuccess,
   fetchAllCoursesFailure,
+  fetchInstructorsByCourseIdSuccess,
+  fetchInstructorsByCourseIdFailure,
   fetchInstructorCourseDetailsSuccess,
   fetchInstructorCourseDetailsFailure,
   fetchInstructorCourseDetailsByCourseIdSuccess,
@@ -20,6 +22,7 @@ import {
 import { 
   getAllInstructorCourses,
   getCoursesByInstructorId,
+  getInstructorsByCourseId,
   getInstructorCourseByCourseId,
   createInstructorCourseDetailsDocument,
   updateInstructorCourseDetailsDocument,
@@ -29,12 +32,25 @@ import * as ROLES from './../../constants/roles';
 
 export function* fetchAllCoursesAsync({ type }) {
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const coursesRef = yield call(getAllInstructorCourses);
 
     yield put(fetchAllCoursesSuccess({ ...coursesRef }));
   } catch(error) {
     yield put(fetchAllCoursesFailure(error));
+  } finally {
+    yield put(subActionStop(type));
+  }
+}
+
+export function* fetchInstructorsByCourseIdAsync({ type, payload: { courseId }}) {
+  try {
+    yield put(actionStart(type));
+    const instructorsRef = yield call(getInstructorsByCourseId, courseId);
+
+    yield put(fetchInstructorsByCourseIdSuccess({ ...instructorsRef }));
+  } catch(error) {
+    yield put(fetchInstructorsByCourseIdFailure(error));
   } finally {
     yield put(actionStop(type));
   }
@@ -69,12 +85,12 @@ export function* fetchInstructorCourseDetailsByCourseIdAsync({ type, payload: { 
 }
 
 export function* createInstructorCourseDetailsAsync({type, payload: { courseDetails }}) {
-  const {user: { currentUser: { id }}} = yield select();
+  const {user: { currentUser }} = yield select();
 
   try {
     yield put(actionStart(type));
-    yield call(createInstructorCourseDetailsDocument, id, courseDetails);
-    const instructorCourseRef = yield call(getCoursesByInstructorId, id);
+    yield call(createInstructorCourseDetailsDocument, currentUser, courseDetails);
+    const instructorCourseRef = yield call(getCoursesByInstructorId, currentUser.id);
 
     yield put(createInstructorCourseDetailsSuccess({ ...instructorCourseRef }));
   } catch(error) {
@@ -122,6 +138,13 @@ export function* onFetchAllCoursesStart() {
   );
 }
 
+export function* onFetchInstructorsByCourseIdStart() {
+  yield takeLatest(
+    InstructorCourseActionTypes.FETCH_INSTRUCTORS_BY_COURSE_ID_START,
+    fetchInstructorsByCourseIdAsync
+  );
+}
+
 export function* onFetchInstructorCourseDetailsStart() {
   yield takeLatest(
     InstructorCourseActionTypes.FETCH_INSTRUCTOR_COURSE_DETAILS_START, 
@@ -154,6 +177,7 @@ export function* instructorCourseSagas() {
   yield all([
     call(onSignInSuccess),
     call(onFetchAllCoursesStart),
+    call(onFetchInstructorsByCourseIdStart),
     call(onFetchInstructorCourseDetailsStart),
     call(onCreateInstructorCourseDetailsStart),
     call(onUpdateInstructorCourseDetailsStart),

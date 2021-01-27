@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   imageLoading: false,
 }
 
-const CourseImage = ({ hasImage, courseId, onUploadCallback }) => {
+const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
@@ -40,33 +40,44 @@ const CourseImage = ({ hasImage, courseId, onUploadCallback }) => {
     });
   }
 
-  return (
-    <div className='d-flex justify-center my'>
-      {     
-        imageLoading ? 
-          <span>Loading</span>
-        :
-          hasImage ?
-            <Image 
-              className='p-default'
-              cloudName="everest-logix" 
-              publicId={courseId} 
-              width="300" 
-              height="300" 
-              crop="scale" 
-              onClick={onClick}
-            />
+  return !(height && width) ? (
+      <div className='d-flex justify-center my'>
+        {     
+          imageLoading ? 
+            <span>Loading</span>
           :
-            <span className='person' onClick={onClick}></span>
-      }
-      <input 
-        type='file' 
-        name='image' 
-        className='img-upload hide'
-        onChange={onUpload} 
+            hasImage ?
+              <Image 
+                className='p-default'
+                cloudName="everest-logix" 
+                publicId={courseId} 
+                width="300" 
+                height="300" 
+                crop="scale" 
+                onClick={onClick}
+              />
+            :
+              <span className='person' onClick={onClick}></span>
+        }
+        <input 
+          type='file' 
+          name='image' 
+          className='img-upload hide'
+          onChange={onUpload} 
+        />
+      </div>
+    )
+  :
+    (
+      <Image 
+        className={className}
+        cloudName="everest-logix" 
+        publicId={courseId} 
+        width={width}
+        height={height}
+        crop="scale" 
       />
-    </div>
-  );
+    )
 }
 
 export default CourseImage;

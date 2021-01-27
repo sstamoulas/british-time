@@ -29,9 +29,9 @@ export const fetchStudentCourseFailure = (error) => ({
   payload: error,
 });
 
-export const createStudentCourseStart = (courseDetails, courseId) => ({
+export const createStudentCourseStart = (courseDetails) => ({
   type: StudentCourseActionTypes.CREATE_STUDENT_COURSE_START,
-  payload: { courseDetails, courseId },
+  payload: { courseDetails },
 });
 
 export const createStudentCourseSuccess = (studentCourses) => ({

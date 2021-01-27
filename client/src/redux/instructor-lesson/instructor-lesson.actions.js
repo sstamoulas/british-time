@@ -15,9 +15,9 @@ export const fetchInstructorLessonsFailure = (error) => ({
   payload: error,
 });
 
-export const fetchInstructorLessonStart = (instructorCourseId, lessonId) => ({
+export const fetchInstructorLessonStart = (lessonId) => ({
   type: InstructorLessonActionTypes.FETCH_INSTRUCTOR_LESSON_START,
-  payload: { instructorCourseId, lessonId },
+  payload: { lessonId },
 });
 
 export const fetchInstructorLessonSuccess = (instructorLesson) => ({

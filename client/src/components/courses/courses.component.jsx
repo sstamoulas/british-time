@@ -5,9 +5,9 @@ import { createStructuredSelector } from 'reselect';
 
 import Carousel from './../carousel/carousel.component';
 
-import { fetchAllCoursesStart } from './../../redux/instructor-course/instructor-course.actions';
+import { fetchCoursesStart } from './../../redux/course/course.actions';
 
-import { selectInstructorCoursesForManaging } from './../../redux/instructor-course/instructor-course.selectors';
+import { selectCoursesForManaging } from './../../redux/course/course.selectors';
 
 import './courses.styles.scss';
 
@@ -15,12 +15,12 @@ const isArrayEmpty = (obj) => {
   return obj.length === 0;
 }
 
-const Courses = ({ history, courses, fetchAllCoursesStart }) => {
+const Courses = ({ history, courses, fetchCoursesStart }) => {
   useEffect(() => {
     if(isArrayEmpty(courses)) {
-      fetchAllCoursesStart();
+      fetchCoursesStart();
     }
-  }, [courses, fetchAllCoursesStart])
+  }, [courses, fetchCoursesStart])
 
   return (
     <div>
@@ -50,11 +50,11 @@ const Courses = ({ history, courses, fetchAllCoursesStart }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  courses: selectInstructorCoursesForManaging,
+  courses: selectCoursesForManaging,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchAllCoursesStart: () => dispatch(fetchAllCoursesStart()),
+  fetchCoursesStart: () => dispatch(fetchCoursesStart()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Courses));

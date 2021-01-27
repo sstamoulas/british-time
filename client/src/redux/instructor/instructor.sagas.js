@@ -3,7 +3,7 @@ import { takeLatest, put, all, call, select } from 'redux-saga/effects';
 import UserActionTypes from './../user/user.types';
 import InstructorActionTypes from './instructor.types';
 
-import { actionStart, actionStop } from './../ui/ui.actions';
+import { actionStart, actionStop, subActionStart, subActionStop } from './../ui/ui.actions';
 import { 
   fetchInstructorDetailsSuccess, 
   fetchInstructorDetailsFailure,
@@ -22,6 +22,21 @@ import {
 } from '../../firebase/firebase.utils';
 
 import * as ROLES from './../../constants/roles';
+
+export function* fetchInstructorDetailsAsync({type, payload: { instructorId }}) {
+  try {
+    yield put(subActionStart(type));
+    const instructorDetails = yield fetchCurrentInstructor(instructorId);
+
+    if (!instructorDetails)
+      return yield put(fetchInstructorDetailsSuccess(null));
+    yield put(fetchInstructorDetailsSuccess(instructorDetails));
+  } catch(error) {
+    yield put(fetchInstructorDetailsFailure(error));
+  } finally {
+    yield put(subActionStop(type));
+  }
+}
 
 export function* createInstructorDetailsAsync({type, payload: { instructorDetails }}) {
   const {user: { currentUser: { id, userName }}} = yield select();
@@ -89,6 +104,13 @@ export function* onCreateInstructorDetailsStart() {
   );
 }
 
+export function* onFetchInstructorDetailsStart() {
+  yield takeLatest(
+    InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_START, 
+    fetchInstructorDetailsAsync
+  );
+}
+
 export function* onUpdateInstructorDetailsStart() {
   yield takeLatest(
     InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_START, 
@@ -99,6 +121,7 @@ export function* onUpdateInstructorDetailsStart() {
 export function* instructorSagas() {
   yield all([
     call(onSignInSuccess),
+    call(onFetchInstructorDetailsStart),
     call(onCreateInstructorDetailsStart),
     call(onUpdateInstructorDetailsStart),
   ]);

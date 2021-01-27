@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Image } from 'cloudinary-react';
-import { createStructuredSelector } from 'reselect';
-
-import { currentUser } from './../../redux/user/user.selectors';
 
 import './profile-image.styles.scss';
 
@@ -11,7 +7,7 @@ const INITIAL_STATE = {
   imageLoading: false,
 }
 
-const ProfileImage = ({ currentUser, hasImage, onUploadCallback }) => {
+const ProfileImage = ({ hasImage, publicId, height, width, className, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
@@ -26,7 +22,7 @@ const ProfileImage = ({ currentUser, hasImage, onUploadCallback }) => {
   const onUpload = (event) => {
     const data = new FormData();
     data.append('file', event.target.files[0]);
-    data.append('public_id', currentUser.id);
+    data.append('public_id', publicId);
 
     setState(prevState => ({ ...prevState, imageLoading: true }));
 
@@ -44,37 +40,44 @@ const ProfileImage = ({ currentUser, hasImage, onUploadCallback }) => {
     });
   }
 
-  return (
-    <div className='d-flex justify-center my'>
-      {     
-        imageLoading ? 
-          <span>Loading</span>
-        :
-          hasImage ?
-            <Image 
-              className='p-default'
-              cloudName="everest-logix" 
-              publicId={currentUser.id} 
-              width="300" 
-              height="300" 
-              crop="scale" 
-              onClick={onClick}
-            />
+  return !(height && width) ? (
+      <div className='d-flex justify-center my'>
+        {     
+          imageLoading ? 
+            <span>Loading</span>
           :
-            <span className='person' onClick={onClick}></span>
-      }
-      <input 
-        type='file' 
-        name='image' 
-        className='img-upload hide'
-        onChange={onUpload} 
+            hasImage ?
+              <Image 
+                className={className}
+                cloudName="everest-logix" 
+                publicId={publicId} 
+                width="300" 
+                height="300" 
+                crop="scale" 
+                onClick={onClick}
+              />
+            :
+              <span className='person' onClick={onClick}></span>
+        }
+        <input 
+          type='file' 
+          name='image' 
+          className='img-upload hide'
+          onChange={onUpload} 
+        />
+      </div>
+    )
+  :
+    (
+      <Image 
+        className={className}
+        cloudName="everest-logix" 
+        publicId={publicId} 
+        width={width}
+        height={height}
+        crop="scale" 
       />
-    </div>
-  );
+    )
 }
 
-const mapStateToProps = createStructuredSelector({
-  currentUser: currentUser,
-});
-
-export default connect(mapStateToProps)(ProfileImage);
+export default ProfileImage;

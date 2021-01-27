@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -14,6 +14,10 @@ import { createInstructorDetailsStart, updateInstructorDetailsStart } from './..
 import { instructorDetails } from './../../redux/instructor/instructor.selectors';
 import { selectCoursesForManaging } from './../../redux/course/course.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
+
+const isObjectEmpty = (obj) => {
+  return obj === null || (Object.keys(obj).length === 0 && obj.constructor === Object)
+}
 
 const INITIAL_STATE = {
   selectedCourseToStart: {},
@@ -31,9 +35,11 @@ const InstructorPage = ({
   const { bio, rating, selectedCourseToStart } = state;
   const isInvalid = bio === '';
 
-  const isObjectEmpty = (obj) => {
-    return Object.keys(obj).length === 0 && obj.constructor === Object
-  }
+  useEffect(() => {
+    if(!isObjectEmpty(instructorDetails)){
+      setState(prevState => ({ ...prevState, ...instructorDetails }));
+    }
+  }, [instructorDetails])
 
   const onSubmit = event => {
     if(isObjectEmpty(instructorDetails)) {
@@ -71,13 +77,13 @@ const InstructorPage = ({
       <h1>Greetings {currentUser.userName}</h1>
       <p>The Instructor Page is accessible by only the Instructor in Question.</p>
       <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
-        <ProfileImage hasImage={instructorDetails.hasImage} onUploadCallback={onUploadCallback} />
+        <ProfileImage className='p-default cursor-pointer' hasImage={state.hasImage || false} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 
           name='bio' 
           className='m-default mx-7 p-2'
           rows='11' 
           cols='50' 
-          defaultValue={bio}
+          defaultValue={bio || ''}
           onChange={onChange} 
           placeholder='Add Your Bio...'
         >
@@ -85,7 +91,7 @@ const InstructorPage = ({
         <button 
           disabled={isInvalid} 
           type="submit" 
-          className='m-default mx-7 p-2'
+          className='m-default mx-7 p-2 cursor-pointer'
         >
           Submit Details
         </button>

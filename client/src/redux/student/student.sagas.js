@@ -14,7 +14,7 @@ import {
 } from './student.actions';
 
 import { 
-  fetchCurrentStudent, 
+  getCurrentStudent, 
   createStudentDetailsDocument, 
   updateStudentDetailsDocument,
 } from '../../firebase/firebase.utils';
@@ -59,7 +59,7 @@ export function* isStudent({ type }) {
   if(role === ROLES.STUDENT) {
     try {
       yield put(actionStart(type));
-      const studentDetails = yield fetchCurrentStudent(id);
+      const studentDetails = yield getCurrentStudent(id);
 
       if (!studentDetails)
         return yield put(fetchStudentDetailsSuccess(null));

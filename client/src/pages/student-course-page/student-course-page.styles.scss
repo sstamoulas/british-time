@@ -201,6 +201,7 @@ img {
     width: 100%;
     height: 100%;
     background-color: #14171c;
+    z-index: 1;
 }
 audio, canvas, progress, video {
     display: inline-block;

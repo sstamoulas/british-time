@@ -1,7 +1,8 @@
 import InstructorActionTypes from './instructor.types';
 
-export const fetchInstructorDetailsStart = () => ({
+export const fetchInstructorDetailsStart = (instructorId) => ({
   type: InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_START,
+  payload: { instructorId },
 });
 
 export const fetchInstructorDetailsSuccess = (instructorDetails) => ({

@@ -20,9 +20,9 @@ const StudentLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart 
 
   useEffect(() => {
     if(isObjectEmpty(lessonDetails)) {
-      fetchInstructorLessonStart(instructorCourseId, lessonId);
+      fetchInstructorLessonStart(lessonId);
     }
-  }, [instructorCourseId, lessonId, lessonDetails, fetchInstructorLessonStart])
+  }, [lessonId, lessonDetails, fetchInstructorLessonStart])
 
   const handleSubmit = (event) => {
     history.push(ROUTES.STUDENT);
@@ -41,7 +41,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchInstructorLessonStart: (instructorCourseId, lessonId) => dispatch(fetchInstructorLessonStart(instructorCourseId, lessonId)),
+  fetchInstructorLessonStart: (lessonId) => dispatch(fetchInstructorLessonStart(lessonId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(StudentLessonPage));

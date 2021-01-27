@@ -67,7 +67,7 @@ export function* fetchCoursesAsync({ type }) {
   }
 }
 
-export function* fetchCourseByIdAsync({ type, payload: { courseId } }) {
+export function* fetchCourseByIdAsync({ type, payload: { courseId }}) {
   try {
     yield put(subActionStart(type));
     const currentCourse = yield call(getCourseById, courseId);

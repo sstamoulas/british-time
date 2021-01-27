@@ -73,7 +73,7 @@ const StudentPage = ({
   return (
     <div>
       <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
-        <ProfileImage hasImage={studentDetails.hasImage} onUploadCallback={onUploadCallback} />
+        <ProfileImage className='p-default cursor-pointer' hasImage={studentDetails.hasImage} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 
           name='bio' 
           className='m-default mx-7 p-2'
@@ -87,7 +87,7 @@ const StudentPage = ({
         <button 
           disabled={isInvalid} 
           type="submit"
-          className='m-default mx-7 p-2'
+          className='m-default mx-7 p-2 cursor-pointer'
         >
           Submit Details
         </button>

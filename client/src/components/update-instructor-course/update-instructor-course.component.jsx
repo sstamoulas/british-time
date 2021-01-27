@@ -117,8 +117,8 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
         <ul>
         {
           !isObjectEmpty(instructorLessons) && 
-          instructorLessons.map((instructorLesson) => (
-            <li key={instructorLesson.id}><Link to={`/instructor/course/${courseId}/lesson/${instructorLesson.id}`}>{instructorLesson.lessonTitle}</Link></li>
+          instructorLessons.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map((instructorLesson, index) => (
+            <li key={instructorLesson.id}><Link to={`/instructor/course/${courseId}/lesson/${instructorLesson.id}`}>Section {index + 1}: {instructorLesson.chapterTitle}</Link></li>
           ))
         }
         </ul>

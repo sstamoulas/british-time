@@ -14,6 +14,21 @@ export const fetchAllCoursesFailure = (error) => ({
   payload: error,
 });
 
+export const fetchInstructorsByCourseIdStart = (courseId) => ({
+  type: InstructorCourseActionTypes.FETCH_INSTRUCTORS_BY_COURSE_ID_START,
+  payload: { courseId },
+});
+
+export const fetchInstructorsByCourseIdSuccess = (instructors) => ({
+  type: InstructorCourseActionTypes.FETCH_INSTRUCTORS_BY_COURSE_ID_SUCCESS,
+  payload: instructors,
+});
+
+export const fetchInstructorsByCourseIdFailure = (error) => ({
+  type: InstructorCourseActionTypes.FETCH_INSTRUCTORS_BY_COURSE_ID_FAILURE,
+  payload: error,
+});
+
 export const fetchInstructorCourseDetailsStart = () => ({
   type: InstructorCourseActionTypes.FETCH_INSTRUCTOR_COURSE_DETAILS_START,
 });
