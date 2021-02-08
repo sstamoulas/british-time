@@ -14,8 +14,9 @@ const app = express()
 app.use(cors());
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
+// app.use(bodyParser.raw({ limit: '1gb' })); 
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
+  extended: true,
 })); 
 
 app.use((req, res, next) => {
@@ -219,6 +220,11 @@ app.post('/file-upload', async (req, res) => {
         body: fs.createReadStream(filePath), // Reading the file from our server
       };
 
+      const permission = {
+        role: 'reader', 
+        type: 'anyone',
+      };
+
       // Authenticating drive API
       const drive = google.drive({ version: 'v3', auth });
 
@@ -237,12 +243,27 @@ app.post('/file-upload', async (req, res) => {
               .status(400)
               .json({ errors: [{ msg: 'Server Error try again later' }] });
           } else {
-            fs.unlinkSync(filePath)
-            // if file upload success then return the unique google drive id
-            // this must be saved to firebase under the course or lesson id
-            await res.status(200).json({
+            await drive.permissions.create({
+              resource: permission,
               fileId: file.data.id,
-              fileName: fileName,
+              fields: 'id',
+            }, async function (err, data) {
+              console.log(data)
+              if (err) {
+                // Handle error...
+                return await res
+                  .status(400)
+                  .json({ errors: [{ msg: 'Server Error try again later' }] });
+              } else {
+                console.log('Permission ID: ', res.id)
+                fs.unlinkSync(filePath)
+                // if file upload success then return the unique google drive id
+                // this must be saved to firebase under the course or lesson id
+                await res.status(200).json({
+                  fileId: file.data.id,
+                  fileName: fileName,
+                });
+              }
             });
           }
         }

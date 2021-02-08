@@ -11,8 +11,6 @@ import * as ROUTES from './../../constants/routes';
 
 const INITIAL_STATE = {
   chapterTitle: '',
-  lessonTitle: '',
-  lessonType: '',
 }
 
 const EMPTY_LESSON = {
@@ -67,8 +65,16 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
     setState(prevState => ({ ...prevState, lessons: newLessons }));
   }
 
-  const handleRemoveLesson = (lessonId) => {
+  const handleRemoveLesson = async (lessonId) => {
     let newLessons = [...lessons];
+    const resourcesToRemove = newLessons.filter((lesson) => lesson.lessonId === lessonId)[0].lessonResources;
+
+    await resourcesToRemove.forEach((resource) => {
+      if(resource.resourceType !== "Text") {
+        handleRemoveResource(lessonId, resource.resourceId, true);
+      }
+    })
+
     newLessons = newLessons.filter((lesson) => lesson.lessonId !== lessonId);
 
     setState(prevState => ({ ...prevState, lessons: newLessons }));
@@ -91,22 +97,39 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
     const index = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
     let lessonResources = lessons[index].lessonResources || [];
     const resourceId = lessonResources.length > 0 ? lessonResources[lessonResources.length - 1].resourceId + 1 : 1; 
-    
+
     lessonResources.push({ ...EMPTY_RESOURCE, resourceId });
-    lessons[index].lessonResources = lessonResources;
+    newLessons[index].lessonResources = lessonResources;
 
     setState(prevState => ({ ...prevState, lessons: newLessons }));
   }
 
-  const handleRemoveResource = (lessonId, resourceId) => {
+  const handleRemoveResource = async (lessonId, resourceId, removeAll = false) => {
     let newLessons = [...lessons];
     const index = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
     let lessonResources = lessons[index].lessonResources;
+    const currentResource = lessonResources.filter((resource) => resource.resourceId === resourceId)[0];
+    const resourceType = currentResource.resourceType;
 
-    lessonResources = lessonResources.filter((resource) => resource.resourceId !== resourceId);
-    newLessons[index].lessonResources = lessonResources;
+    if(resourceType === "Text") {
+      lessonResources = lessonResources.filter((resource) => resource.resourceId !== resourceId);
+      newLessons[index].lessonResources = lessonResources;
 
-    setState(prevState => ({ ...prevState, lessons: newLessons }));
+      setState(prevState => ({ ...prevState, lessons: newLessons }));
+    }
+    else {
+      await fetch(`${baseURL}/file-delete/${currentResource.file.fileId}`, {
+        method: 'DELETE',
+      })
+      .catch((error) => console.log('error: ', error));
+
+      lessonResources = lessonResources.filter((resource) => resource.resourceId !== resourceId);
+      newLessons[index].lessonResources = lessonResources;
+
+      if(!removeAll) {
+        setState(prevState => ({ ...prevState, lessons: newLessons }));
+      }
+    }
   }
 
   const handleSubmit = (event) => {
@@ -133,11 +156,8 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
       const lessonIndex = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
       const newResources = lessons[lessonIndex].lessonResources;
       const resourceIndex = newResources.findIndex((resource) => resource.resourceId === resourceId);
-      newResources[resourceIndex].files = newResources[resourceIndex].files || [];
 
-      console.log(newResources[resourceIndex].files, newResources[resourceIndex])
-      
-      newLessons[lessonIndex].lessonResources[resourceIndex] = { ...newResources[resourceIndex], files: [...newResources[resourceIndex].files, {fileId, fileName}] };
+      newLessons[lessonIndex].lessonResources[resourceIndex] = { ...newResources[resourceIndex], file: {fileId, fileName} };
 
       setState(prevState => ({ ...prevState, lessons: newLessons }));
     })
@@ -152,34 +172,50 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
         lessons.map((lesson, index) => (
           <div key={lesson.lessonId}>
             <input type='text' name='lessonTitle' value={lesson.lessonTitle} onChange={(e) => handleLessonChange(e, lesson.lessonId)} />
-            <select name='lessonType' value={lesson.lessonType || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)}>
-              <option defaultValue hidden>Select A Lesson Type</option>
-              <option value='Text'>Text</option>
-              <option value='Video'>Video</option>
-            </select>
             {
-              lesson.lessonType === 'Text' && lesson.lessonResources && (
-                lesson.lessonResources.map((resource) => console.log(lesson.lessonResources) || (
+              !lesson.lessonType && (
+                <select name='lessonType' value={lesson.lessonType || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)}>
+                  <option defaultValue hidden>Select A Lesson Type</option>
+                  <option value='Content'>Content</option>
+                  <option value='Video'>Video</option>
+                </select>
+              )
+            }
+            {
+              lesson.lessonType && (
+                <span>{lesson.lessonType}</span>
+              )
+            }
+            {
+              lesson.lessonType === 'Content' && lesson.lessonResources && (
+                lesson.lessonResources.map((resource) => (
                   <div key={resource.resourceId}>
-                    <select name='resourceType' value={resource.resourceType || ''} onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)}>
-                      <option defaultValue hidden>Select A Resource Type</option>
-                      <option value='Text'>Text</option>
-                      <option value='Document'>Document</option>
-                      <option value='Audio'>Audio</option>
-                      <option value='Image'>Image</option>
-                    </select>
+                  {
+                    !resource.resourceType && (
+                      <select name='resourceType' value={resource.resourceType || ''} onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)}>
+                        <option defaultValue hidden>Select A Resource Type</option>
+                        <option value='Text'>Text</option>
+                        <option value='Document'>Document</option>
+                        <option value='Audio'>Audio</option>
+                        <option value='Image'>Image</option>
+                      </select>
+                    )
+                  }
+                  {
+                    resource.resourceType && (
+                      <span>{resource.resourceType}</span>
+                    )
+                  }
                     {
-                      ['Document', 'Audio', 'Image'].includes(resource.resourceType) && (
+                      ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file === undefined && (
                         <div>
                           <input type='file' name='file' onChange={(e) => onFileUpload(e, lesson.lessonId, resource.resourceId)} />
-                          <ul>
-                            {
-                              resource.files && resource.files.map((file) => (
-                                <li key={file.fileId}>{file.fileType} - {file.fileName} - {file.fileId}</li>
-                              ))
-                            }
-                          </ul>
                         </div>
+                      )
+                    }
+                    {
+                      ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file !== undefined && (
+                        <span key={resource.file.fileId}>{resource.file.fileType} - {resource.file.fileName} - {resource.file.fileId}</span>
                       )
                     }
                     {
@@ -204,11 +240,14 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
               lesson.lessonType === 'Video' && (
                 <input type='text' name='videoId' placeholder='Type Youtube Video ID' value={lesson.videoId || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)} />
               )
-
             }
 
             <input type='button' value='Remove Lesson' onClick={() => handleRemoveLesson(lesson.lessonId)} />
-            <input type='button' value='Add Resource' onClick={() => handleAddResource(lesson.lessonId)} />
+            {
+              lesson.lessonType === 'Content' && (
+                <input type='button' value='Add Resource' onClick={() => handleAddResource(lesson.lessonId)} />
+              )
+            }
           </div>
         ))
       }

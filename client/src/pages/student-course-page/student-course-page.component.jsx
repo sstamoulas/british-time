@@ -24,8 +24,6 @@ const isArrayEmpty = (obj) => {
   return obj.length === 0
 }
 
-const arr = ['guooD6w7iJw', 'H9B5mYfBPlY'];
-
 const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchStudentCourseStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...courseDetails });
@@ -35,8 +33,8 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [activeTab, setActiveTab] = useState('Overview');
   const [player, setPlayer] = useState(undefined);
-  const [activeVideo, setActiveVideo] = useState(arr[0]);
-  const [activeText, setActiveText] = useState('');
+  console.log(instructorLessons)
+  const [currentLesson, setCurrentLesson] = useState(!isArrayEmpty(instructorLessons) && instructorLessons[0].lessons[0]);
 
   const { courseName } = state;
   let lessonAccordion;
@@ -125,7 +123,7 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
   }, [lessonAccordion]);
 
   useEffect(() => {
-    console.log(courseDetails, instructorLessons, courseDetails.instructorCourseId)
+    console.log('cl:', courseDetails, instructorLessons, courseDetails.instructorCourseId)
     if(isObjectEmpty(courseDetails)) {
       console.log('in if', courseDetails)
       fetchStudentCourseStart(courseId);
@@ -144,17 +142,11 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
     else {
       player.load();
     }
-  }, [player, activeVideo])
+  }, [player, currentLesson.videoId])
 
   const loadNewContent = (lesson) => {
-    if(lesson.type === 'video') {
-      setActiveVideo(lesson.content);
-      setActiveText('');
-    }
-    else if(lesson.type === 'text') {
-      setActiveVideo('');
-      setActiveText(lesson.content);
-    }
+    console.log(lesson)
+    setCurrentLesson(lesson)
   }
 
   const handleClick = (event) => {
@@ -178,13 +170,37 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
 
 
                                           {
-                                            activeText &&
+                                            currentLesson.lessonType === "Content" &&
                                             <div className="text-viewer--scroll-container--1iy0Z">
                                                <div className="text-viewer--container--18Ayx">
                                                   <div className="text-viewer--content--3hoqQ">
-                                                     <div className="a1 mb-space-md">Resources: PostgreSQL With Docker</div>
+                                                     <div className="a1 mb-space-md">{currentLesson.lessonTitle}</div>
                                                      <div className="p-space-md">
                                                         <div data-purpose="safely-set-inner-html:rich-text-viewer:html" className="article-asset--content--1dAQ9">
+                                                          {
+                                                            currentLesson.lessonResources.map((lessonResource) => console.log(lessonResource) || (
+                                                              <div key={lessonResource.resourceId}>
+                                                              { lessonResource.resourceType === "Text" && (
+                                                                  <p>{lessonResource.resourceValue}</p>
+                                                                )
+                                                              }
+                                                              { lessonResource.resourceType === "Document" && (
+                                                                  <a href={`https://drive.google.com/uc?authuser=0&id=${lessonResource.file.fileId}&export=download`}>Download</a>
+                                                                )
+                                                              }
+                                                              { lessonResource.resourceType === "Audio" && (
+                                                                  <audio controls="controls">
+                                                                    <source src={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`} />
+                                                                  </audio>
+                                                                )
+                                                              }
+                                                              { lessonResource.resourceType === "Image" && (
+                                                                  <img src={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`} width="300" height="200" />
+                                                                )
+                                                              }
+                                                              </div>
+                                                            ))
+                                                          }
                                                            <p>That was a tough video! Lots of material covered, but keep in mind that when it comes to configuration files like yml files, there is nothing better than the online documentation to get yourself familiar with them. Although it may look daunting, most developers just check out and read the documentation when they have a problem to solve. For example, here are the resources I recommend you read up on based on the previous video:<br/><br/>1. How we set up the database with username and password: (see the environment variables section)&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://hub.docker.com/_/postgres/">https://hub.docker.com/_/postgres/</a><br/><br/>2. <code>psql </code>&nbsp;command:&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://www.postgresql.org/docs/9.2/static/app-psql.html">https://www.postgresql.org/docs/9.2/static/app-psql.html</a><br/><br/>3. Finally, if you haven't done so already, see if you can install PostgreSQL on your machine and use a GUI like I do in the video to make sure your docker-compose file is working:&nbsp;<br/><br/><br/></p>
                                                            <p>To install PostgreSQL&nbsp;on your computer, follow the below steps:&nbsp;</p>
                                                            <p><strong>Mac:&nbsp;</strong>Follow my previous video for instructions. You will need&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://brew.sh/">homebrew</a>&nbsp;for the easiest way to set up.&nbsp;keep in mind you may have to run with the 'sudo' command.&nbsp; Or you can follow&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://www.codementor.io/engineerapart/getting-started-with-postgresql-on-mac-osx-are8jcopb">this tutorial</a>.</p>
@@ -230,12 +246,12 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
 
 
                                           {
-                                            activeVideo &&
+                                            console.log(currentLesson) || currentLesson.lessonType === "Video" &&
                                             <div className="video-viewer--container--23VX7">
                                                <div className="video-player--container--YDQRW">
                                                   <div className="video-player--video-wrapper--1L212 user-activity--user-inactive--2uBeO">
                                                      <div id="playerId__8036556--3" className="video-js video-player--video-player--1sfof vjs-paused vjs-controls-enabled vjs-workinghover vjs-v6 vjs-user-inactive" lang="en-us" role="region" aria-label="Video Player">
-                                                        <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" data-yt2html5={activeVideo}></video>
+                                                        <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" autoPlay data-yt2html5={currentLesson.videoId}></video>
                                                         <div className="vjs-control-bar user-activity--hide-when-user-inactive--pDPGx" dir="ltr">
                                                            <div className="control-bar--popover-area--1LX56"></div>
                                                            <div className="vjs-progress-control vjs-control">
