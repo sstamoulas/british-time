@@ -1,11 +1,13 @@
-.person {
-  border: 1px solid darkslategrey;
-  padding: 40px;
-  border-radius: 100px;
-  background-color: darkslategrey;
+#root {
+  .person {
+    border: 1px solid darkslategrey;
+    padding: 40px;
+    border-radius: 100px;
+    background-color: darkslategrey;
 
-  &:before {
-    content: '\1F464';
-    font-size: 100px;
+    &:before {
+      content: '\1F464';
+      font-size: 100px;
+    }
   }
 }

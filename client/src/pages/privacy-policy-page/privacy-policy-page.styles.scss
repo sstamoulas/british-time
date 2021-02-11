@@ -1,28 +1,30 @@
-p, h1, h2, h3, h4, h5, h6, ul, ol {
-  max-width: revert;
-}
+#root {
+  p, h1, h2, h3, h4, h5, h6, ul, ol {
+    max-width: revert;
+  }
 
-ul {
-  list-style: revert;
-  margin: revert;
-  padding: revert;
-}
+  ul {
+    list-style: revert;
+    margin: revert;
+    padding: revert;
+  }
 
-.mt-xs {
-  margin-top: 30px;
-}
+  .mt-xs {
+    margin-top: 30px;
+  }
 
-.px-xs {
-  padding-left: 30px;
-  padding-right: 30px;
-}
+  .px-xs {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 
-span {
-  a {
-    color: revert;
-    cursor: auto !important;
-    background-color: revert;
-    font-weight: revert;
-    text-decoration: revert;
+  span {
+    a {
+      color: revert;
+      cursor: auto !important;
+      background-color: revert;
+      font-weight: revert;
+      text-decoration: revert;
+    }
   }
 }

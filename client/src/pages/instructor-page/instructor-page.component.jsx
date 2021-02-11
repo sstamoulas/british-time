@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { Image } from 'cloudinary-react';
 
+import Zoom from './../../components/zoom/zoom.component';
 import CreateInstructorCourse from './../../components/create-instructor-course/create-instructor-course.component';
 import InstructorCourses from './../../components/instructor-courses/instructor-courses.component';
 import ProfileImage from './../../components/profile-image/profile-image.component';
@@ -23,6 +24,8 @@ const INITIAL_STATE = {
   selectedCourseToStart: {},
 }
 
+const hasLiveSession = true;
+
 const InstructorPage = ({ 
     currentUser, 
     instructorDetails, 
@@ -32,6 +35,7 @@ const InstructorPage = ({
     error 
   }) => {
   const [state, setState] = useState({ ...INITIAL_STATE, ...instructorDetails });
+  const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
   const { bio, rating, selectedCourseToStart } = state;
   const isInvalid = bio === '';
 
@@ -72,10 +76,33 @@ const InstructorPage = ({
     }
   }
 
+  const openLiveSession = () => {
+    document.querySelector('#zmmtg-root').style.display = '';
+    document.querySelector('#zmmtg-root').style.backgroundColor = 'black';
+    document.querySelector('#root').style.display = 'none';
+    setIsLiveSessionOpen(true);
+  }
+
   return (
     <div>
       <h1>Greetings {currentUser.userName}</h1>
       <p>The Instructor Page is accessible by only the Instructor in Question.</p>
+      {
+        hasLiveSession && (
+          <button
+            className="launchButton"
+            onClick={openLiveSession}
+            style={{ backgroundColor: "red" }}
+          >
+            Launch Live Session{" "}
+          </button>
+        )
+      }
+      {
+        isLiveSessionOpen && (
+          <Zoom meetingNumber={'82267762341'} userName={'Stamatios Stamoulas'} userEmail={'tstamoulas@gmail.com'} passWord={'ZGRpZWZiNU1DUGhGelNQbEJlUUxiQT09'} role={1} />
+        )
+      }
       <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
         <ProfileImage className='p-default cursor-pointer' hasImage={state.hasImage || false} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 

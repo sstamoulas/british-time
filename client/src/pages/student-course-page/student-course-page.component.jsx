@@ -4,6 +4,7 @@ import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
 import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 
+import Zoom from './../../components/zoom/zoom.component';
 import CourseLessons from '../../components/course-lessons/course-lessons.component';
 
 import { fetchStudentCourseStart } from '../../redux/student-course/student-course.actions';
@@ -24,6 +25,8 @@ const isArrayEmpty = (obj) => {
   return obj.length === 0
 }
 
+const hasLiveSession = true;
+
 const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchStudentCourseStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...courseDetails });
@@ -35,6 +38,7 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
   const [player, setPlayer] = useState(undefined);
   console.log(instructorLessons)
   const [currentLesson, setCurrentLesson] = useState(!isArrayEmpty(instructorLessons) && instructorLessons[0].lessons[0]);
+  const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
 
   const { courseName } = state;
   let lessonAccordion;
@@ -151,6 +155,13 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
 
   const handleClick = (event) => {
     setActiveTab(event.target.textContent)
+  }
+
+  const openLiveSession = () => {
+    document.querySelector('#zmmtg-root').style.display = '';
+    document.querySelector('#zmmtg-root').style.backgroundColor = 'black';
+    document.querySelector('#root').style.display = 'none';
+    setIsLiveSessionOpen(true);
   }
 
   return !isObjectEmpty(courseDetails) && (
@@ -473,6 +484,11 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
                </div>
             </div>
          </div>
+        {
+          isLiveSessionOpen && (
+            <Zoom meetingNumber={'82267762341'} userName={'Stamatios Stamoulas'} userEmail={'tstamoulas@gmail.com'} passWord={'ZGRpZWZiNU1DUGhGelNQbEJlUUxiQT09'} role={0} />
+          )
+        }
          <div className="app--row--1ydzX app--dashboard--dXVM6">
             <div className="app--row-content--1lH7B">
                <div className="app--dashboard-content--r2Ce9">
@@ -491,6 +507,9 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
                                        </div>
                                        <div data-index="4" className="carousel--scroll-item--3Wciz">
                                           <div className={`tabs--nav-button-container--P4D9D ${activeTab === 'Announcements' && 'tabs--active--2rPuV'}`}><button type="button" id="tabs--1-tab-4" aria-selected="false" role="tab" tabIndex="-1" className={`udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md tabs--nav-button--1o7e_ ${activeTab === 'Announcements' && 'tabs--active--2rPuV'}`} onClick={handleClick}><span>Announcements</span></button></div>
+                                       </div>
+                                       <div data-index="4" className="carousel--scroll-item--3Wciz" style={{display: `${!hasLiveSession ? 'none' : ''}`}}>
+                                          <div className="tabs--nav-button-container--P4D9D"><button type="button" id="tabs--1-tab-4" aria-selected="false" role="tab" tabIndex="-1" className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md tabs--nav-button--1o7e_" onClick={openLiveSession}><span>Join Live Session</span></button></div>
                                        </div>
                                     </div>
                                  </div>

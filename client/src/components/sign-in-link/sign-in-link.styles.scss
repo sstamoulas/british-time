@@ -1,9 +1,11 @@
-.sign-up-footer {
-  display: block;
-  padding: 0 0 24px;
-  text-align: center;
-}
+#root {
+  .sign-up-footer {
+    display: block;
+    padding: 0 0 24px;
+    text-align: center;
+  }
 
-.sign-in-link {
-  font-weight: 700;
+  .sign-in-link {
+    font-weight: 700;
+  }
 }

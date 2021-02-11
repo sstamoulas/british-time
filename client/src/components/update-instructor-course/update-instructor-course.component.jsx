@@ -18,24 +18,12 @@ import * as ROUTES from './../../constants/routes';
 
 const INITIAL_STATE = {
   courseName: '',
-  startDate: '',
-  endDate: '',
-  isVisible: false,
-  courseDays: [
-    { name: 'Monday', isChecked: false, startTime: '', endTime: '' },
-    { name: 'Tuesday', isChecked: false, startTime: '', endTime: '' },
-    { name: 'Wednesday', isChecked: false, startTime: '', endTime: '' },
-    { name: 'Thursday', isChecked: false, startTime: '', endTime: '' },
-    { name: 'Friday', isChecked: false, startTime: '', endTime: '' },
-    { name: 'Saturday', isChecked: false, startTime: '', endTime: '' },
-    { name: 'Sunday', isChecked: false, startTime: '', endTime: '' },
-  ],
 }
 
 const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart, updateInstructorCourseDetailsStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, ...courseDetails });
-  const { courseName, startDate, endDate, isVisible, courseDays } = state;
+  const { courseName } = state;
 
   const isObjectEmpty = (obj) => {
     return Object.keys(obj).length === 0 && obj.constructor === Object
@@ -49,30 +37,9 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
   }, [courseId, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart]);
 
   const handleChange = (event, dayOfWeek) => {
-    const { name, value, checked, type } = event.target;
+    const { name, value } = event.target;
 
-    if(type === 'checkbox') {
-      if(name === 'isVisible') {
-        setState(prevState => ({ ...prevState, isVisible: checked }));
-      }
-      else {
-        let newArr = [...courseDays];
-        const index = courseDays.findIndex(courseDay => courseDay.name === value)
-        newArr[index].isChecked = checked;
-
-        setState(prevState => ({ ...prevState, courseDays: newArr }));
-      }
-    }
-    else if(type === 'time') {
-      let newArr = [...courseDays];
-      const index = courseDays.findIndex(courseDay => courseDay.name === dayOfWeek)
-      newArr[index][name] = value;
-
-      setState(prevState => ({ ...prevState, courseDays: newArr }));
-    }
-    else {
-      setState(prevState => ({ ...prevState, [name]: value }));
-    }
+    setState(prevState => ({ ...prevState, [name]: value }));
   }
 
   const handleSubmit = (event) => {
@@ -81,35 +48,25 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
     event.preventDefault();
   }
 
+  const addLiveSession = () => {
+    const data = new FormData();
+    data.append('start_time', '2021-02-30T22:00:00Z');
+    data.append('duration', 60);
+
+    fetch(`https://api.zoom.us/v2/users/${'everestlogix@gmail.com'}/meetings`, {
+      method: 'POST',
+      body: data,
+    })
+    .then((res) => res.json())
+    .then((result) => console.log('result', result))
+    .catch((error) => console.log('error: ', error));
+
+  }
+
   return (
     <Fragment>
       <form onSubmit={handleSubmit}>
         <input type='text' name='courseName' value={courseName} disabled />
-        <input type='date' name='startDate' value={startDate} onChange={handleChange} />
-        <input type='date' name='endDate' value={endDate} onChange={handleChange} />
-        <input type='checkbox' name='isVisible' value={isVisible} checked={isVisible} onChange={handleChange} />
-        {
-          courseDays.map((courseDay) => (
-            <input
-              type='checkbox'
-              name='courseDays'
-              key={courseDay.name}
-              value={courseDay.name}
-              checked={courseDay.isChecked}
-              onChange={handleChange}
-            />
-          ))
-        }
-        {
-          courseDays.map((courseDay) => (
-            courseDay.isChecked &&
-              <div key={courseDay.name}>
-                <h1>{courseDay.name} Schedule</h1>
-                <input type='time' name='startTime' value={courseDay.startTime} onChange={(e) => handleChange(e, courseDay.name)} />
-                <input type='time' name='endTime' value={courseDay.endTime} onChange={(e) => handleChange(e, courseDay.name)} />
-              </div>
-          ))
-        }
         <input type="submit" value="Update Course" />
       </form>
       <div>

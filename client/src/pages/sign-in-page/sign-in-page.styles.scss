@@ -1,10 +1,12 @@
-.signin-header {
-  border-bottom: solid 1px #dedfe0;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  color: #29303b;
-  display: block;
-  font-weight: 700;
-  font-size: 15px;
-  padding: 24px 64px 24px 24px;
+#root {
+  .signin-header {
+    border-bottom: solid 1px #dedfe0;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    color: #29303b;
+    display: block;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 24px 64px 24px 24px;
+  }
 }

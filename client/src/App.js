@@ -44,6 +44,7 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
   const isMounted = useRef(false);
 
   useEffect(() => {
+    document.querySelector('#zmmtg-root').style.display = 'none';
     if (!isMounted.current) {
       checkUserSessionStart();
       isMounted.current = true;
