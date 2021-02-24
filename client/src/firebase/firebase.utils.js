@@ -243,10 +243,6 @@ export const convertInstructorCoursesCollectionsSnapshotToMap = (collections) =>
       courseId, 
       instructorId, 
       courseName, 
-      courseDays, 
-      startDate, 
-      endDate, 
-      isVisible, 
       createdAt,
     } = doc.data();
 
@@ -255,10 +251,6 @@ export const convertInstructorCoursesCollectionsSnapshotToMap = (collections) =>
       courseId, 
       instructorId, 
       courseName, 
-      courseDays, 
-      startDate, 
-      endDate, 
-      isVisible, 
       createdAt,
     }
   });
@@ -315,11 +307,12 @@ export const updateCourseDocument = async (course) => {
 
 export const convertCoursesCollectionsSnapshotToMap = (collections) => {
   const transformedCollection = collections.docs.map(doc => {
-    const { courseName } = doc.data();
+    const { courseName, headline } = doc.data();
 
     return {
       id: doc.id,
       courseName,
+      headline,
     }
   });
 
@@ -529,11 +522,8 @@ export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
       instructorId,
       instructorCourseId,
       courseName, 
-      courseDays, 
-      startDate, 
-      endDate, 
-      isVisible, 
       createdAt,
+      userName,
     } = doc.data();
 
     return {
@@ -542,12 +532,9 @@ export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
       studentId, 
       instructorId,
       instructorCourseId,
-      courseName, 
-      courseDays, 
-      startDate, 
-      endDate, 
-      isVisible, 
+      courseName,  
       createdAt,
+      userName,
     }
   });
 

@@ -231,6 +231,11 @@ const StudentNavigation = () => (
       </Link>
     </li>
     <li>
+      <Link to={ROUTES.CHAT_ROOMS} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Chat Rooms</span>
+      </Link>
+    </li>
+    <li>
       <Link to={ROUTES.STUDENT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
         <span className="udlite-block-list-item-content">Student</span>
       </Link>

@@ -117,7 +117,7 @@ const CourseDetailsPage = ({
                             <div className="buy-box__element">
                               <div>
                                 <div className="price-text--container--Ws-fP udlite-clp-price-text" data-purpose="price-text-container">
-                                  <div className="price-text--price-part--Tu6MH udlite-clp-discount-price udlite-heading-xxl" data-purpose="course-price-text"><span><span>₺27.99</span></span></div>
+                                  <div className="price-text--price-part--Tu6MH udlite-clp-discount-price udlite-heading-xxl" data-purpose="course-price-text"><span><span>₺30</span></span></div>
                                 </div>
                               </div>
                             </div>
@@ -162,7 +162,7 @@ const CourseDetailsPage = ({
                       <div className="price-text--container--Ws-fP slider-menu__price-text udlite-clp-price-text" data-purpose="price-text-container">
                         <div className="price-text--price-part--Tu6MH udlite-clp-discount-price udlite-heading-lg" data-purpose="course-price-text">
                           <span>
-                            <span>₺27.99</span>
+                            <span>₺30</span>
                           </span>
                         </div>
                       </div>
@@ -298,15 +298,6 @@ const CourseDetailsPage = ({
                               {
                                 instructor.userName
                               } 
-                              &nbsp;
-                              - 
-                              &nbsp;
-                              {
-                                instructor.courseDays
-                                .filter((courseDay) => courseDay.isChecked)
-                                .map((courseDay) => courseDay.name.substring(0, 3))
-                                .join('/')
-                              }
                             </option>
                           ))
                         }

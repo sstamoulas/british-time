@@ -27,10 +27,6 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   const [state, setState] = useState({ ...INITIAL_STATE, ...currentCourse });
   const [objectiveText, setObjectiveText] = useState('');
   const [requirementText, setRequirementText] = useState('');
-  const baseURL = process.env.NODE_ENV === "production" ? 
-    'https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api' 
-  : 
-    'http://localhost:5001/react-firebase-authentic-5bd64/us-central1/api';
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -85,57 +81,6 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     updateCourseStart({...state, id: courseId, hasImage: true });
   }
 
-  const onVideoUpload = async (event) => {
-    const data = new FormData();
-
-    fetch(`${baseURL}/video-upload`, {
-      method: 'POST',
-    })
-    .then((res) => res.json())
-    .then(({ fileId }) => console.log('result', fileId))
-    .catch((error) => console.log('error: ', error));
-  }
-
-  const onFileDownload = (event) => {
-    const fileName = '2014_YDS_ILKBAHAR_INGILIZCE.pdf';
-    const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx'
-
-    fetch(`${baseURL}/file-download?fileName=${fileName}&fileId=${fileId}`, {
-      method: 'GET',
-    })
-    .then((response) => {
-      window.open(response.url)
-    })  
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-
-  const onFileDelete = (event) => {
-    const fileId = '1-NR8vewLS2U4rxDLasC52IfJBmGf1jRx';
-
-    fetch(`${baseURL}/file-delete/${fileId}`, {
-      method: 'DELETE',
-    })
-    .then((response) => {
-      // setState(prevState => ({ ...prevState, imageLoading: false }));
-      // onUploadCallback();
-    })  
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-
-  const getCloudName = (event) => {
-    fetch(`${baseURL}/video-conference`)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }
-
   useEffect(() => {
     if(isObjectEmpty(currentCourse)) {
       fetchCourseByIdStart(courseId);
@@ -150,10 +95,6 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
       <h1>Edit Course Titled '{state.courseName}' Page</h1>
       <form onSubmit={handleSubmit}>
         <CourseImage hasImage={state.hasImage} courseId={courseId} onUploadCallback={onUploadCallback} />
-        <a onClick={onVideoUpload}>Click to upload a video</a>
-        <a onClick={onFileDownload}>Click to download a file</a>
-        <a onClick={onFileDelete}>Click to delete a file</a>
-        <a onClick={getCloudName}>Get Cloud Name</a>
         <select name='level' onChange={handleChange}>
           <option defaultValue hidden> 
             Select a Level 

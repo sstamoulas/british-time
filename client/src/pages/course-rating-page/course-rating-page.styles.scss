@@ -1,0 +1,20 @@
+.rating-form {
+  display: flex;
+  flex-direction: column;
+
+  & .center {
+    display: flex;
+    justify-content: center;
+  }
+
+  & .rating-container {
+    align-items: center;
+  }
+
+  button {
+    padding: revert;
+    border: revert;
+    background: revert;
+    outline: revert;
+  }
+}

@@ -2,9 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import Chat from './../../components/chat/chat.component';
-import VideoChatContainer from './../../components/video-chat-container/video-chat-container.component';
-
 import { currentUser } from './../../redux/user/user.selectors';
 
 import * as ROLES from './../../constants/roles';
@@ -22,11 +19,6 @@ const HomePage = ({ currentUser }) => (
           <h1 className="udlite-heading-xxl" data-purpose="safely-set-inner-html:billboard:title">Bit by bit</h1>
           <p className="udlite-text-md" data-purpose="safely-set-inner-html:billboard:subtitle">Learn for an hour and develop new skills. Courses from ₺27.99 through Dec. 11.</p>
         </div>
-        <Chat />
-        {
-          (currentUser.role.includes(ROLES.INSTRUCTOR) || currentUser.role.includes(ROLES.STUDENT)) &&
-            <VideoChatContainer />
-        }
       </div>
     </div>
   </div>

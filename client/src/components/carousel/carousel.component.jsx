@@ -65,7 +65,7 @@ const Carousel = ({ type, courses }) => {
         <div className="carousel__container js-carousel-container">
           <div className={`carousel__list js-carousel-list-${type}`}>
           {
-            courses.map((course) => (
+            courses.map((course) => console.log(course) || (
               <div key={course.id} data-index="0" className={`carousel__item slick-slide slick-active slick-current js-carousel-item-${type}`} tabIndex="-1" aria-hidden="false" style={{outline: 'none', width: '231px'}}>
                 <div>
                   <div data-courseid="637930" className="course-discovery-unit--card-margin--2TVw4 merchandising-course-card--card--2UfMa">
@@ -76,51 +76,14 @@ const Carousel = ({ type, courses }) => {
                       <div className="merchandising-course-card--card-body--3OpAH">
                         <div>
                           <div className="merchandising-course-card--course-title--2Ob4m" data-purpose="course-card-title">{course.courseName}</div>
-                          <span className="course-badge--course-badge--1AN7r">
-                            <span data-purpose="badge" className="on-course-card badge badge-accented yellow">
-                              <span className="badge-text">Bestseller</span>
-                            </span>
-                          </span>
-                          <span className="merchandising-course-card--instructor-titles--vXVfV" data-purpose="course-card-instructor-titles">Chris Haroun</span>
-                        </div>
-                        <div className="fx-jsb">
-                          <span data-purpose="details-rating" className="star-rating--details__rating--36AIt">
-                            <span className="star-rating--star-container--186zZ">
-                              <div aria-label="Rating: 4.5 out of 5, 43,128 reviews" data-purpose="star-rating-shell" className="star-rating-shell star-rating--star-rating--static--3wPvS star-rating--star-rating--tiny--2kjvX">
-                                <div>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--unfilled--1aZxo"></span>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--filled--2D0bO" style={{width: '100%'}}></span>
-                                </div>
-                                <div>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--unfilled--1aZxo"></span>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--filled--2D0bO" style={{width: '100%'}}></span>
-                                </div>
-                                <div>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--unfilled--1aZxo"></span>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--filled--2D0bO" style={{width: '100%'}}></span>
-                                </div>
-                                <div>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--unfilled--1aZxo"></span>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--filled--2D0bO" style={{width: '100%'}}></span>
-                                </div>
-                                <div>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--unfilled--1aZxo"></span>
-                                  <span className="star-rating--review-star--Z6Nqj star-rating--review-star--filled--2D0bO" style={{width: '50%'}}></span>
-                                </div>
-                              </div>
-                            </span>
-                            <span aria-hidden="true" className="star-rating--review__numbers-container--2euA-">
-                              <span className="star-rating--reviews__stats--3ANGp" data-purpose="course-card-star-rating">4.5</span>
-                              <span className="star-rating--reviews__count--1Zo2k" data-purpose="course-card-review-count">(43,128)</span>
-                            </span>
-                          </span>
+                          <span className="merchandising-course-card--instructor-titles--vXVfV" data-purpose="course-card-instructor-titles">{course.headline}</span>
                         </div>
                         <div className="merchandising-course-card--price-wrapper--1eeWg" data-purpose="course-card-price-wrapper">
                           <div className="price-text-container price-text--base-price__container--Xwk8v price-text--reverse--1rh1B" data-purpose="price-text-container">
                             <div className="course-price-text price-text--base-price__discount--1J7vF price-text--black--1qJbH price-text--medium--2clK9 price-text--semibold--DLyJV" data-purpose="course-price-text">
                               <span className="sr-only">Current price</span>
                               <span>
-                                <span>₺379.99</span>
+                                <span>₺30</span>
                               </span>
                             </div>
                           </div>

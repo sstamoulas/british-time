@@ -72,7 +72,7 @@ const StudentPage = ({
 
   return (
     <div>
-      <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
+      <form onSubmit={onSubmit} className='student-form d-flex flex-column m-default'>
         <ProfileImage className='p-default cursor-pointer' hasImage={studentDetails.hasImage} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 
           name='bio' 

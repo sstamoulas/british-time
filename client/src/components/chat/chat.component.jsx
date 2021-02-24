@@ -1,10 +1,14 @@
-import React, { Component, useState, useEffect } from 'react'
+import React, { Component, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
+import ProfileImage from './../profile-image/profile-image.component';
+
 import { currentUser } from './../../redux/user/user.selectors';
 
-import { database } from "./../../firebase/firebase.utils"
+import { database } from "./../../firebase/firebase.utils";
+
+import './chat.styles.scss';
 
 
 const INITIAL_STATE = {
@@ -15,16 +19,16 @@ const INITIAL_STATE = {
   writeError: null
 }
 
-const Chat = ({ currentUser }) => {
+const Chat = ({ currentUser, room }) => {
   const [state, setState] = useState({ ...INITIAL_STATE, user: currentUser })
   useEffect(() => {
     const init = async () => {
       setState(prevState => ({ ...prevState, readError: null }));
       try {
-        database.ref("chats").on("value", snapshot => {
+        database.ref(`${room}`).on("value", snapshot => {
           let chats = [];
           snapshot.forEach((snap) => {
-            chats.push(snap.val());
+            chats.push({...snap.val(), key: snap.key });
           });
 
           setState(prevState => ({ ...prevState, chats }));
@@ -35,7 +39,7 @@ const Chat = ({ currentUser }) => {
     }
 
     init();
-  }, [])
+  }, [room])
 
   const handleChange = (event) => {
     event.persist();
@@ -44,13 +48,26 @@ const Chat = ({ currentUser }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     setState(prevState => ({ ...prevState, writeError: null }));
     try {
-      await database.ref("chats").push({
-        content: state.content,
-        timestamp: Date.now(),
-        uid: state.user
-      });
+      if(state.chats[state.chats.length - 1].uid.id === state.user.id) {
+        let newContent = state.content;
+        newContent = `${state.chats[state.chats.length - 1].content} <br /> ${newContent}`;
+
+        await database.ref(`${room}/${state.chats[state.chats.length - 1].key}`).update({
+          content: newContent,
+          timestamp: Date.now(),
+          uid: state.user
+        });
+      }
+      else {
+        await database.ref(`${room}`).push({
+          content: state.content,
+          timestamp: Date.now(),
+          uid: state.user
+        });
+      }
 
       setState(prevState => ({ ...prevState, content: '' }));
     } catch (error) {
@@ -59,19 +76,51 @@ const Chat = ({ currentUser }) => {
   }
 
   return (
-    <div>
-      <div className="chats">
-        {state.chats.map(chat => {
-          return <p key={chat.timestamp}>{chat.content}</p>
-        })}
+    <div className="chatroom">
+      <div className="chat-top friend">
+        <div className="name">
+          <h3>{room}</h3>
+        </div>
+        <div className="profile">
+          <ProfileImage
+            className="icon" 
+            publicId={currentUser.id} 
+            width="64" 
+            height="64" 
+            style={{width: '6.4rem', height: '6.4rem'}} 
+          />
+        </div>
       </div>
-      <form onSubmit={handleSubmit}>
-        <input onChange={handleChange} value={state.content} />
-        {state.error ? <p>{state.writeError}</p> : null}
-        <button type="submit">Send</button>
-      </form>
-      <div>
-        Login in as: <strong>{state.user.userName}</strong>
+      <div className="chat-mid">
+        {
+          state.chats.map((chat, index) => {
+            const chatItems = chat.content.split('<br />')
+            return (
+              <div className="chat" key={chat.timestamp}>
+                <div className={`chatbox ${chat.uid.id === currentUser.id ? 'left' : 'right'}`}>
+                  <div className="profile">
+                    <ProfileImage
+                      className="icon" 
+                      publicId={chat.uid.id} 
+                      width="64" 
+                      height="64" 
+                      style={{width: '6.4rem', height: '6.4rem'}} 
+                    />
+                  </div>
+                  <div className="message">
+                    <p>{chatItems.map((chatItem, index) => <span key={index}>{chatItem}<br /></span>)}</p>
+                  </div>
+                </div>
+              </div>
+            )
+          })
+        }
+      </div>
+      <div className="inputbox chat-bottom">
+        <form onSubmit={handleSubmit} style={{paddingBottom: '10px'}}>
+          <input type="text" placeholder="..." onChange={handleChange} value={state.content} />
+          <button type="submit"><span>+</span></button>
+        </form>
       </div>
     </div>
   );

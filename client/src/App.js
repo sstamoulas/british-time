@@ -21,6 +21,8 @@ import LessonUpdatePage from './pages/lesson-update-page/lesson-update-page.comp
 import CourseDetailsPage from './pages/course-details-page/course-details-page.component';
 import StudentCoursePage from './pages/student-course-page/student-course-page.component';
 import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.component';
+import CourseRatingPage from './pages/course-rating-page/course-rating-page.component';
+import ChatRoomPage from './pages/chat-room-page/chat-room-page.component';
 import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
 
 import Navigation from './components/navigation/navigation.component';
@@ -155,6 +157,18 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
             path={ROUTES.STUDENT_LESSON_DETAILS}
             condition={currentUser && currentUser.role === ROLES.STUDENT}
             component={StudentLessonPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.COURSE_RATING}
+            condition={currentUser && currentUser.role === ROLES.STUDENT}
+            component={CourseRatingPage}
+          />
+          <PrivateRoute
+            exact
+            path={ROUTES.CHAT_ROOMS}
+            condition={currentUser && currentUser.role === ROLES.STUDENT}
+            component={ChatRoomPage}
           />
           <Route
             path='/*' 
