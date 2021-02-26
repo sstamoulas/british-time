@@ -11,9 +11,9 @@ const ProfileImage = ({ hasImage, publicId, height, width, className, onUploadCa
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
-    'https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api' 
+    `${process.env.BASE_URL}/api`
   : 
-    'http://localhost:5001/react-firebase-authentic-5bd64/us-central1/api';
+    `${process.env.LOCAL_HOST_URL}/api`;
 
   const onClick = event => {
     document.querySelector(".img-upload").click();

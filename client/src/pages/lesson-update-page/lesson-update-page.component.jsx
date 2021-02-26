@@ -33,9 +33,9 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
   const [fileType, setFileType] = useState(null);
   const { chapterTitle, lessons } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
-    'https://us-central1-react-firebase-authentic-5bd64.cloudfunctions.net/api' 
+    `${process.env.BASE_URL}/api`
   : 
-    'http://localhost:5001/react-firebase-authentic-5bd64/us-central1/api';
+    `${process.env.LOCAL_HOST_URL}/api`;
 
   useEffect(() => {
     if(isObjectEmpty(lessonDetails)) {

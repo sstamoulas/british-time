@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {Switch, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
+
 import { createStructuredSelector } from 'reselect';
 
 import LandingPage from './pages/landing-page/landing-page.component';

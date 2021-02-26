@@ -26,6 +26,15 @@ app.use((req, res, next) => {
   next();
 });
 
+// serve static assets normally
+app.use(express.static(path.join(__dirname, './../client/build')));
+
+// handle every other route with index.html, which will contain
+// a script tag to your application's JavaScript file(s).
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, './../client/build', 'index.html'));
+});
+
 // If modifying these scopes, delete token.json.
 const SCOPES = [
   'https://www.googleapis.com/auth/drive', 
