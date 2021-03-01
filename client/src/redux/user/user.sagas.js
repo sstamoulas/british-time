@@ -102,35 +102,59 @@ export function* signOut({ type }) {
 }
 
 export function* onSignUpStart() {
-  yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
+  yield takeLatest(
+    UserActionTypes.SIGN_UP_START, 
+    signUp
+  );
 }
 
 export function* onSignUpSuccess() {
-  yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
+  yield takeLatest(
+    UserActionTypes.SIGN_UP_SUCCESS, 
+    signInAfterSignUp
+  );
 }
 
 export function* onSignInStart() {
-  yield takeLatest(UserActionTypes.SIGN_IN_START, signInWithEmail);
+  yield takeLatest(
+    UserActionTypes.SIGN_IN_START, 
+    signInWithEmail
+  );
 }
 
 export function* onCheckUserSessionStart() {
-  yield takeLatest(UserActionTypes.CHECK_USER_SESSION_START, isUserAuthenticated);
+  yield takeLatest(
+    UserActionTypes.CHECK_USER_SESSION_START, 
+    isUserAuthenticated
+  );
 }
 
 export function* onPasswordResetStart() {
-  yield takeLatest(UserActionTypes.PASSWORD_RESET_START, passwordReset)
+  yield takeLatest(
+    UserActionTypes.PASSWORD_RESET_START, 
+    passwordReset
+  )
 }
 
 export function* onSignOutStart() {
-  yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
+  yield takeLatest(
+    UserActionTypes.SIGN_OUT_START, 
+    signOut
+  );
 }
 
 export function* onUpdateUserSuccess() {
-  yield takeLatest(SystemActionTypes.UPDATE_USER_SUCCESS, isUserAuthenticated);
+  yield takeLatest(
+    SystemActionTypes.UPDATE_USER_SUCCESS, 
+    isUserAuthenticated
+  );
 }
 
 export function* onCreateCourseSuccess() {
-  yield takeLatest(CourseActionTypes.CREATE_COURSE_SUCCESS, isUserAuthenticated);
+  yield takeLatest(
+    CourseActionTypes.CREATE_COURSE_SUCCESS, 
+    isUserAuthenticated
+  );
 }
 
 export function* userSagas() {

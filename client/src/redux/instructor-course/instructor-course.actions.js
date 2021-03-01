@@ -73,6 +73,20 @@ export const createInstructorCourseDetailsFailure = (error) => ({
   payload: error,
 });
 
+export const updateInstructorCourseRatingStart = (instructorCourseId, oldRating, rating) => ({
+  type: InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_RATING_START,
+  payload: { instructorCourseId, oldRating, rating },
+});
+
+export const updateInstructorCourseRatingSuccess = () => ({
+  type: InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_RATING_SUCCESS,
+});
+
+export const updateInstructorCourseRatingFailure = (error) => ({
+  type: InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_RATING_FAILURE,
+  payload: error,
+});
+
 export const updateInstructorCourseDetailsStart = (courseId, courseDetails) => ({
   type: InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_DETAILS_START,
   payload: { courseId, courseDetails },

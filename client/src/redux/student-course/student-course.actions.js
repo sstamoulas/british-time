@@ -29,7 +29,7 @@ export const fetchStudentCourseFailure = (error) => ({
   payload: error,
 });
 
-export const createStudentCourseStart = (courseDetails) => ({
+export const createStudentCourseStart = (courseDetails) => console.log(courseDetails) || ({
   type: StudentCourseActionTypes.CREATE_STUDENT_COURSE_START,
   payload: { courseDetails },
 });
@@ -44,7 +44,7 @@ export const createStudentCourseFailure = (error) => ({
   payload: error,
 });
 
-export const updateStudentCourseStart = (courseId, courseDetails) => console.log(courseDetails) || ({
+export const updateStudentCourseStart = (courseId, courseDetails) => ({
   type: StudentCourseActionTypes.UPDATE_STUDENT_COURSE_START,
   payload: { courseId, courseDetails },
 });

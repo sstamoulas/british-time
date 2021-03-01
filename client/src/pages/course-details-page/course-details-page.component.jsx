@@ -38,12 +38,9 @@ const CourseDetailsPage = ({
   const [selectedInstructor, setSelectedInstructor] = useState({instructorCourseId: Object.keys(instructors)[0], ...instructors[Object.keys(instructors)[0]]});
 
   useEffect(() => {
-    let isMounted = true;
     window.addEventListener('scroll', fixSideBar);
 
     return () => {
-      isMounted = false;
-
       window.removeEventListener('scroll', fixSideBar);
     };
 
@@ -86,6 +83,8 @@ const CourseDetailsPage = ({
     history.push(ROUTES.STUDENT);
     event.preventDefault();
   }
+
+  console.log('instructors: ', instructors, instructorDetails)
 
   return !isObjectEmpty(courseDetails) && (
     <div className="paid-course-landing-page__container component-margin">

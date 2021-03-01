@@ -7,6 +7,8 @@ import './create-instructor-course.styles.scss';
 
 const INITIAL_STATE = {
   courseName: '',
+  totalStudents: 0,
+  rating: 0,
 }
 
 const CreateInstructorCourse = ({ courseDetails, createInstructorCourseDetailsStart }) => {

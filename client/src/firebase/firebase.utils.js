@@ -152,6 +152,35 @@ export const updateInstructorDetailsDocument = async (userId, instructorDetails)
   return instructorRef;
 }
 
+export const updateInstructorRatingDocument = async (instructorId, oldRating, rating) => {
+  const docRef = firestore.collection('users').doc(instructorId);
+  const snapShot = await docRef.get();
+  const instructorDetails = snapShot.data();
+  let totalStudents = oldRating == 0 ? instructorDetails.totalStudents + 1 : instructorDetails.totalStudents
+  const updatedAt = new Date();
+
+  if(totalStudents === undefined) {
+    totalStudents = 1;
+  }
+
+  if(instructorDetails.rating) {
+    rating = ((instructorDetails.rating * totalStudents) - oldRating + rating)/totalStudents;
+  }
+
+  try {
+    await docRef.update({
+      ...instructorDetails,
+      rating,
+      totalStudents,
+      updatedAt,
+    });
+  } catch(error) {
+    console.log('error updating instructor rating', error.message);
+  }
+
+  return docRef;
+}
+
   // *** Instructor Course API ***
 
 export const getAllInstructorCourses = async () => {
@@ -232,6 +261,31 @@ export const updateInstructorCourseDetailsDocument = async (courseId, courseDeta
     });
   } catch(error) {
     console.log('error updating instructor course details', error.message);
+  }
+
+  return docRef;
+}
+
+export const updateInstructorCourseRatingDocument = async (instructorCourseId, oldRating, rating) => {
+  const docRef = firestore.collection('instructor-courses').doc(instructorCourseId);
+  const snapShot = await docRef.get();
+  const courseDetails = snapShot.data();
+  const totalStudents = oldRating == 0 ? courseDetails.totalStudents + 1 : courseDetails.totalStudents
+  const updatedAt = new Date();
+
+  if(courseDetails.rating) {
+    rating = ((courseDetails.rating * totalStudents) - oldRating + rating)/totalStudents;
+  }
+
+  try {
+    await docRef.update({
+      ...courseDetails,
+      rating,
+      totalStudents,
+      updatedAt,
+    });
+  } catch(error) {
+    console.log('error updating instructor course rating', error.message);
   }
 
   return docRef;
@@ -325,7 +379,6 @@ export const convertCoursesCollectionsSnapshotToMap = (collections) => {
   // *** Lesson API ***
 
 export const getLessonsByCourseId = async (instructorCourseId) => {
-  console.log('instructorCourseId', instructorCourseId)
   const docRef = firestore.collection('lessons').where("courseId", "==", instructorCourseId);
   const snapShot = await docRef.get();
 
@@ -447,33 +500,20 @@ export const getAllStudentCourses = async () => {
 }
 
 export const getCoursesByStudentId = async (studentId) => {
-  const collectionRef = firestore.collection('student-courses').where("studentId", "==", studentId);
-  const snapShot = await collectionRef.get();
+  let collectionRef = firestore.collection('student-courses').where("studentId", "==", studentId);
+  let snapShot = await collectionRef.get();
 
   const collectionOfStudentCourses = convertStudentCoursesCollectionsSnapshotToMap(snapShot);
-  // const coursesByStudentId = Object.entries(collectionOfStudentCourses)
-  //   .map(([key, value]) => value)
-  //   .filter((studentCourse) => studentCourse.studentId === studentId);
 
-  return collectionOfStudentCourses;
+  return Promise.all(await Object.entries(collectionOfStudentCourses)
+    .map(async ([key, value]) => {
+      return {studentCourseId: value.id, instructorCourseId: value.instructorCourseId, ...(await getInstructorCourseByCourseId(value.instructorCourseId))}
+    }));
 }
 
 export const getStudentCourseByCourseId = async (courseId) => {
-  console.log('1st in firebase', courseId)
   const docRef = firestore.collection('student-courses').doc(courseId);
-  console.log('2nd in firebase', docRef)
-  let snapShot;
-  try {
-    console.log('before .get()')
-    snapShot = await docRef.get();
-    console.log('after .get()')
-  } catch(error) {
-    console.log('error in firebase', error);
-  }
-
-  console.log('before .data()')
-  console.log('3rd in firebase', snapShot.data())
-  console.log('after .data()')
+  const snapShot = await docRef.get();
 
   return snapShot.data();
 }
@@ -522,6 +562,7 @@ export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
       instructorId,
       instructorCourseId,
       courseName, 
+      rating,
       createdAt,
       userName,
     } = doc.data();
@@ -533,6 +574,7 @@ export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
       instructorId,
       instructorCourseId,
       courseName,  
+      rating,
       createdAt,
       userName,
     }

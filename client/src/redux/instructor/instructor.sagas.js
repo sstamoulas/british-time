@@ -11,6 +11,8 @@ import {
   createInstructorDetailsFailure,
   updateInstructorDetailsSuccess, 
   updateInstructorDetailsFailure,
+  updateInstructorRatingSuccess,
+  updateInstructorRatingFailure,
 } from './instructor.actions';
 
 import { fetchCoursesAsync } from './../course/course.sagas';
@@ -19,6 +21,7 @@ import {
   fetchCurrentInstructor, 
   createInstructorDetailsDocument, 
   updateInstructorDetailsDocument,
+  updateInstructorRatingDocument,
 } from '../../firebase/firebase.utils';
 
 import * as ROLES from './../../constants/roles';
@@ -65,6 +68,20 @@ export function* updateInstructorDetailsAsync({type, payload: { instructorDetail
     yield put(updateInstructorDetailsSuccess({ ...instructorSnapshot.data() }));
   } catch(error) {
     yield put(updateInstructorDetailsFailure(error));
+  } finally {
+    yield put(actionStop(type));
+  }
+}
+
+export function* updateInstructorRatingAsync({type, payload: { instructorId, oldRating, rating }}) {
+  try {
+    yield put(actionStart(type));
+    console.log(instructorId, oldRating, rating)
+    const instructorRef = yield call(updateInstructorRatingDocument, instructorId, oldRating, rating);
+
+    yield put(updateInstructorRatingSuccess({ ...instructorRef }));
+  } catch(error) {
+    yield put(updateInstructorRatingFailure(error));
   } finally {
     yield put(actionStop(type));
   }
@@ -118,11 +135,19 @@ export function* onUpdateInstructorDetailsStart() {
   );
 }
 
+export function* onUpdateInstructorRatingStart() {
+  yield takeLatest(
+    InstructorActionTypes.UPDATE_INSTRUCTOR_RATING_START, 
+    updateInstructorRatingAsync
+  );
+}
+
 export function* instructorSagas() {
   yield all([
     call(onSignInSuccess),
     call(onFetchInstructorDetailsStart),
     call(onCreateInstructorDetailsStart),
     call(onUpdateInstructorDetailsStart),
+    call(onUpdateInstructorRatingStart),
   ]);
 }

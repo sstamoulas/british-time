@@ -7,11 +7,11 @@ import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 import Zoom from './../../components/zoom/zoom.component';
 import CourseLessons from '../../components/course-lessons/course-lessons.component';
 
-import { fetchStudentCourseStart } from '../../redux/student-course/student-course.actions';
+import { fetchInstructorCourseDetailsByCourseIdStart } from './../../redux/instructor-course/instructor-course.actions';
 import { fetchInstructorLessonsStart } from '../../redux/instructor-lesson/instructor-lesson.actions';
 
 import { instructorLessons } from '../../redux/instructor-lesson/instructor-lesson.selectors';
-import { selectedCourseDetails } from '../../redux/student-course/student-course.selectors';
+import { selectedCourseDetails } from '../../redux/instructor-course/instructor-course.selectors';
 
 import * as ROUTES from './../../constants/routes';
 
@@ -27,7 +27,13 @@ const isArrayEmpty = (obj) => {
 
 const hasLiveSession = true;
 
-const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchStudentCourseStart }) => {
+const StudentCoursePage = ({ 
+  history, 
+  courseDetails, 
+  instructorLessons, 
+  fetchInstructorLessonsStart, 
+  fetchInstructorCourseDetailsByCourseIdStart 
+}) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...courseDetails });
   const [accordionOpen, setAccordionOpen] = useState(false);
@@ -130,12 +136,12 @@ const StudentCoursePage = ({ history, courseDetails, instructorLessons, fetchIns
     console.log('cl:', courseDetails, instructorLessons, courseDetails.instructorCourseId)
     if(isObjectEmpty(courseDetails)) {
       console.log('in if', courseDetails)
-      fetchStudentCourseStart(courseId);
+      fetchInstructorCourseDetailsByCourseIdStart(courseId);
     }
     else if(isArrayEmpty(instructorLessons)) {
-      fetchInstructorLessonsStart(courseDetails.instructorCourseId);
+      fetchInstructorLessonsStart(courseId);
     }
-  }, [courseId, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchStudentCourseStart])
+  }, [courseId, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart])
 
   useEffect(() => {
 
@@ -1290,7 +1296,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchStudentCourseStart: (courseId) => dispatch(fetchStudentCourseStart(courseId)),
+  fetchInstructorCourseDetailsByCourseIdStart: (courseId) => dispatch(fetchInstructorCourseDetailsByCourseIdStart(courseId)),
   fetchInstructorLessonsStart: (instructorCourseId) => dispatch(fetchInstructorLessonsStart(instructorCourseId)),
 })
 

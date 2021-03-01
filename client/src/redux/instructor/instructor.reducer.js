@@ -9,6 +9,8 @@ const instructorReducer = (state = INITIAL_STATE, action) => {
     case InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_START:
     case InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_START:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_START:
+    case InstructorActionTypes.UPDATE_INSTRUCTOR_RATING_START:
+    case InstructorActionTypes.UPDATE_INSTRUCTOR_RATING_SUCCESS:
       return {
         ...state,
         error: null,
@@ -24,6 +26,7 @@ const instructorReducer = (state = INITIAL_STATE, action) => {
     case InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_FAILURE:
     case InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_FAILURE:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_FAILURE:
+    case InstructorActionTypes.UPDATE_INSTRUCTOR_RATING_FAILURE:
       return {
         ...state,
         error: action.payload,

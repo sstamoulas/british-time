@@ -1,8 +1,9 @@
-.student-form {
-  button {
-    padding: revert;
-    border: revert;
-    background: revert;
-    outline: revert;
+#root {
+  .student-form {
+    button {
+      border: revert;
+      background: revert;
+      outline: revert;
+    }
   }
 }

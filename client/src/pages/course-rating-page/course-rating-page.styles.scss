@@ -1,20 +1,21 @@
-.rating-form {
-  display: flex;
-  flex-direction: column;
-
-  & .center {
+#root {
+  .rating-form {
     display: flex;
-    justify-content: center;
-  }
+    flex-direction: column;
 
-  & .rating-container {
-    align-items: center;
-  }
+    & .center {
+      display: flex;
+      justify-content: center;
+    }
 
-  button {
-    padding: revert;
-    border: revert;
-    background: revert;
-    outline: revert;
+    & .rating-container {
+      align-items: center;
+    }
+
+    button {
+      border: revert;
+      background: revert;
+      outline: revert;
+    }
   }
 }

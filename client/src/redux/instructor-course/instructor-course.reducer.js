@@ -14,6 +14,8 @@ const instructorCourseReducer = (state = INITIAL_STATE, action) => {
     case InstructorCourseActionTypes.CREATE_INSTRUCTOR_COURSE_DETAILS_START:
     case InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_DETAILS_START:
     case InstructorCourseActionTypes.FETCH_INSTRUCTOR_COURSE_DETAILS_BY_COURSE_ID_START:
+    case InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_RATING_START:
+    case InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_RATING_SUCCESS:
       return {
         ...state,
         error: null,
@@ -46,6 +48,7 @@ const instructorCourseReducer = (state = INITIAL_STATE, action) => {
     case InstructorCourseActionTypes.FETCH_INSTRUCTOR_COURSE_DETAILS_FAILURE:
     case InstructorCourseActionTypes.CREATE_INSTRUCTOR_COURSE_DETAILS_FAILURE:
     case InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_DETAILS_FAILURE:
+    case InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_RATING_FAILURE:
       return {
         ...state,
         error: action.payload,

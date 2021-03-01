@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, batch } from 'react-redux';
 import { withRouter, useParams } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import RatingStar from './../../components/rating-star/rating-star.component';
 
-import { fetchStudentCourseStart, updateStudentCourseStart } from '../../redux/student-course/student-course.actions';
+import { fetchStudentCourseStart, updateStudentCourseStart } from './../../redux/student-course/student-course.actions';
+import { updateInstructorCourseRatingStart } from './../../redux/instructor-course/instructor-course.actions';
+import { updateInstructorRatingStart } from './../../redux/instructor/instructor.actions';
 
-import { selectedCourseDetails } from '../../redux/student-course/student-course.selectors';
+import { selectedCourseDetails } from './../../redux/student-course/student-course.selectors';
 
 import * as ROUTES from './../../constants/routes';
 
@@ -23,10 +25,18 @@ const INITIAL_STATE = {
   review: '',
 }
 
-const CourseRatingPage = ({ history, courseDetails, fetchStudentCourseStart, updateStudentCourseStart }) => {
+const CourseRatingPage = ({ 
+  history, 
+  courseDetails, 
+  fetchStudentCourseStart, 
+  updateStudentCourseStart, 
+  updateInstructorCourseRatingStart, 
+  updateInstructorRatingStart
+}) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, ...courseDetails });
   const { rating, tempRating, review } = state;
+  const oldRating = courseDetails.rating;
   let ratingDisplay = [];
 
   const handleChange = event => {
@@ -36,7 +46,11 @@ const CourseRatingPage = ({ history, courseDetails, fetchStudentCourseStart, upd
 
   const handleSubmit = (event) => {
     delete state.tempRating;
-    updateStudentCourseStart(courseId, {...state });
+    batch(() => {
+      updateStudentCourseStart(courseId, {...state });
+      updateInstructorCourseRatingStart(state.instructorCourseId, oldRating, rating);
+      updateInstructorRatingStart(state.instructorId, oldRating, rating);
+    });
     history.push(ROUTES.STUDENT);
     event.preventDefault();
   }
@@ -128,8 +142,14 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchStudentCourseStart: (courseId) => dispatch(fetchStudentCourseStart(courseId)),
-  updateStudentCourseStart: (courseId, courseDetails) => dispatch(updateStudentCourseStart(courseId, courseDetails)),
+  fetchStudentCourseStart: (courseId) => 
+    dispatch(fetchStudentCourseStart(courseId)),
+  updateStudentCourseStart: (courseId, courseDetails) => 
+    dispatch(updateStudentCourseStart(courseId, courseDetails)),
+  updateInstructorCourseRatingStart: (instructorCourseId, oldRating, rating) =>
+    dispatch(updateInstructorCourseRatingStart(instructorCourseId, oldRating, rating)),
+  updateInstructorRatingStart: (instructorId, oldRating, rating) =>
+    dispatch(updateInstructorRatingStart(instructorId, oldRating, rating)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CourseRatingPage));

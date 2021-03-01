@@ -11,13 +11,18 @@ const Zoom = ({ meetingNumber, userName, userEmail, passWord, role }) => {
 
   const API_SECRET = "f42ilZOVKnJY5Obc6EnzhceBmxPNxxg8iQc7";
 
+  const baseURL = process.env.NODE_ENV === "production" ? 
+    process.env.PUBLIC_URL
+  : 
+    'http://localhost:3000';
+
   const meetConfig = {
     apiKey: API_KEY,
     apiSecret: API_SECRET,
     meetingNumber,
     userName,
     passWord,
-    leaveUrl: "http://localhost:3000",
+    leaveUrl: baseURL,
     role,
   };
 
@@ -29,7 +34,7 @@ const Zoom = ({ meetingNumber, userName, userEmail, passWord, role }) => {
     success(res) {
       console.log("signature", res.result);
       ZoomMtg.init({
-        leaveUrl: "http://localhost:3000",
+        leaveUrl: baseURL,
         isSupportAV: true,
         success() {
           ZoomMtg.join({

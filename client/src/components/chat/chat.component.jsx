@@ -77,18 +77,9 @@ const Chat = ({ currentUser, room }) => {
 
   return (
     <div className="chatroom">
-      <div className="chat-top friend">
+      <div className="chat-top">
         <div className="name">
           <h3>{room}</h3>
-        </div>
-        <div className="profile">
-          <ProfileImage
-            className="icon" 
-            publicId={currentUser.id} 
-            width="64" 
-            height="64" 
-            style={{width: '6.4rem', height: '6.4rem'}} 
-          />
         </div>
       </div>
       <div className="chat-mid">
