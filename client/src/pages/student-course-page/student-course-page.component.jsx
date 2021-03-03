@@ -42,14 +42,11 @@ const StudentCoursePage = ({
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [activeTab, setActiveTab] = useState('Overview');
   const [player, setPlayer] = useState(undefined);
-  console.log(instructorLessons)
   const [currentLesson, setCurrentLesson] = useState(!isArrayEmpty(instructorLessons) && instructorLessons[0].lessons[0]);
   const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
 
   const { courseName } = state;
   let lessonAccordion;
-
-  console.log('re-render')
 
   useEffect(() => {
     window.addEventListener('scroll', fixSideBarHeight);
@@ -133,9 +130,7 @@ const StudentCoursePage = ({
   }, [lessonAccordion]);
 
   useEffect(() => {
-    console.log('cl:', courseDetails, instructorLessons, courseDetails.instructorCourseId)
     if(isObjectEmpty(courseDetails)) {
-      console.log('in if', courseDetails)
       fetchInstructorCourseDetailsByCourseIdStart(courseId);
     }
     else if(isArrayEmpty(instructorLessons)) {
@@ -144,8 +139,6 @@ const StudentCoursePage = ({
   }, [courseId, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart])
 
   useEffect(() => {
-
-    console.log('is loading...', !player)
     if(!player) {
       setPlayer(new YouTubeToHtml5({ withAudio: true }));
     }
@@ -155,7 +148,6 @@ const StudentCoursePage = ({
   }, [player, currentLesson.videoId])
 
   const loadNewContent = (lesson) => {
-    console.log(lesson)
     setCurrentLesson(lesson)
   }
 
@@ -195,7 +187,7 @@ const StudentCoursePage = ({
                                                      <div className="p-space-md">
                                                         <div data-purpose="safely-set-inner-html:rich-text-viewer:html" className="article-asset--content--1dAQ9">
                                                           {
-                                                            currentLesson.lessonResources.map((lessonResource) => console.log(lessonResource) || (
+                                                            currentLesson.lessonResources.map((lessonResource) => (
                                                               <div key={lessonResource.resourceId}>
                                                               { lessonResource.resourceType === "Text" && (
                                                                   <p>{lessonResource.resourceValue}</p>
@@ -263,7 +255,7 @@ const StudentCoursePage = ({
 
 
                                           {
-                                            console.log(currentLesson) || currentLesson.lessonType === "Video" &&
+                                            currentLesson.lessonType === "Video" &&
                                             <div className="video-viewer--container--23VX7">
                                                <div className="video-player--container--YDQRW">
                                                   <div className="video-player--video-wrapper--1L212 user-activity--user-inactive--2uBeO">

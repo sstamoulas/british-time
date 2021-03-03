@@ -82,8 +82,6 @@ const CourseRatingPage = ({
     }
   }, [courseId, courseDetails, fetchStudentCourseStart])
 
-  console.log(courseDetails)
-
   for(let i = 1; i <= 10; i++) {
     if(rating >= i && rating != null) {
       ratingDisplay.push(

@@ -524,10 +524,16 @@ export const createStudentCourseDetailsDocument = async (studentId, courseDetail
   const createdAt = new Date();
 
   if(!snapShot.exists) {
+    const { courseId, studentId, instructorId, instructorCourseId, courseName, rating, userName } = courseDetails;
     try {
       await docRef.set({
-        ...courseDetails,
-        studentId,
+        courseId, 
+        studentId, 
+        instructorId,
+        instructorCourseId,
+        courseName, 
+        rating,
+        userName,
         createdAt,
       });
     } catch(error) {
@@ -543,8 +549,15 @@ export const updateStudentCourseDetailsDocument = async (courseId, courseDetails
   const updatedAt = new Date();
 
   try {
+    const { courseId, studentId, instructorId, instructorCourseId, courseName, rating, userName } = courseDetails;
     await docRef.update({
-      ...courseDetails,
+      courseId, 
+      studentId, 
+      instructorId,
+      instructorCourseId,
+      courseName, 
+      rating,
+      userName,
       updatedAt,
     });
   } catch(error) {
@@ -563,8 +576,9 @@ export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
       instructorCourseId,
       courseName, 
       rating,
-      createdAt,
       userName,
+      createdAt,
+      updatedAt,
     } = doc.data();
 
     return {
@@ -575,8 +589,9 @@ export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
       instructorCourseId,
       courseName,  
       rating,
-      createdAt,
       userName,
+      createdAt,
+      updatedAt,
     }
   });
 
@@ -584,6 +599,48 @@ export const convertStudentCoursesCollectionsSnapshotToMap = (collections) => {
     accumulator[collection.id.toLowerCase()] = collection;
     return accumulator;
   }, {})
+}
+
+  // *** Payment API ***
+
+export const getPaymentsByUserId = async (userId) => {
+  let docRef = firestore.collection('payment-history').doc(userId);
+  let snapShot = await docRef.get();
+
+  return snapShot.data();
+}
+
+export const createPaymentsDocument = async (userId) => {
+  const docRef = firestore.collection('payment-history').doc(userId);
+  const snapShot = await docRef.get();
+  const createdAt = new Date();
+
+  if(!snapShot.exists) {
+    try {
+      await docRef.set({
+        transactions: [],
+      });
+    } catch(error) {
+      console.log('error creating payment history', error.message);
+    }
+  }
+
+  return docRef;
+}
+
+export const updatePaymentsDocument = async (userId, transactions) => {
+  const docRef = firestore.collection('payment-history').doc(userId);
+  const updatedAt = new Date();
+
+  try {
+    await docRef.update({
+      transactions,
+    });
+  } catch(error) {
+    console.log('error updating payment history', error.message);
+  }
+
+  return docRef;
 }
 
 export default firebase;

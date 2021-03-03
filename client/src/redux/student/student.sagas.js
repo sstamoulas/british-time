@@ -11,6 +11,8 @@ import {
   createStudentDetailsFailure,
   updateStudentDetailsSuccess, 
   updateStudentDetailsFailure,
+  updateStudentFundsSuccess,
+  updateStudentFundsFailure,
 } from './student.actions';
 
 import { 
@@ -48,6 +50,20 @@ export function* updateStudentDetailsAsync({type, payload: { studentDetails }}) 
     yield put(updateStudentDetailsSuccess({ ...studentSnapshot.data() }));
   } catch(error) {
     yield put(updateStudentDetailsFailure(error));
+  } finally {
+    yield put(actionStop(type));
+  }
+}
+
+export function* updateStudentFundsAsync({type, payload: { userId, funds }}) {
+  try {
+    yield put(actionStart(type));
+    const studentRef = yield call(updateStudentDetailsDocument, userId, { funds });
+    const studentSnapshot = yield studentRef.get();
+
+    yield put(updateStudentFundsSuccess({ ...studentSnapshot.data() }));
+  } catch(error) {
+    yield put(updateStudentFundsFailure(error));
   } finally {
     yield put(actionStop(type));
   }
@@ -94,10 +110,18 @@ export function* onUpdateStudentDetailsStart() {
   );
 }
 
+export function* onUpdateStudentFundsStart() {
+  yield takeLatest(
+    StudentActionTypes.UPDATE_STUDENT_FUNDS_START,
+    updateStudentFundsAsync
+  );
+}
+
 export function* studentSagas() {
   yield all([
     call(onSignInSuccess),
     call(onCreateStudentDetailsStart),
     call(onUpdateStudentDetailsStart),
+    call(onUpdateStudentFundsStart),
   ]);
 }

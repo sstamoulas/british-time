@@ -44,7 +44,7 @@ const StudentCourses = ({ history, currentUser, studentCourses }) => {
             }
 
             return (
-              <div key={studentCourse.instructorCourseId} role="presentation" tabIndex="-1" className="card card--learning" data-purpose="enrolled-course-card">
+              <div key={studentCourse.studentCourseId} role="presentation" tabIndex="-1" className="card card--learning" data-purpose="enrolled-course-card">
                 <Link to={`/student/course/${studentCourse.instructorCourseId}`} className="card--learning__image" tabIndex="-1">
                   <div className="card__image play-button-trigger">
                     <CourseImage className="course-image" courseId={studentCourse.courseId} alt={studentCourse.courseName}  width="240" height="135" />

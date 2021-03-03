@@ -48,20 +48,20 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
     event.preventDefault();
   }
 
-  const addLiveSession = () => {
-    const data = new FormData();
-    data.append('start_time', '2021-02-30T22:00:00Z');
-    data.append('duration', 60);
+  // const addLiveSession = () => {
+  //   const data = new FormData();
+  //   data.append('start_time', '2021-02-30T22:00:00Z');
+  //   data.append('duration', 60);
 
-    fetch(`https://api.zoom.us/v2/users/${'everestlogix@gmail.com'}/meetings`, {
-      method: 'POST',
-      body: data,
-    })
-    .then((res) => res.json())
-    .then((result) => console.log('result', result))
-    .catch((error) => console.log('error: ', error));
+  //   fetch(`https://api.zoom.us/v2/users/${'everestlogix@gmail.com'}/meetings`, {
+  //     method: 'POST',
+  //     body: data,
+  //   })
+  //   .then((res) => res.json())
+  //   .then((result) => console.log('result', result))
+  //   .catch((error) => console.log('error: ', error));
 
-  }
+  // }
 
   return (
     <Fragment>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect, batch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { withRouter, useParams } from 'react-router-dom';
+import { Link, withRouter, useParams } from 'react-router-dom';
 
 import ProfileImage from './../../components/profile-image/profile-image.component';
 import CourseImage from './../../components/course-image/course-image.component';
@@ -12,6 +12,7 @@ import { fetchInstructorsByCourseIdStart } from './../../redux/instructor-course
 import { createStudentCourseStart } from './../../redux/student-course/student-course.actions';
 
 import { selectCurrentCourse } from '../../redux/course/course.selectors';
+import { studentCourses } from './../../redux/student-course/student-course.selectors';
 import { selectedCourseDetails, selectCourseInstructors } from './../../redux/instructor-course/instructor-course.selectors';
 import { instructorDetails } from './../../redux/instructor/instructor.selectors';
 
@@ -27,6 +28,7 @@ const CourseDetailsPage = ({
   history, 
   courseDetails, 
   instructors, 
+  studentCourses,
   instructorDetails,
   fetchCourseByIdStart, 
   fetchInstructorDetailsStart,
@@ -75,7 +77,7 @@ const CourseDetailsPage = ({
   ])
 
   const handleChange = (event) => {
-    setSelectedInstructor(instructors[event.target.value])
+    setSelectedInstructor({instructorCourseId: event.target.value, ...instructors[event.target.value]})
   }
 
   const handleClick = (event) => {
@@ -84,7 +86,9 @@ const CourseDetailsPage = ({
     event.preventDefault();
   }
 
-  console.log('instructors: ', instructors, instructorDetails)
+  const hasTakenCourse = !isObjectEmpty(studentCourses) && 
+    Object.values(studentCourses).map((studentCourse) => 
+      studentCourse.instructorCourseId).includes(selectedInstructor.instructorCourseId)
 
   return !isObjectEmpty(courseDetails) && (
     <div className="paid-course-landing-page__container component-margin">
@@ -116,12 +120,27 @@ const CourseDetailsPage = ({
                             <div className="buy-box__element">
                               <div>
                                 <div className="price-text--container--Ws-fP udlite-clp-price-text" data-purpose="price-text-container">
-                                  <div className="price-text--price-part--Tu6MH udlite-clp-discount-price udlite-heading-xxl" data-purpose="course-price-text"><span><span>₺30</span></span></div>
+                                  <div className="price-text--price-part--Tu6MH udlite-clp-discount-price udlite-heading-xxl" data-purpose="course-price-text">
+                                    <span>
+                                    {
+                                      hasTakenCourse ? (
+                                        <span>Paid</span>
+                                      ) : (
+                                        <span>₺30</span>
+                                      )
+                                    }
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
                             </div>
                             <div className="buy-box__element buy-box__element--add-to-cart-button">
-                              <div data-purpose="add-to-cart"><button type="button" className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}} onClick={handleClick}>Add to cart</button></div>
+                            {
+                              hasTakenCourse ?
+                                <div data-purpose="add-to-cart"><Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}}>Go to Course</Link></div>
+                              :
+                                <div data-purpose="add-to-cart"><button type="button" className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}} onClick={handleClick}>Add to cart</button></div>
+                            }
                             </div>
                           </div>
                         </div>
@@ -161,7 +180,13 @@ const CourseDetailsPage = ({
                       <div className="price-text--container--Ws-fP slider-menu__price-text udlite-clp-price-text" data-purpose="price-text-container">
                         <div className="price-text--price-part--Tu6MH udlite-clp-discount-price udlite-heading-lg" data-purpose="course-price-text">
                           <span>
-                            <span>₺30</span>
+                            {
+                              hasTakenCourse ? (
+                                <span>Paid</span>
+                              ) : (
+                                <span>₺30</span>
+                              )
+                            }
                           </span>
                         </div>
                       </div>
@@ -169,9 +194,15 @@ const CourseDetailsPage = ({
                   </div>
                   <div className="slider-menu__buy-button">
                     <div>
-                      <button type="button" className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4" onClick={handleClick}>
-                        <span>Add to Cart</span>
-                      </button>
+                      {
+                        hasTakenCourse ? (
+                          <Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4">Go to Course</Link>
+                        ) : (
+                          <button type="button" className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4" onClick={handleClick}>
+                            <span>Add to Cart</span>
+                          </button>
+                        )
+                      }
                     </div>
                   </div>
                 </div>
@@ -219,7 +250,7 @@ const CourseDetailsPage = ({
                     <h1 className="udlite-heading-xl clp-lead__title clp-lead__title--small" data-purpose="lead-title">
                       {courseDetails.courseName}
                     </h1>
-                    <div className="udlite-text-md clp-lead__headline" data-purpose="lead-headline">{courseDetails.headline}
+                    <div className="udlite-text-md clp-lead__headline" data-purpose="lead-headline">{courseDetails.headline}&nbsp;
                       English speaking course. 77 Hours of English language speaking, English listening practice. 1000 English language words
                     </div>
                   </div>
@@ -320,7 +351,7 @@ const CourseDetailsPage = ({
                         <ul className="unstyled-list udlite-block-list">
                           <li>
                             <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">{instructorDetails.instructorRating || 'N/A'} Instructor Rating</div>
+                              <div className="udlite-block-list-item-content">{selectedInstructor.rating || 'N/A'} Instructor Rating</div>
                             </div>
                           </li>
                           <li>
@@ -330,7 +361,7 @@ const CourseDetailsPage = ({
                           </li>
                           <li>
                             <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">{instructorDetails.instructorStudents || 0} Students</div>
+                              <div className="udlite-block-list-item-content">{selectedInstructor.totalStudents || 0} Students</div>
                             </div>
                           </li>
                           <li>
@@ -366,6 +397,7 @@ const mapStateToProps = createStructuredSelector({
   instructors: selectCourseInstructors,
   courseDetails: selectCurrentCourse,
   instructorDetails: instructorDetails,
+  studentCourses: studentCourses,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -43,3 +43,17 @@ export const updateStudentDetailsFailure = (error) => ({
   type: StudentActionTypes.UPDATE_STUDENT_DETAILS_FAILURE,
   payload: error,
 });
+
+export const updateStudentFundsStart = (userId, funds) => ({
+  type: StudentActionTypes.UPDATE_STUDENT_FUNDS_START,
+  payload: { userId, funds },
+});
+
+export const updateStudentFundsSuccess = () => ({
+  type: StudentActionTypes.UPDATE_STUDENT_FUNDS_SUCCESS,
+});
+
+export const updateStudentFundsFailure = (error) => ({
+  type: StudentActionTypes.UPDATE_STUDENT_FUNDS_FAILURE,
+  payload: error,
+});

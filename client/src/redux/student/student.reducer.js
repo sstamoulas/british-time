@@ -9,6 +9,8 @@ const studentReducer = (state = INITIAL_STATE, action) => {
     case StudentActionTypes.FETCH_STUDENT_DETAILS_START:
     case StudentActionTypes.CREATE_STUDENT_DETAILS_START:
     case StudentActionTypes.UPDATE_STUDENT_DETAILS_START:
+    case StudentActionTypes.UPDATE_STUDENT_FUNDS_START:
+    case StudentActionTypes.UPDATE_STUDENT_FUNDS_SUCCESS:
       return {
         ...state,
         error: null,
@@ -24,6 +26,7 @@ const studentReducer = (state = INITIAL_STATE, action) => {
     case StudentActionTypes.FETCH_STUDENT_DETAILS_FAILURE:
     case StudentActionTypes.CREATE_STUDENT_DETAILS_FAILURE:
     case StudentActionTypes.UPDATE_STUDENT_DETAILS_FAILURE:
+    case StudentActionTypes.UPDATE_STUDENT_FUNDS_FAILURE:
       return {
         ...state,
         error: action.payload,

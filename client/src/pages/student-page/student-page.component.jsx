@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import StudentCourses from './../../components/student-courses/student-courses.component';
@@ -14,8 +14,6 @@ import { currentUser } from './../../redux/user/user.selectors';
 import './student-page.styles.scss';
 
 // need to add hasImage flag
-// Also if a course is activated for a user 
-// it shoulld not show in the search results to activate a new course.
 
 
 const INITIAL_STATE = {
@@ -72,6 +70,7 @@ const StudentPage = ({
 
   return (
     <div>
+      <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
       <form onSubmit={onSubmit} className='student-form d-flex flex-column m-default'>
         <ProfileImage className='p-default cursor-pointer' hasImage={studentDetails.hasImage} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 

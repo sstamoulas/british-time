@@ -19,6 +19,7 @@ import {
 import { 
   auth, 
   createUserProfileDocument,
+  createPaymentsDocument,
   getCurrentUser
 } from '../../firebase/firebase.utils';
 
@@ -26,6 +27,9 @@ export function* getSnapshotFromUserAuth(userAuth, additionalData) {
   try {
     const userRef = yield call(createUserProfileDocument, userAuth, additionalData);
     const userSnapshot = yield userRef.get();
+
+    yield call(createPaymentsDocument, userSnapshot.id);
+
     yield put(signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
   } catch(error) {
     yield put(signInFailure(error));
@@ -36,6 +40,7 @@ export function* signUp({ type, payload: { userName, email, password, role }}) {
   try {
     yield put(actionStart(type));
     const { user } = yield auth.createUserWithEmailAndPassword(email, password)
+
     yield put(signUpSuccess({ user, additionalData: { userName, role }}));
   } catch(error) {
     yield put(signUpFailure(error));

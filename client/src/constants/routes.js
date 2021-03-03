@@ -8,6 +8,7 @@ export const HOME = '/home';
 export const ACCOUNT = '/account';
 
 export const ADMIN = '/admin';
+export const PAYMENT = '/payment-history/:userId';
 
 export const INSTRUCTOR = '/instructor';
 export const COURSES = '/courses';

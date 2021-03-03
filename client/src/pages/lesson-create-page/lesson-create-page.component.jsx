@@ -10,6 +10,7 @@ import * as ROUTES from './../../constants/routes';
 
 const INITIAL_STATE = {
   chapterTitle: '',
+  lessons: [],
 }
 
 const EMPTY_LESSON = {
@@ -24,7 +25,7 @@ const EMPTY_RESOURCE = {
 
 const CreateLessonPage = ({ history, createInstructorLessonStart }) => {
   const { courseId } = useParams();
-  const [state, setState] = useState({ ...INITIAL_STATE, courseId, lessons: [] });
+  const [state, setState] = useState({ ...INITIAL_STATE, courseId });
   const [fileType, setFileType] = useState(null)
   const { chapterTitle, lessons } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 

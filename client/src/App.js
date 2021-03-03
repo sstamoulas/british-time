@@ -25,6 +25,7 @@ import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.c
 import CourseRatingPage from './pages/course-rating-page/course-rating-page.component';
 import ChatRoomPage from './pages/chat-room-page/chat-room-page.component';
 import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
+import PaymentPage from './pages/payment-page/payment-page.component';
 
 import Navigation from './components/navigation/navigation.component';
 import Footer from './components/footer/footer.component';
@@ -92,6 +93,12 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
             path={ROUTES.ACCOUNT}
             condition={currentUser}
             component={AccountPage}
+          />
+          <PrivateRoute 
+            exact
+            path={ROUTES.PAYMENT}
+            condition={currentUser}
+            component={PaymentPage}
           />
           <PrivateRoute 
             exact

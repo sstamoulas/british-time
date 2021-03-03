@@ -32,7 +32,6 @@ const ProfileImage = ({ hasImage, publicId, height, width, className, onUploadCa
     })
     .then((response) => {
       setState(prevState => ({ ...prevState, imageLoading: false }));
-      console.log(response.json());
       onUploadCallback();
     })  
     .catch((error) => {

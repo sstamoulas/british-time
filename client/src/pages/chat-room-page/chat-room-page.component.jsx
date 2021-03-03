@@ -12,13 +12,11 @@ const ChatRoom = () => {
     setChatRoom(textContent);
   }
 
-  console.log('chatRoom: ', chatRoom)
-
   return (
     <div>
       <ul>
         {
-          rooms.map((room) => console.log(room) || (
+          rooms.map((room) => (
             <li key={room} value={room} onClick={handleRoomChange}>{room}</li>
           ))
         }

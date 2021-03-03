@@ -11,7 +11,6 @@ const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCal
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
 
-  console.log(process.env.NODE_ENV)
   const baseURL = process.env.NODE_ENV === "production" ? 
     `${process.env.BASE_URL}/api`
   : 
@@ -34,7 +33,6 @@ const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCal
     })
     .then((response) => {
       setState(prevState => ({ ...prevState, imageLoading: false }));
-      console.log('response: ', response.json());
       onUploadCallback();
     })  
     .catch((error) => {

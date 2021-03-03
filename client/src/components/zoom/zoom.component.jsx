@@ -32,7 +32,7 @@ const Zoom = ({ meetingNumber, userName, userEmail, passWord, role }) => {
     apiSecret: meetConfig.apiSecret,
     role: meetConfig.role,
     success(res) {
-      console.log("signature", res.result);
+      // console.log("signature", res.result);
       ZoomMtg.init({
         leaveUrl: baseURL,
         isSupportAV: true,

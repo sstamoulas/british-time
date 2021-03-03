@@ -9,6 +9,7 @@ import instructorCourseReducer from './instructor-course/instructor-course.reduc
 import instructorLessonReducer from './instructor-lesson/instructor-lesson.reducer';
 import studentReducer from './student/student.reducer';
 import studentCourseReducer from './student-course/student-course.reducer';
+import paymentHistoryReducer from './payment-history/payment-history.reducer';
 
 const rootReducer = combineReducers({
   ui: uiReducer,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   instructorLessons: instructorLessonReducer,
   student: studentReducer,
   studentCourses: studentCourseReducer,
+  paymentHistory: paymentHistoryReducer,
 });
 
 export default rootReducer;

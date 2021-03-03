@@ -26,8 +26,6 @@ export function* fetchInstructorLessonsAsync({ type, payload: { instructorCourse
     yield put(actionStart(type));
     const instructorLessonsRef = yield call(getLessonsByCourseId, instructorCourseId);
 
-    console.log('in saga', instructorLessonsRef)
-
     yield put(fetchInstructorLessonsSuccess({ ...instructorLessonsRef }));
   } catch(error) {
     yield put(fetchInstructorLessonsFailure(error));

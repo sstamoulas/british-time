@@ -76,7 +76,6 @@ export function* updateInstructorDetailsAsync({type, payload: { instructorDetail
 export function* updateInstructorRatingAsync({type, payload: { instructorId, oldRating, rating }}) {
   try {
     yield put(actionStart(type));
-    console.log(instructorId, oldRating, rating)
     const instructorRef = yield call(updateInstructorRatingDocument, instructorId, oldRating, rating);
 
     yield put(updateInstructorRatingSuccess({ ...instructorRef }));

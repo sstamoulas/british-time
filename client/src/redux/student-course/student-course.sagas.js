@@ -42,8 +42,6 @@ export function* fetchStudentCoursesAsync({ type }) {
 export function* fetchStudentCourseAsync({ type, payload: { courseId }}) {
   try {
     yield put(actionStart(type));
-
-    console.log('in saga', courseId)
     const studentCourseRef = yield call(getStudentCourseByCourseId, courseId);
 
     yield put(fetchStudentCourseSuccess({ ...studentCourseRef }));
