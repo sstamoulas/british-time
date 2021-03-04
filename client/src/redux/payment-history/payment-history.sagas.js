@@ -9,11 +9,14 @@ import {
   fetchPaymentHistoryFailure,
   updatePaymentHistorySuccess, 
   updatePaymentHistoryFailure,
+  addPaymentHistoryTransactionSuccess,
+  addPaymentHistoryTransactionFailure,
 } from './payment-history.actions';
 
 import { 
   getPaymentsByUserId,
   updatePaymentsDocument,
+  addPaymentTransaction,
 } from './../../firebase/firebase.utils';
 
 import * as ROLES from './../../constants/roles';
@@ -45,6 +48,19 @@ export function* updatePaymentHistoryAsync({type, payload: { userId, transaction
   }
 }
 
+export function* addPaymentHistoryTransactionAsync({type, payload: { userId, transaction }}) {
+  try {
+    yield put(actionStart(type));
+    const paymentHistoryRef = yield call(addPaymentTransaction, userId, transaction);
+
+    yield put(addPaymentHistoryTransactionSuccess({ ...paymentHistoryRef }));
+  } catch(error) {
+    yield put(addPaymentHistoryTransactionFailure(error));
+  } finally {
+    yield put(actionStop(type));
+  }
+}
+
 export function* hasPaymentHistory({ type }) {
   const {user: { currentUser: { id, role }}} = yield select();
 
@@ -69,6 +85,13 @@ export function* onUpdatePaymentHistoryStart() {
   );
 }
 
+export function* onAddPaymentHistorTransactionStart() {
+  yield takeLatest(
+    PaymentHistoryActionTypes.ADD_PAYMENT_HISTORY_TRANSACTION_START, 
+    addPaymentHistoryTransactionAsync
+  );
+}
+
 export function* onSignInSuccess() {
   yield takeLatest(
     UserActionTypes.SIGN_IN_SUCCESS, 
@@ -80,6 +103,7 @@ export function* paymentHistorySagas() {
   yield all([
     call(onFetchPaymentHistoryStart),
     call(onUpdatePaymentHistoryStart),
+    call(onAddPaymentHistorTransactionStart),
     call(onSignInSuccess),
   ]);
 }

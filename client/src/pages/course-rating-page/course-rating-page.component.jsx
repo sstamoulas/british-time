@@ -46,6 +46,7 @@ const CourseRatingPage = ({
 
   const handleSubmit = (event) => {
     delete state.tempRating;
+    console.log(state)
     batch(() => {
       updateStudentCourseStart(courseId, {...state });
       updateInstructorCourseRatingStart(state.instructorCourseId, oldRating, rating);

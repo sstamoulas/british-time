@@ -10,11 +10,14 @@ import { fetchCourseByIdStart } from '../../redux/course/course.actions';
 import { fetchInstructorDetailsStart } from './../../redux/instructor/instructor.actions';
 import { fetchInstructorsByCourseIdStart } from './../../redux/instructor-course/instructor-course.actions';
 import { createStudentCourseStart } from './../../redux/student-course/student-course.actions';
+import { addPaymentHistoryTransactionStart } from './../../redux/payment-history/payment-history.actions';
+import { updateStudentFundsStart } from './../../redux/student/student.actions';
 
 import { selectCurrentCourse } from '../../redux/course/course.selectors';
 import { studentCourses } from './../../redux/student-course/student-course.selectors';
 import { selectedCourseDetails, selectCourseInstructors } from './../../redux/instructor-course/instructor-course.selectors';
 import { instructorDetails } from './../../redux/instructor/instructor.selectors';
+import { currentUser } from './../../redux/user/user.selectors';
 
 import * as ROUTES from './../../constants/routes';
 
@@ -26,6 +29,7 @@ const isObjectEmpty = (obj) => {
 
 const CourseDetailsPage = ({ 
   history, 
+  currentUser,
   courseDetails, 
   instructors, 
   studentCourses,
@@ -33,6 +37,8 @@ const CourseDetailsPage = ({
   fetchCourseByIdStart, 
   fetchInstructorDetailsStart,
   fetchInstructorsByCourseIdStart, 
+  addPaymentHistoryTransactionStart,
+  updateStudentFundsStart,
   createStudentCourseStart 
 }) => {
   const { courseId } = useParams();
@@ -81,7 +87,20 @@ const CourseDetailsPage = ({
   }
 
   const handleClick = (event) => {
-    createStudentCourseStart({ ...selectedInstructor });
+    const courseInfo = {
+      title: `${courseDetails.courseName} By ${instructorDetails.userName}`,
+      type: 'Credit',
+      amount: "30",
+      date: (new Date()).toString(),
+      transactionId: courseDetails.id,
+    }
+
+    batch(() => {
+      createStudentCourseStart({ ...selectedInstructor });
+      addPaymentHistoryTransactionStart(currentUser.id, courseInfo);
+      updateStudentFundsStart(currentUser.id, currentUser.funds - 30);
+    })
+
     history.push(ROUTES.STUDENT);
     event.preventDefault();
   }
@@ -139,7 +158,7 @@ const CourseDetailsPage = ({
                               hasTakenCourse ?
                                 <div data-purpose="add-to-cart"><Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}}>Go to Course</Link></div>
                               :
-                                <div data-purpose="add-to-cart"><button type="button" className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}} onClick={handleClick}>Add to cart</button></div>
+                                <div data-purpose="add-to-cart"><button type="button" className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}} onClick={handleClick}>Add to car { currentUser.funds < 30 ? 'Insufficient funds' : ''}</button></div>
                             }
                             </div>
                           </div>
@@ -398,6 +417,7 @@ const mapStateToProps = createStructuredSelector({
   courseDetails: selectCurrentCourse,
   instructorDetails: instructorDetails,
   studentCourses: studentCourses,
+  currentUser: currentUser,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -405,6 +425,10 @@ const mapDispatchToProps = (dispatch) => ({
   fetchInstructorDetailsStart: (instructorId) => dispatch(fetchInstructorDetailsStart(instructorId)),
   fetchInstructorsByCourseIdStart: (courseId) => dispatch(fetchInstructorsByCourseIdStart(courseId)),
   createStudentCourseStart: (courseDetails) => dispatch(createStudentCourseStart(courseDetails)),
+  addPaymentHistoryTransactionStart: (userId, transaction) => 
+    dispatch(addPaymentHistoryTransactionStart(userId, transaction)),
+  updateStudentFundsStart: (userId, funds) =>
+    dispatch(updateStudentFundsStart(userId, funds)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CourseDetailsPage));

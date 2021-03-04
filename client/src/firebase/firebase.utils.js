@@ -156,16 +156,24 @@ export const updateInstructorRatingDocument = async (instructorId, oldRating, ra
   const docRef = firestore.collection('users').doc(instructorId);
   const snapShot = await docRef.get();
   const instructorDetails = snapShot.data();
-  let totalStudents = oldRating == 0 ? instructorDetails.totalStudents + 1 : instructorDetails.totalStudents
+  let totalStudents = instructorDetails.totalStudents ? instructorDetails.totalStudents : 0;
+  totalStudents = oldRating === undefined ? totalStudents + 1 : totalStudents;
   const updatedAt = new Date();
 
-  if(totalStudents === undefined) {
-    totalStudents = 1;
+  if(oldRating === undefined) {
+    oldRating = 0;
   }
 
+  console.log('instructorDetails.rating', instructorDetails.rating);
+  console.log('totalStudents', totalStudents)
+  console.log('rating', rating)
+  console.log('oldRating', oldRating)
+
   if(instructorDetails.rating) {
-    rating = ((instructorDetails.rating * totalStudents) - oldRating + rating)/totalStudents;
+    rating = ((instructorDetails.rating * (oldRating == 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
   }
+
+  console.log('new rating', rating)
 
   try {
     await docRef.update({
@@ -270,12 +278,24 @@ export const updateInstructorCourseRatingDocument = async (instructorCourseId, o
   const docRef = firestore.collection('instructor-courses').doc(instructorCourseId);
   const snapShot = await docRef.get();
   const courseDetails = snapShot.data();
-  const totalStudents = oldRating == 0 ? courseDetails.totalStudents + 1 : courseDetails.totalStudents
+  let totalStudents = courseDetails.totalStudents ? courseDetails.totalStudents : 0;
+  totalStudents = oldRating === undefined ? totalStudents + 1 : totalStudents;
   const updatedAt = new Date();
 
-  if(courseDetails.rating) {
-    rating = ((courseDetails.rating * totalStudents) - oldRating + rating)/totalStudents;
+  if(oldRating === undefined) {
+    oldRating = 0;
   }
+
+  console.log('courseDetails.rating', courseDetails.rating);
+  console.log('totalStudents', totalStudents)
+  console.log('rating', rating)
+  console.log('oldRating', oldRating)
+
+  if(courseDetails.rating) {
+    rating = ((courseDetails.rating * (oldRating == 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
+  }
+
+  console.log('new rating', rating)
 
   try {
     await docRef.update({
@@ -523,8 +543,10 @@ export const createStudentCourseDetailsDocument = async (studentId, courseDetail
   const snapShot = await docRef.get();
   const createdAt = new Date();
 
+  console.log('createStudentCourseDetailsDocument', courseDetails)
+
   if(!snapShot.exists) {
-    const { courseId, studentId, instructorId, instructorCourseId, courseName, rating, userName } = courseDetails;
+    const { courseId, instructorId, instructorCourseId, courseName, userName } = courseDetails;
     try {
       await docRef.set({
         courseId, 
@@ -532,7 +554,7 @@ export const createStudentCourseDetailsDocument = async (studentId, courseDetail
         instructorId,
         instructorCourseId,
         courseName, 
-        rating,
+        rating: 0,
         userName,
         createdAt,
       });
@@ -549,7 +571,7 @@ export const updateStudentCourseDetailsDocument = async (courseId, courseDetails
   const updatedAt = new Date();
 
   try {
-    const { courseId, studentId, instructorId, instructorCourseId, courseName, rating, userName } = courseDetails;
+    const { courseId, studentId, instructorId, instructorCourseId, courseName, rating, review, userName } = courseDetails;
     await docRef.update({
       courseId, 
       studentId, 
@@ -557,6 +579,7 @@ export const updateStudentCourseDetailsDocument = async (courseId, courseDetails
       instructorCourseId,
       courseName, 
       rating,
+      review,
       userName,
       updatedAt,
     });
@@ -631,6 +654,29 @@ export const createPaymentsDocument = async (userId) => {
 export const updatePaymentsDocument = async (userId, transactions) => {
   const docRef = firestore.collection('payment-history').doc(userId);
   const updatedAt = new Date();
+
+  try {
+    await docRef.update({
+      transactions,
+    });
+  } catch(error) {
+    console.log('error updating payment history', error.message);
+  }
+
+  return docRef;
+}
+
+export const addPaymentTransaction = async (userId, transaction) => {
+  const docRef = firestore.collection('payment-history').doc(userId);
+  const snapShot = await docRef.get();
+  console.log('snapShot', snapShot)
+  let { transactions } = snapShot.data();
+  console.log('transactions', transactions)
+  const updatedAt = new Date();
+
+  transactions.push(transaction);
+
+  console.log('new transactions', transactions)
 
   try {
     await docRef.update({

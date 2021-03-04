@@ -8,6 +8,8 @@ const paymentHistoryReducer = (state = INITIAL_STATE, action) => {
   switch(action.type) {
     case PaymentHistoryActionTypes.UPDATE_PAYMENT_HISTORY_START:
     case PaymentHistoryActionTypes.FETCH_PAYMENT_HISTORY_START:
+    case PaymentHistoryActionTypes.ADD_PAYMENT_HISTORY_TRANSACTION_START:
+    case PaymentHistoryActionTypes.ADD_PAYMENT_HISTORY_TRANSACTION_SUCCESS:
       return {
         ...state,
         error: null,
@@ -21,6 +23,7 @@ const paymentHistoryReducer = (state = INITIAL_STATE, action) => {
       };
     case PaymentHistoryActionTypes.UPDATE_PAYMENT_HISTORY_FAILURE:
     case PaymentHistoryActionTypes.FETCH_PAYMENT_HISTORY_FAILURE:
+    case PaymentHistoryActionTypes.ADD_PAYMENT_HISTORY_TRANSACTION_FAILURE:
       return {
         ...state,
         error: action.payload,
