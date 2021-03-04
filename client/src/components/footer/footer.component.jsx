@@ -94,7 +94,7 @@ const Footer = ({ currentUser }) => {
             <div className="logo-container">
               <Link to={ROUTES.LANDING} className='logo'>Native Talk</Link>
             </div>
-            <div className="copyright-container">© {currentYear} Native Talk, Inc.</div>
+            <div className="copyright-container udlite-text-xs">© {currentYear} Native Talk, Inc.</div>
         </div>
       </div>
 

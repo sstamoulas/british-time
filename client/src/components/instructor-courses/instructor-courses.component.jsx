@@ -14,48 +14,68 @@ import { currentUser } from './../../redux/user/user.selectors';
 import './instructor-courses.styles.scss';
 
 const InstructorCourses = ({ currentUser, instructorCourses }) => (
-  <div>
-    <h1>Your Courses</h1>
+  <div className="container">
+    <h3 className='course-label'>Your Courses</h3>
+    <div className="card-wrapper">
     {
-    Object.keys(instructorCourses).length ?
-      Object.entries(instructorCourses).map(([index, instructorCourse]) => (
-        <div key={instructorCourse.id} role="presentation" tabIndex="-1" className="card card--learning" data-purpose="enrolled-course-card">
-          <Link to={`/instructor/course/${instructorCourse.id}`} className="card--learning__image" tabIndex="-1">
-            <div className="card__image play-button-trigger">
-              <CourseImage className="course-image" courseId={instructorCourse.courseName} alt={instructorCourse.courseName}  width="240" height="135" />
-              <div className="play-button">
-              </div>
-            </div>
-          </Link>
-          <Link className='card--learning__details' to={`/instructor/course/${instructorCourse.id}`}>
-            <div className="card__details">
-              <strong className="details__name">{instructorCourse.courseName}</strong>
-              <div className="details__bottom">
-                <span className="details__progress"><span className="progress__bar" style={{width: '1%'}}></span></span>
-                <span className="a11 text-midnight-lighter progress__text tooltip-container">
-                  <div className="ellipsis">(10 Students)</div>
-                </span>
-                <div className="details__bottom--review dib pull-right">
-                  <div>
-                    <div role="button" tabIndex="0" data-purpose="review-button" className="leave-rating--review-container--vertical--120k4">
-                      <div aria-label="Rating: 0 out of 5" className="star-rating-shell star-rating--star-rating--static--3wPvS star-rating--star-rating--small--yMOwk">
-                        <div><span><RatingFullStar /></span></div>
-                        <div><span><RatingFullStar /></span></div>
-                        <div><span><RatingHalfStar /></span></div>
-                        <div><span><RatingEmptyStar /></span></div>
-                        <div><span><RatingEmptyStar /></span></div>
+      Object.keys(instructorCourses).length ?
+        Object.entries(instructorCourses).map(([index, instructorCourse]) => {
+
+          console.log(instructorCourse)
+          const isPlural = instructorCourse.totalStudents != 1 ? 's' : '';
+          const totalStudents = instructorCourse.totalStudents || 0;
+          let renderRating = [];
+
+          for(let i = 0; i < 5; i++) {
+            if((instructorCourse.rating/2) > i && (instructorCourse.rating/2) < (i + 1)) {
+              renderRating.push(<div key={i}><span><RatingHalfStar /></span></div>)
+            }
+            else if((instructorCourse.rating/2) > i) {
+              renderRating.push(<div key={i}><span><RatingFullStar /></span></div>)
+            }
+            else {
+              renderRating.push(<div key={i}><span><RatingEmptyStar /></span></div>)
+            }
+          }
+
+          return (
+            <div key={instructorCourse.id} role="presentation" tabIndex="-1" className="card card--learning" data-purpose="enrolled-course-card">
+              <Link to={`/instructor/course/${instructorCourse.id}`} className="card--learning__image" tabIndex="-1">
+                <div className="card__image play-button-trigger">
+                  <CourseImage className="course-image" courseId={instructorCourse.courseName} alt={instructorCourse.courseName}  width="240" height="135" />
+                  <div className="play-button">
+                  </div>
+                </div>
+              </Link>
+              <Link className='card--learning__details' to={`/instructor/course/${instructorCourse.id}`}>
+                <div className="card__details">
+                  <strong className="details__name">{instructorCourse.courseName}</strong>
+                  <div className="details__bottom">
+                    <span className="details__progress"><span className="progress__bar" style={{width: '1%'}}></span></span>
+                    <span className="a11 text-midnight-lighter progress__text tooltip-container">
+                      <div className="ellipsis">({totalStudents} Student{isPlural})</div>
+                    </span>
+                    <div className="details__bottom--review dib pull-right">
+                      <div>
+                        <div role="button" tabIndex="0" data-purpose="review-button" className="leave-rating--review-container--vertical--120k4">
+                          <div aria-label="Rating: 0 out of 5" className="star-rating-shell star-rating--star-rating--static--3wPvS star-rating--star-rating--small--yMOwk">
+                          {
+                            renderRating
+                          }
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </div>
-          </Link>
-        </div>
-      ))
+          )
+        })
       :
         <div>You have not created any courses</div>
     }
+    </div>
   </div>
 );
 

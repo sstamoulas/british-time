@@ -87,21 +87,26 @@ const CourseDetailsPage = ({
   }
 
   const handleClick = (event) => {
-    const courseInfo = {
-      title: `${courseDetails.courseName} By ${instructorDetails.userName}`,
-      type: 'Credit',
-      amount: "30",
-      date: (new Date()).toString(),
-      transactionId: courseDetails.id,
+    if(currentUser) {
+      const courseInfo = {
+        title: `${courseDetails.courseName} By ${instructorDetails.userName}`,
+        type: 'Credit',
+        amount: "30",
+        date: (new Date()).toString(),
+        transactionId: courseDetails.id,
+      }
+
+      batch(() => {
+        createStudentCourseStart({ ...selectedInstructor });
+        addPaymentHistoryTransactionStart(currentUser.id, courseInfo);
+        updateStudentFundsStart(currentUser.id, currentUser.funds - 30);
+      })
+
+      history.push(ROUTES.STUDENT);
     }
-
-    batch(() => {
-      createStudentCourseStart({ ...selectedInstructor });
-      addPaymentHistoryTransactionStart(currentUser.id, courseInfo);
-      updateStudentFundsStart(currentUser.id, currentUser.funds - 30);
-    })
-
-    history.push(ROUTES.STUDENT);
+    else {
+      history.push(ROUTES.SIGN_IN);
+    }
     event.preventDefault();
   }
 
@@ -158,7 +163,7 @@ const CourseDetailsPage = ({
                               hasTakenCourse ?
                                 <div data-purpose="add-to-cart"><Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}}>Go to Course</Link></div>
                               :
-                                <div data-purpose="add-to-cart"><button type="button" className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}} onClick={handleClick}>Add to car { currentUser.funds < 30 ? 'Insufficient funds' : ''}</button></div>
+                                <div data-purpose="add-to-cart"><button type="button" className={`udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart ${currentUser && currentUser.funds < 30 ? 'udlite-btn-disabled' : ''}`} style={{width: '100%'}} onClick={handleClick} disabled={currentUser && currentUser.funds < 30 ? true : false}>{ currentUser && currentUser.funds < 30 ? 'Insufficient Funds' : 'Add to Cart' }</button></div>
                             }
                             </div>
                           </div>
@@ -217,8 +222,8 @@ const CourseDetailsPage = ({
                         hasTakenCourse ? (
                           <Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4">Go to Course</Link>
                         ) : (
-                          <button type="button" className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4" onClick={handleClick}>
-                            <span>Add to Cart</span>
+                          <button type="button" className={`udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4 ${currentUser && currentUser.funds < 30 ? 'udlite-btn-disabled' : ''}`} onClick={handleClick} disabled={currentUser && currentUser.funds < 30 ? true : false}>
+                            <span>{ currentUser && currentUser.funds < 30 ? 'Insufficient Funds' : 'Add to Cart' }</span>
                           </button>
                         )
                       }

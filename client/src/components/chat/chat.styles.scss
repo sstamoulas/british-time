@@ -157,8 +157,10 @@ $blue: #72a3d4;
           }
         }
         .right {
-          grid-column: 2/-1;
-          justify-self: end;
+          display: flex;
+          justify-content: flex-end;
+          // grid-column: 2/-1;
+          // justify-self: end;
           .message {
             margin-right: 10px;
             border-right-color: transparent;

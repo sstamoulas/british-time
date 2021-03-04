@@ -317,6 +317,8 @@ export const convertInstructorCoursesCollectionsSnapshotToMap = (collections) =>
       courseId, 
       instructorId, 
       courseName, 
+      rating,
+      totalStudents,
       createdAt,
     } = doc.data();
 
@@ -325,6 +327,8 @@ export const convertInstructorCoursesCollectionsSnapshotToMap = (collections) =>
       courseId, 
       instructorId, 
       courseName, 
+      rating,
+      totalStudents,
       createdAt,
     }
   });

@@ -34,6 +34,18 @@
       max-width: none;
   }
 
+  @media screen and (max-width: 701px) {
+    .udlite-footer .footer-section-main {
+      margin-bottom: 3rem;
+    }
+  }
+
+  @media screen and (min-width: 701px) and (max-width: 1079px) {
+    .udlite-footer .footer-section-main {
+      margin-bottom: 8rem;
+    }
+  }
+
   @media screen and (min-width: 43.81em) {
     .udlite-footer .footer-section-main {
       padding-top: 2.4rem;

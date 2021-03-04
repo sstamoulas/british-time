@@ -11,10 +11,11 @@ import ProfileImage from './../../components/profile-image/profile-image.compone
 
 import { createInstructorDetailsStart, updateInstructorDetailsStart } from './../../redux/instructor/instructor.actions';
 
-
 import { instructorDetails } from './../../redux/instructor/instructor.selectors';
 import { selectCoursesForManaging } from './../../redux/course/course.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
+
+import './instructor-page.styles.scss';
 
 const isObjectEmpty = (obj) => {
   return obj === null || (Object.keys(obj).length === 0 && obj.constructor === Object)
@@ -118,7 +119,7 @@ const InstructorPage = ({
         <button 
           disabled={isInvalid} 
           type="submit" 
-          className='m-default mx-7 p-2 cursor-pointer'
+          className='form-btn m-default mx-7 p-2 cursor-pointer'
         >
           Submit Details
         </button>
@@ -126,8 +127,8 @@ const InstructorPage = ({
         {error && <p>{error.message}</p>}
       </form>
 
-      <h1>Start A New Course</h1>
-      <select onChange={onSelectChange}>
+      <h1 className='d-flex justify-center'>Start A New Course</h1>
+      <select className='d-flex justify-center' onChange={onSelectChange}>
         <option>Select A Course</option>
         {
           availableCourses.map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
