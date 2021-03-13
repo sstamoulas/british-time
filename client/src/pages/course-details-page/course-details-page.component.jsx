@@ -15,7 +15,7 @@ import { updateStudentFundsStart } from './../../redux/student/student.actions';
 
 import { selectCurrentCourse } from '../../redux/course/course.selectors';
 import { studentCourses } from './../../redux/student-course/student-course.selectors';
-import { selectedCourseDetails, selectCourseInstructors } from './../../redux/instructor-course/instructor-course.selectors';
+import { selectCourseInstructors } from './../../redux/instructor-course/instructor-course.selectors';
 import { instructorDetails } from './../../redux/instructor/instructor.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
 
@@ -99,6 +99,10 @@ const CourseDetailsPage = ({
       batch(() => {
         createStudentCourseStart({ ...selectedInstructor });
         addPaymentHistoryTransactionStart(currentUser.id, courseInfo);
+
+        courseInfo.type = 'Pending Debit'
+
+        addPaymentHistoryTransactionStart(selectedInstructor.instructorId, courseInfo);
         updateStudentFundsStart(currentUser.id, currentUser.funds - 30);
       })
 
@@ -110,7 +114,7 @@ const CourseDetailsPage = ({
     event.preventDefault();
   }
 
-  const hasTakenCourse = !isObjectEmpty(studentCourses) && 
+  const hasTakenCourse = currentUser && !isObjectEmpty(studentCourses) && 
     Object.values(studentCourses).map((studentCourse) => 
       studentCourse.instructorCourseId).includes(selectedInstructor.instructorCourseId)
 
@@ -128,7 +132,7 @@ const CourseDetailsPage = ({
                         <div className="intro-asset--asset--1eSsi" data-purpose="introduction-asset">
                           <button type="button" className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md udlite-custom-focus-visible intro-asset--placeholder--16yPA" aria-label="Play course preview">
                             <span className="intro-asset--img-aspect--1UbeZ">
-                              <CourseImage courseId={courseDetails.id} alt="" width="240" height="135" />
+                              <CourseImage imageExtension={courseDetails.imageExtension} courseId={courseDetails.id} alt="" width="240" height="135" />
                             </span>
                             <span className="intro-asset--overlay--3Z3co intro-asset--gradient--Od7zs"></span>
                             <span className="udlite-play-overlay">
@@ -163,14 +167,18 @@ const CourseDetailsPage = ({
                               hasTakenCourse ?
                                 <div data-purpose="add-to-cart"><Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}}>Go to Course</Link></div>
                               :
-                                <div data-purpose="add-to-cart"><button type="button" className={`udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart ${currentUser && currentUser.funds < 30 ? 'udlite-btn-disabled' : ''}`} style={{width: '100%'}} onClick={handleClick} disabled={currentUser && currentUser.funds < 30 ? true : false}>{ currentUser && currentUser.funds < 30 ? 'Insufficient Funds' : 'Add to Cart' }</button></div>
+                                <div data-purpose="add-to-cart"><button type="button" className={`udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart ${(currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? 'udlite-btn-disabled' : ''}`} style={{width: '100%'}} onClick={handleClick} disabled={(currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? true : false}>{ isObjectEmpty(instructorDetails) ?  'Not Available' : (currentUser && currentUser.funds < 30 ? 'Insufficient Funds' : 'Add to Cart') }</button></div>
                             }
                             </div>
                           </div>
                         </div>
-                        <div className="money-back-notice">
-                          <div className="buy-box__element buy-box__element--money-back" data-purpose="money-back-guarantee"><span className="money-back">30-Day Money-Back Guarantee</span></div>
-                        </div>
+                        {
+                          false && (
+                            <div className="money-back-notice">
+                              <div className="buy-box__element buy-box__element--money-back" data-purpose="money-back-guarantee"><span className="money-back">30-Day Money-Back Guarantee</span></div>
+                            </div>
+                          )
+                        }
                         <div className="incentives--incentives-container--CUQ8q">
                           <h2 className="udlite-heading-md incentives--header--3O_-f" data-purpose="header">This course includes:</h2>
                           <ul className="unstyled-list udlite-block-list">
@@ -222,8 +230,8 @@ const CourseDetailsPage = ({
                         hasTakenCourse ? (
                           <Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4">Go to Course</Link>
                         ) : (
-                          <button type="button" className={`udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4 ${currentUser && currentUser.funds < 30 ? 'udlite-btn-disabled' : ''}`} onClick={handleClick} disabled={currentUser && currentUser.funds < 30 ? true : false}>
-                            <span>{ currentUser && currentUser.funds < 30 ? 'Insufficient Funds' : 'Add to Cart' }</span>
+                          <button type="button" className={`udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4 ${(currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? 'udlite-btn-disabled' : ''}`} onClick={handleClick} disabled={(currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? true : false}>
+                            <span>{ (currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? 'Not Available' : ('Insufficient Funds' : 'Add to Cart') }</span>
                           </button>
                         )
                       }
@@ -249,7 +257,7 @@ const CourseDetailsPage = ({
                       <div className="intro-asset--asset--1eSsi" data-purpose="introduction-asset">
                         <button type="button" className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md udlite-custom-focus-visible intro-asset--placeholder--16yPA" aria-label="Play course preview">
                           <span className="intro-asset--img-aspect--1UbeZ">
-                            <CourseImage hasImage={courseDetails.hasImage} courseId={courseDetails.id} alt="" width="240" height="135" />
+                            <CourseImage imageExtension={courseDetails.imageExtension} courseId={courseDetails.id} alt="" width="240" height="135" />
                           </span>
                           <span className="intro-asset--overlay--3Z3co intro-asset--gradient--Od7zs">
                           </span>
@@ -335,72 +343,78 @@ const CourseDetailsPage = ({
             </div>
           </div>
         </div>
-        <div className="course-landing-page__main-content component-margin">
-          <div className="clp-component-render">
-            <div className="instructor">
-              <span id="instructor" className="in-page-offset-anchor"></span>
+        {
+          isObjectEmpty(instructorDetails) ? (
+            <div>This course is currently not available.</div>
+          ) : (
+            <div className="course-landing-page__main-content component-margin">
               <div className="clp-component-render">
-                <div className="ud-component--course-landing-page-udlite--instructors">
-                  <div className="styles--instructors--2JsS3">
-                    <h2 className="udlite-heading-xl styles--instructors__header--16F_8">Instructor</h2>
-                    <div className="instructor--instructor--1wSOF" data-purpose="instructor-bio">
-                      <span className="in-page-offset-anchor" id="instructor-1"></span>
-                      <select onChange={handleChange}>
-                        {
-                          Object.entries(instructors).map(([index, instructor]) => (
-                            <option key={index} value={index}>
-                              {
-                                instructor.userName
-                              } 
-                            </option>
-                          ))
-                        }
-                      </select>
-                      <div>
-                        <div className="udlite-heading-lg instructor--instructor__title--34ItB">{instructorDetails.userName}</div>
-                        <div className="udlite-text-md instructor--instructor__job-title--1HUmd">{instructorDetails.jobTitle}</div>
-                      </div>
-                      <div className="instructor--instructor__image-and-stats--1IqE7">
-                        <a className="instructor--instructor__image-link--9e3fA">
-                          <ProfileImage 
-                            alt={instructorDetails.userName} 
-                            className="instructor--instructor__image--va-P5 udlite-avatar udlite-avatar-image" 
-                            hasImage={instructorDetails.hasImage}  
-                            publicId={selectedInstructor.instructorId} 
-                            width="64" 
-                            height="64" 
-                            style={{width: '6.4rem', height: '6.4rem'}} 
-                          />
-                        </a>
-                        <ul className="unstyled-list udlite-block-list">
-                          <li>
-                            <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">{selectedInstructor.rating || 'N/A'} Instructor Rating</div>
-                            </div>
-                          </li>
-                          <li>
-                            <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">{instructorDetails.instructorReviews || 0} Reviews</div>
-                            </div>
-                          </li>
-                          <li>
-                            <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">{selectedInstructor.totalStudents || 0} Students</div>
-                            </div>
-                          </li>
-                          <li>
-                            <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
-                              <div className="udlite-block-list-item-content">{instructorDetails.instructorCourses || 0} Courses</div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="show-more--container--1QLmn">
-                        <span id="u96-show-more--1" data-type="checkbox" data-checked="checked" style={{display: 'none'}}></span>
-                        <div style={{maxHeight: '146px'}} className="show-more--content--isg5c show-more--with-gradient--2abmN">
+                <div className="instructor">
+                  <span id="instructor" className="in-page-offset-anchor"></span>
+                  <div className="clp-component-render">
+                    <div className="ud-component--course-landing-page-udlite--instructors">
+                      <div className="styles--instructors--2JsS3">
+                        <h2 className="udlite-heading-xl styles--instructors__header--16F_8">Instructor</h2>
+                        <div className="instructor--instructor--1wSOF" data-purpose="instructor-bio">
+                          <span className="in-page-offset-anchor" id="instructor-1"></span>
+                          <select onChange={handleChange}>
+                            {
+                              Object.entries(instructors).map(([index, instructor]) => (
+                                <option key={index} value={index}>
+                                  {
+                                    instructor.userName
+                                  } 
+                                </option>
+                              ))
+                            }
+                          </select>
                           <div>
-                            <div className="udlite-text-sm instructor--instructor__description--1dHxF" data-purpose="description-content">
-                              <p>{instructorDetails.bio || 'N/A'}</p>
+                            <div className="udlite-heading-lg instructor--instructor__title--34ItB">{instructorDetails.userName}</div>
+                            <div className="udlite-text-md instructor--instructor__job-title--1HUmd">{instructorDetails.jobTitle}</div>
+                          </div>
+                          <div className="instructor--instructor__image-and-stats--1IqE7">
+                            <a className="instructor--instructor__image-link--9e3fA">
+                              <ProfileImage 
+                                alt={instructorDetails.userName} 
+                                className="instructor--instructor__image--va-P5 udlite-avatar udlite-avatar-image" 
+                                imageExtension={instructorDetails.imageExtension}  
+                                publicId={selectedInstructor.instructorId} 
+                                width="64" 
+                                height="64" 
+                                style={{width: '6.4rem', height: '6.4rem'}} 
+                              />
+                            </a>
+                            <ul className="unstyled-list udlite-block-list">
+                              <li>
+                                <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
+                                  <div className="udlite-block-list-item-content">{selectedInstructor.rating || 'N/A'} Instructor Rating</div>
+                                </div>
+                              </li>
+                              <li>
+                                <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
+                                  <div className="udlite-block-list-item-content">{instructorDetails.instructorReviews || 0} Reviews</div>
+                                </div>
+                              </li>
+                              <li>
+                                <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
+                                  <div className="udlite-block-list-item-content">{selectedInstructor.totalStudents || 0} Students</div>
+                                </div>
+                              </li>
+                              <li>
+                                <div data-purpose="stat" className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
+                                  <div className="udlite-block-list-item-content">{instructorDetails.instructorCourses || 0} Courses</div>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                          <div className="show-more--container--1QLmn">
+                            <span id="u96-show-more--1" data-type="checkbox" data-checked="checked" style={{display: 'none'}}></span>
+                            <div style={{maxHeight: '146px'}} className="show-more--content--isg5c show-more--with-gradient--2abmN">
+                              <div>
+                                <div className="udlite-text-sm instructor--instructor__description--1dHxF" data-purpose="description-content">
+                                  <p>{instructorDetails.bio || 'N/A'}</p>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -410,8 +424,8 @@ const CourseDetailsPage = ({
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          )
+        }
       </div>
     </div>
   )

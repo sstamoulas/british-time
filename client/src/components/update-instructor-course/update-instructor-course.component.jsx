@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, batch } from 'react-redux';
 import { Link, withRouter, useParams } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
@@ -18,12 +18,13 @@ import * as ROUTES from './../../constants/routes';
 
 const INITIAL_STATE = {
   courseName: '',
+  isVisible: false,
 }
 
 const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart, updateInstructorCourseDetailsStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, ...courseDetails });
-  const { courseName } = state;
+  const { courseName, isVisible } = state;
 
   const isObjectEmpty = (obj) => {
     return Object.keys(obj).length === 0 && obj.constructor === Object
@@ -31,21 +32,43 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
 
   useEffect(() => {
     if(isObjectEmpty(courseDetails)) {
-      fetchInstructorCourseDetailsByCourseIdStart(courseId);
-      fetchInstructorLessonsStart(courseId);
+      batch(() => {
+        fetchInstructorCourseDetailsByCourseIdStart(courseId);
+        fetchInstructorLessonsStart(courseId);
+      });
     }
   }, [courseId, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart]);
 
-  const handleChange = (event, dayOfWeek) => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
 
     setState(prevState => ({ ...prevState, [name]: value }));
+  }
+
+  const handleCheckbox = (event) => {
+    const { name, checked } = event.target;
+
+    console.log(name, checked)
+
+    setState(prevState => ({ ...prevState, [name]: checked }));
   }
 
   const handleSubmit = (event) => {
     updateInstructorCourseDetailsStart(courseId, state);
     history.push(ROUTES.INSTRUCTOR);
     event.preventDefault();
+  }
+
+  const sortInstructorLessons = (a, b) => {
+    if(a.createdAt.seconds > b.createdAt.seconds) {
+      return 1;
+    }
+    else if(a.createdAt.seconds < b.createdAt.seconds) {
+      return -1;
+    }
+    else {
+      return 0;
+    }
   }
 
   // const addLiveSession = () => {
@@ -63,10 +86,22 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
 
   // }
 
+  instructorLessons.sort(sortInstructorLessons);
+
   return (
     <Fragment>
       <form onSubmit={handleSubmit}>
         <input type='text' name='courseName' value={courseName} disabled />
+        {
+          courseDetails.isVisible ? (
+            <div>Course is now visible and cannot be undone.</div>
+          ) : (
+            <div>
+              <input type='checkbox' name='isVisible' onChange={handleCheckbox} checked={isVisible} />
+              <label style={{ verticalAlign: 'top' }}>&nbsp;&nbsp;Is Course Visible?</label>
+            </div>
+          )
+        }
         <input type="submit" value="Update Course" />
       </form>
       <div>
@@ -74,7 +109,7 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
         <ul>
         {
           !isObjectEmpty(instructorLessons) && 
-          instructorLessons.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt)).map((instructorLesson, index) => (
+          instructorLessons.map((instructorLesson, index) => (
             <li key={instructorLesson.id}><Link to={`/instructor/course/${courseId}/lesson/${instructorLesson.id}`}>Section {index + 1}: {instructorLesson.chapterTitle}</Link></li>
           ))
         }

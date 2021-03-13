@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -12,9 +12,6 @@ import { studentDetails } from './../../redux/student/student.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
 
 import './student-page.styles.scss';
-
-// need to add hasImage flag
-
 
 const INITIAL_STATE = {
   bio: '',
@@ -30,18 +27,11 @@ const StudentPage = ({
   }) => {
   const [state, setState] = useState({ ...INITIAL_STATE, ...studentDetails });
   const { bio, imageLoading } = state;
-  const isInvalid = bio === '' && !studentDetails.hasImage;
+  const isInvalid = bio === '' && !studentDetails.imageExtension;
 
   const isObjectEmpty = (obj) => {
     return Object.keys(obj).length === 0 && obj.constructor === Object
   }
-
-  // useEffect(() => {
-  //   setState(prevState => ({ 
-  //     ...prevState, 
-  //     bio: studentDetails.bio, 
-  //   }));
-  // }, [studentDetails])
 
   const onSubmit = event => {
     if(isObjectEmpty(studentDetails)) {
@@ -59,12 +49,12 @@ const StudentPage = ({
     setState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const onUploadCallback = () => {
+  const onUploadCallback = (imageExtension) => {
     if(isObjectEmpty(studentDetails)) {
-      createStudentDetailsStart({ hasImage: true });
+      createStudentDetailsStart({ imageExtension });
     }
     else {
-      updateStudentDetailsStart({ hasImage: true });
+      updateStudentDetailsStart({ imageExtension });
     }
   }
 
@@ -72,7 +62,7 @@ const StudentPage = ({
     <div>
       <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
       <form onSubmit={onSubmit} className='student-form d-flex flex-column m-default'>
-        <ProfileImage className='p-default cursor-pointer' hasImage={studentDetails.hasImage} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
+        <ProfileImage className='p-default cursor-pointer' imageExtension={studentDetails.imageExtension} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 
           name='bio' 
           className='m-default mx-7 p-2'

@@ -9,7 +9,6 @@ import { updateStudentFundsStart } from './../../redux/student/student.actions';
 import { selectedTransactions } from './../../redux/payment-history/payment-history.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
 
-import * as ROUTES from './../../constants/routes';
 import * as ROLES from './../../constants/roles';
 
 const EMPTY_TRANSACTION = {
@@ -152,6 +151,7 @@ const PaymentPage = ({ currentUser, userTransactions, fetchPaymentHistoryStart, 
                     </option> 
                     <option value="Debit">Debit</option>
                     <option value="Credit">Credit</option>
+                    <option value="Pedning Debit">Pending Debit</option>
                   </select>
                 </td>
                 <td><input type='text' name='title' onChange={(e) => handleChange(e, transaction.transactionId)} value={transaction.title} /></td>

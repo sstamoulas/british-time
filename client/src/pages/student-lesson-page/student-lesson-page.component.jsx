@@ -14,7 +14,7 @@ const isObjectEmpty = (obj) => {
 }
 
 const StudentLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart }) => {
-  const { instructorCourseId, lessonId } = useParams();
+  const { lessonId } = useParams();
   const [state, setState] = useState({ ...lessonDetails });
   const { courseName } = state;
 

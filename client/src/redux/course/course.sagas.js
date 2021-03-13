@@ -44,6 +44,7 @@ export function* createCourseAsync({type, payload: { courseDetails }}) {
 
 export function* updateCourseAsync({type, payload: { courseDetails }}) {
   try {
+    console.log('in saga', courseDetails)
     yield put(subActionStart(type));
     yield call(updateCourseDocument, courseDetails);
 
@@ -71,7 +72,7 @@ export function* fetchCourseByIdAsync({ type, payload: { courseId }}) {
   try {
     yield put(subActionStart(type));
     const currentCourse = yield call(getCourseById, courseId);
-    yield put(fetchCourseByIdSuccess(currentCourse));
+    yield put(fetchCourseByIdSuccess({ ...currentCourse, courseId }));
   } catch(error) {
     yield put(fetchCourseByIdFailure(error));
   } finally {

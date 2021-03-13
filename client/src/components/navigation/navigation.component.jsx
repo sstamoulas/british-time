@@ -41,7 +41,7 @@ const Navigation = ({ currentUser }) => {
                     <Fragment>
                       <li>
                         <Link to={ROUTES.SIGN_IN} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
-                          <span className="udlite-block-list-item-content">Log in</span>
+                          <span className="udlite-block-list-item-content">Log In</span>
                         </Link>
                       </li>
                       <li>
@@ -62,6 +62,22 @@ const Navigation = ({ currentUser }) => {
               </ul>
               <div className="udlite-heading-sm mobile-nav--nav-section-heading"></div>
               <ul className="unstyled-list udlite-block-list mobile-nav--nav-section">
+                {
+                  !currentUser && (
+                    <Fragment>
+                      <li>
+                        <Link to={ROUTES.ABOUT_US} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                          <span className="udlite-block-list-item-content">About Us</span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to={ROUTES.CONTACT_US} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                          <span className="udlite-block-list-item-content">Contact Us</span>
+                        </Link>
+                      </li>
+                    </Fragment>
+                  )
+                }
                 <li>
                   <Link to={ROUTES.COURSES} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
                     <span className="udlite-block-list-item-content">Courses</span>
@@ -248,6 +264,12 @@ const StudentNavigation = () => (
 
 const NavigationNonAuth = () => (
   <div className='nav-sub-container'>
+    <div className='header-gap'>
+      <Link to={ROUTES.ABOUT_US} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link"><span className="udlite-block-list-item-content">About Us</span></Link>
+    </div>
+    <div className='header-gap'>
+      <Link to={ROUTES.CONTACT_US} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link"><span className="udlite-block-list-item-content">Contact Us</span></Link>
+    </div>
     <div className='header-gap'>
       <Link to={ROUTES.COURSES} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link"><span className="udlite-block-list-item-content">Courses</span></Link>
     </div>

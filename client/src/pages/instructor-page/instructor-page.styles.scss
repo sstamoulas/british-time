@@ -1,5 +1,12 @@
-button.form-btn {
-  border: revert;
-  background: revert;
-  outline: revert;
+#root {
+  button.form-btn {
+    border: revert;
+    background: revert;
+    outline: revert;
+  }
+
+  .course-selection {
+    margin: 0 auto;
+    width: 150px;
+  }
 }

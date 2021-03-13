@@ -19,74 +19,36 @@ const Footer = ({ currentUser }) => {
         <div className="links">
           <ul className="unstyled-list link-column">
             <li>
-              <a className="link udlite-text-sm ud-ufb-notice-click-event">
-              Udemy for Business
-              </a>
-            </li>
-            <li>
-              <a className="link udlite-text-sm">
-              Teach on Udemy
-              </a>
-            </li>
-            <li>
-              <a className="link udlite-text-sm">
-              Get the app
-              </a>
-            </li>
-            <li>
-              <a className="link udlite-text-sm">
-              About us
-              </a>
-            </li>
-            <li>
-              <a className="link udlite-text-sm">
-              Contact us
-              </a>
-            </li>
-          </ul>
-          <ul className="unstyled-list link-column">
-            <li>
-              <a className="link udlite-text-sm">
-              Careers
-              </a>
-            </li>
-
-            <li>
-              <a className="link udlite-text-sm">
-              Blog
-              </a>
-            </li>
-            <li>
-              <a className="link udlite-text-sm">
-              Help and Support
-              </a>
-            </li>
-            <li>
-              <a className="link udlite-text-sm">
-              Affiliate
-              </a>
-            </li>
-          </ul>
-          <ul className="unstyled-list link-column">
-            <li>
-              <a className="link udlite-text-sm">
-              Terms
-              </a>
-            </li>
-            <li>
-              <Link to={ROUTES.PRIVACY_POLICY} className="link udlite-text-sm">
-              Privacy policy
+              <Link to={ROUTES.TEACHING} className="link udlite-text-sm">
+              Teach on Native Talk
               </Link>
             </li>
             <li>
-              <a className="link udlite-text-sm">
-              Sitemap
-              </a>
+              <Link to={ROUTES.ABOUT_US} className="link udlite-text-sm">
+              About Us
+              </Link>
             </li>
             <li>
-              <a className="link udlite-text-sm">
-              Featured courses
-              </a>
+              <Link to={ROUTES.CONTACT_US} className="link udlite-text-sm">
+              Contact Us
+              </Link>
+            </li>
+          </ul>
+          <ul className="unstyled-list link-column">
+            <li>
+              <Link to={ROUTES.TERMS} className="link udlite-text-sm">
+              Terms
+              </Link>
+            </li>
+            <li>
+              <Link to={ROUTES.PRIVACY_POLICY} className="link udlite-text-sm">
+              Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link to={ROUTES.COURSES} className="link udlite-text-sm">
+              Featured Courses
+              </Link>
             </li>
           </ul>
           </div>

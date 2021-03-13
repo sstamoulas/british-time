@@ -1,11 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import './privacy-policy-page.styles.scss';
 
 const PrivacyPolicyPage = () => (
   <div className='container px-xs mt-xs'>
     <p style={{ textAlign: 'center' }}><span style={{ fontWeight: 'bold' }}>Privacy Policy</span></p>
-    <p>Welcome to Native Talk Inc.! We know that you care how information about you is used and shared, and we appreciate your trust that we will do so carefully and sensibly. Native Talk, Inc. (“Native Talk,” “we,” “us,” or “our”) provides this Privacy Policy (“Policy” or “Privacy Policy”) to describe the information we collect, how we use it, and when and with whom we share it. This Policy applies to the general-audience Native Talk website (the “Site”) located at <a href="https://www.nativetalk.live" target="_blank" rel="noopener"><span style={{ color: '#0000ff' }}>www.nativetalk.live</span></a> or related services (the “Services”). By accessing or using the Services, you agree to this Policy. If you do not agree to this Policy, please do not access or use the Services. Native Talk Inc. is the data controller for your information.&nbsp;&nbsp;</p>
+    <p>Welcome to Native Talk Inc.! We know that you care how information about you is used and shared, and we appreciate your trust that we will do so carefully and sensibly. Native Talk, Inc. (“Native Talk,” “we,” “us,” or “our”) provides this Privacy Policy (“Policy” or “Privacy Policy”) to describe the information we collect, how we use it, and when and with whom we share it. This Policy applies to the general-audience Native Talk website (the “Site”) located at <Link to="/" target="_blank" rel="noopener"><span style={{ color: '#0000ff' }}>www.nativetalk.live</span></Link> or related services (the “Services”). By accessing or using the Services, you agree to this Policy. If you do not agree to this Policy, please do not access or use the Services. Native Talk Inc. is the data controller for your information.&nbsp;&nbsp;</p>
     <ol start="1">
       <li style={{ fontWeight: 'bold' }}><span style={{ fontWeight: 'bold' }}>The Information We Collect</span></li>
     </ol>

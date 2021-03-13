@@ -7,14 +7,14 @@ const INITIAL_STATE = {
   imageLoading: false,
 }
 
-const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCallback }) => {
+const CourseImage = ({ imageExtension, courseId, height, width, className, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
 
   const baseURL = process.env.NODE_ENV === "production" ? 
-    `${process.env.BASE_URL}/api`
+    `${process.env.REACT_APP_BASE_URL}/api`
   : 
-    `${process.env.LOCAL_HOST_URL}/api`;
+    `${process.env.REACT_APP_LOCAL_HOST_URL}/api`;
 
   const onClick = event => {
     document.querySelector(".img-upload").click();
@@ -22,6 +22,8 @@ const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCal
 
   const onUpload = (event) => {
     const data = new FormData();
+    const fileName = event.target.files[0].name;
+    const imageExtension = fileName.substring(fileName.indexOf('.') + 1);
     data.append('file', event.target.files[0]);
     data.append('public_id', courseId);
 
@@ -33,7 +35,7 @@ const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCal
     })
     .then((response) => {
       setState(prevState => ({ ...prevState, imageLoading: false }));
-      onUploadCallback();
+      onUploadCallback(imageExtension);
     })  
     .catch((error) => {
       console.log(error);
@@ -46,11 +48,11 @@ const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCal
           imageLoading ? 
             <span>Loading</span>
           :
-            hasImage ?
+            imageExtension ?
               <Image 
                 className='p-default'
                 cloudName="everest-logix" 
-                publicId={courseId} 
+                publicId={`${courseId}.${imageExtension}`} 
                 width="300" 
                 height="300" 
                 crop="scale" 
@@ -72,7 +74,7 @@ const CourseImage = ({ hasImage, courseId, height, width, className, onUploadCal
       <Image 
         className={className}
         cloudName="everest-logix" 
-        publicId={courseId} 
+        publicId={imageExtension ? `${courseId}.${imageExtension}` : 'Not Available.png'} 
         width={width}
         height={height}
         crop="scale" 

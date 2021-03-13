@@ -4,10 +4,12 @@ import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { Image } from 'cloudinary-react';
 
-import Zoom from './../../components/zoom/zoom.component';
 import CreateInstructorCourse from './../../components/create-instructor-course/create-instructor-course.component';
 import InstructorCourses from './../../components/instructor-courses/instructor-courses.component';
 import ProfileImage from './../../components/profile-image/profile-image.component';
+import CountDownTimer from './../../components/count-down-timer/count-down-timer.component';
+import LiveSessionButton from './../../components/live-session-button/live-session-button.component';
+
 
 import { createInstructorDetailsStart, updateInstructorDetailsStart } from './../../redux/instructor/instructor.actions';
 
@@ -25,7 +27,7 @@ const INITIAL_STATE = {
   selectedCourseToStart: {},
 }
 
-const hasLiveSession = true;
+const liveSessionDateTime = (new Date('Mar 06 2021 22:44:26')).getTime();
 
 const InstructorPage = ({ 
     currentUser, 
@@ -36,7 +38,6 @@ const InstructorPage = ({
     error 
   }) => {
   const [state, setState] = useState({ ...INITIAL_STATE, ...instructorDetails });
-  const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
   const { bio, rating, selectedCourseToStart } = state;
   const isInvalid = bio === '';
 
@@ -68,44 +69,36 @@ const InstructorPage = ({
     setState(prevState => ({ ...prevState, selectedCourseToStart: availableCourses[selectedIndex] }));
   }
 
-  const onUploadCallback = () => {
+  const onUploadCallback = (imageExtension) => {
     if(isObjectEmpty(instructorDetails)) {
-      createInstructorDetailsStart({ hasImage: true });
+      createInstructorDetailsStart({ imageExtension });
     }
     else {
-      updateInstructorDetailsStart({ hasImage: true });
+      updateInstructorDetailsStart({ imageExtension });
     }
   }
 
-  const openLiveSession = () => {
-    document.querySelector('#zmmtg-root').style.display = '';
-    document.querySelector('#zmmtg-root').style.backgroundColor = 'black';
-    document.querySelector('#root').style.display = 'none';
-    setIsLiveSessionOpen(true);
+  const sortCourses = (courseA, courseB) => {
+    if (courseA.courseName < courseB.courseName) {
+      return -1;
+    }
+    else if (courseA.courseName > courseB.courseName) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
   }
 
   return (
     <div>
       <h1>Greetings {currentUser.userName}</h1>
       <p>The Instructor Page is accessible by only the Instructor in Question.</p>
-      {
-        hasLiveSession && (
-          <button
-            className="launchButton"
-            onClick={openLiveSession}
-            style={{ backgroundColor: "red" }}
-          >
-            Launch Live Session{" "}
-          </button>
-        )
-      }
-      {
-        isLiveSessionOpen && (
-          <Zoom meetingNumber={'82267762341'} userName={'Stamatios Stamoulas'} userEmail={'tstamoulas@gmail.com'} passWord={'ZGRpZWZiNU1DUGhGelNQbEJlUUxiQT09'} role={1} />
-        )
-      }
+      <CountDownTimer startTime={liveSessionDateTime} text={''}>
+        <LiveSessionButton />
+      </CountDownTimer>
       <form onSubmit={onSubmit} className='d-flex flex-column m-default'>
-        <ProfileImage className='p-default cursor-pointer' hasImage={state.hasImage || false} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
+        <ProfileImage className='p-default cursor-pointer' imageExtension={state.imageExtension} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 
           name='bio' 
           className='m-default mx-7 p-2'
@@ -128,12 +121,14 @@ const InstructorPage = ({
       </form>
 
       <h1 className='d-flex justify-center'>Start A New Course</h1>
-      <select className='d-flex justify-center' onChange={onSelectChange}>
-        <option>Select A Course</option>
-        {
-          availableCourses.map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
-        }
-      </select>
+      <div className='d-flex'>
+        <select className='course-selection' onChange={onSelectChange}>
+          <option>Select A Course</option>
+          {
+            availableCourses.sort(sortCourses).map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
+          }
+        </select>
+      </div>
       {
         selectedCourseToStart.courseName &&
         <CreateInstructorCourse courseDetails={selectedCourseToStart}/>

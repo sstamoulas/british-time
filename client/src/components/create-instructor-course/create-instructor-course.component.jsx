@@ -9,6 +9,7 @@ const INITIAL_STATE = {
   courseName: '',
   totalStudents: 0,
   rating: 0,
+  isVisible: false,
 }
 
 const CreateInstructorCourse = ({ courseDetails, createInstructorCourseDetailsStart }) => {

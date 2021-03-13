@@ -22,6 +22,13 @@ const Courses = ({ history, courses, fetchCoursesStart }) => {
     }
   }, [courses, fetchCoursesStart])
 
+  const beginnerCourses = courses.filter((course) => parseInt(course.level) === 0);
+  const elementaryCourses = courses.filter((course) => parseInt(course.level) === 1);
+  const preIntermediateCourses = courses.filter((course) => parseInt(course.level) === 2);
+  const intermediateCourses = courses.filter((course) => parseInt(course.level) === 3);
+  const upperIntermediateCourses = courses.filter((course) => parseInt(course.level) === 4);
+  const advancedCourses = courses.filter((course) => parseInt(course.level) === 5);
+
   return (
     <div>
       <div className="ud-component--logged-in-home--billboard">
@@ -36,15 +43,17 @@ const Courses = ({ history, courses, fetchCoursesStart }) => {
         </div>
       </div>
       <h3 className="h3-margin udlite-container udlite-heading-xl">Beginner Level Courses</h3>
-      <Carousel type={'beginner'} courses={courses} />
+      <Carousel type={'beginner'} courses={beginnerCourses} />
+      <h3 className="h3-margin udlite-container udlite-heading-xl">Elementary Level Courses</h3>
+      <Carousel type={'elementary'} courses={elementaryCourses} />
       <h3 className="h3-margin udlite-container udlite-heading-xl">Pre-Intermediate Level Courses</h3>
-      <Carousel type={'pre-intermediate'} courses={courses} />
+      <Carousel type={'pre-intermediate'} courses={preIntermediateCourses} />
       <h3 className="h3-margin udlite-container udlite-heading-xl">Intermediate Level Courses</h3>
-      <Carousel type={'intermediate'} courses={courses} />
+      <Carousel type={'intermediate'} courses={intermediateCourses} />
       <h3 className="h3-margin udlite-container udlite-heading-xl">Upper Intermediate Level Courses</h3>
-      <Carousel type={'upper-intermediate'} courses={courses} />
+      <Carousel type={'upper-intermediate'} courses={upperIntermediateCourses} />
       <h3 className="h3-margin udlite-container udlite-heading-xl">Advanced Level Courses</h3>
-      <Carousel type={'advanced'} courses={courses} />
+      <Carousel type={'advanced'} courses={advancedCourses} />
     </div>
   )
 };

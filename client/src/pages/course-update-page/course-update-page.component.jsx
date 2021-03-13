@@ -11,42 +11,33 @@ import { selectCurrentCourse } from '../../redux/course/course.selectors';
 import * as ROUTES from './../../constants/routes';
 
 const isObjectEmpty = (obj) => {
-  return Object.keys(obj).length === 0 && obj.constructor === Object
+  return obj === undefined || (Object.keys(obj).length === 0 && obj.constructor === Object)
 }
 
 const INITIAL_STATE = {
-  hasImage: false,
+  imageExtension: '',
   courseName: '', 
   headline: '',
   requirements: [],
   objectives: [],
+  objectiveText: '',
+  requirementText: '',
 }
 
 const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, updateCourseStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, ...currentCourse });
-  const [objectiveText, setObjectiveText] = useState('');
-  const [requirementText, setRequirementText] = useState('');
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setState(prevState => ({ ...prevState, [name]: value }));
   }
 
-  const handleObjectiveTextChange = (event) => {
-    setObjectiveText(event.target.value);
-  }
-
-  const handleRequirementTextChange = (event) => {
-    setRequirementText(event.target.value);
-  }
-
   const handleObjectiveAdd = () => {
-    const { objectives } = state;
+    const { objectives, objectiveText } = state;
     const newObjectives = objectives.concat({ text: objectiveText, id: objectives.length === 0 ? 0 : objectives[objectives.length - 1].id + 1 });
  
-    setObjectiveText('');
-    setState(prevState => ({ ...prevState, objectives: newObjectives }));
+    setState(prevState => ({ ...prevState, objectives: newObjectives, objectiveText: '' }));
   }
 
   const handleObjectiveRemove = (id) => {
@@ -57,11 +48,10 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   }
 
   const handleRequirementsAdd = () => {
-    const { requirements } = state;
+    const { requirements, requirementText } = state;
     const newRequirements = requirements.concat({ text: requirementText, id: requirements.length === 0 ? 0 : requirements[requirements.length - 1].id + 1 });
  
-    setRequirementText('');
-    setState(prevState => ({ ...prevState, requirements: newRequirements }));
+    setState(prevState => ({ ...prevState, requirements: newRequirements, requirementText: '' }));
   }
 
   const handleRequirementsRemove = (id) => {
@@ -72,13 +62,15 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
   }
 
   const handleSubmit = (event) => {
-    updateCourseStart(state);
+    const { imageExtension, level, courseName, headline, requirements, objectives } = state;
+
+    updateCourseStart({ courseId, imageExtension, level, courseName, headline, requirements, objectives });
     history.push(ROUTES.ADMIN);
     event.preventDefault();
   }
 
-  const onUploadCallback = () => {
-    updateCourseStart({...state, id: courseId, hasImage: true });
+  const onUploadCallback = (imageExtension) => {
+    updateCourseStart({...state, id: courseId, imageExtension });
   }
 
   useEffect(() => {
@@ -94,16 +86,17 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
     <div>
       <h1>Edit Course Titled '{state.courseName}' Page</h1>
       <form onSubmit={handleSubmit}>
-        <CourseImage hasImage={state.hasImage} courseId={courseId} onUploadCallback={onUploadCallback} />
-        <select name='level' onChange={handleChange}>
+        <CourseImage imageExtension={state.imageExtension} courseId={courseId} onUploadCallback={onUploadCallback} />
+        <select name='level' value={state.level} onChange={handleChange}>
           <option defaultValue hidden> 
             Select a Level 
           </option> 
           <option value="0">Beginner</option>
-          <option value="1">Pre-Intermediate</option>
-          <option value="2">Intermediate</option>
-          <option value="3">Upper-Intermediate</option>
-          <option value="4">Advanced</option>
+          <option value="1">Elementary</option>
+          <option value="2">Pre-Intermediate</option>
+          <option value="3">Intermediate</option>
+          <option value="4">Upper-Intermediate</option>
+          <option value="5">Advanced</option>
         </select>
         <ul>
           {state.objectives.map((objective) => (
@@ -113,7 +106,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
             </li>
           ))}
         </ul>
-        <input type="text" value={objectiveText} onChange={handleObjectiveTextChange} />
+        <input type="text" name='objectiveText' value={state.objectiveText} onChange={handleChange} />
         <button type="button" onClick={handleObjectiveAdd}>
           Add Objective
         </button>
@@ -125,7 +118,7 @@ const CourseUpdatePage = ({ history, currentCourse, fetchCourseByIdStart, update
             </li>
           ))}
         </ul>
-        <input type="text" value={requirementText} onChange={handleRequirementTextChange} />
+        <input type="text" name='requirementText' value={state.requirementText} onChange={handleChange} />
         <button type="button" onClick={handleRequirementsAdd}>
           Add Requirement
         </button>

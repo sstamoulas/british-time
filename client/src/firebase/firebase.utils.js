@@ -170,7 +170,7 @@ export const updateInstructorRatingDocument = async (instructorId, oldRating, ra
   console.log('oldRating', oldRating)
 
   if(instructorDetails.rating) {
-    rating = ((instructorDetails.rating * (oldRating == 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
+    rating = ((instructorDetails.rating * (oldRating === 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
   }
 
   console.log('new rating', rating)
@@ -211,7 +211,9 @@ export const getCoursesByInstructorId = async (instructorId) => {
 }
 
 export const getInstructorsByCourseId = async (courseId) => {
-  const docRef = firestore.collection('instructor-courses').where("courseId", "==", courseId);
+  const docRef = firestore.collection('instructor-courses')
+    .where("courseId", "==", courseId)
+    .where("isVisible", "==", true);
   const querySnapShot = await docRef.get();
   let instructors = {};
 
@@ -292,7 +294,7 @@ export const updateInstructorCourseRatingDocument = async (instructorCourseId, o
   console.log('oldRating', oldRating)
 
   if(courseDetails.rating) {
-    rating = ((courseDetails.rating * (oldRating == 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
+    rating = ((courseDetails.rating * (oldRating === 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
   }
 
   console.log('new rating', rating)
@@ -370,7 +372,8 @@ export const createCourseDocument = async (course) => {
 }
 
 export const updateCourseDocument = async (course) => {
-  const docRef = firestore.collection('courses/').doc(course.id);
+  console.log('updateCourseDocument', course)
+  const docRef = firestore.collection('courses/').doc(course.courseId);
 
   try {
     await docRef.update({
@@ -385,12 +388,15 @@ export const updateCourseDocument = async (course) => {
 
 export const convertCoursesCollectionsSnapshotToMap = (collections) => {
   const transformedCollection = collections.docs.map(doc => {
-    const { courseName, headline } = doc.data();
+    const { courseName, headline, courseId, imageExtension, level } = doc.data();
 
     return {
       id: doc.id,
       courseName,
       headline,
+      courseId, 
+      imageExtension, 
+      level,
     }
   });
 

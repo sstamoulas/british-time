@@ -17,6 +17,18 @@ const AdminPage = ({ users, error, courses, updateUserStart }) => {
     updateUserStart(user.id, {[target.getAttribute('data')]: target.value});
   }
 
+  const sortCourses = (courseA, courseB) => {
+    if (courseA.courseName < courseB.courseName) {
+      return -1;
+    }
+    else if (courseA.courseName > courseB.courseName) {
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+
   return (
     <div>
       <h1>Admin Page</h1>
@@ -25,7 +37,7 @@ const AdminPage = ({ users, error, courses, updateUserStart }) => {
         <Link to={ROUTES.CREATE_COURSE}>Create A Course</Link>
         <ul>
           { courses.length && 
-            courses.map((course) => <li key={course.id}><Link to={`course/${course.id}`}>{course.courseName}</Link></li>)
+            courses.sort(sortCourses).map((course) => <li key={course.id}><Link to={`course/${course.id}`}>{course.courseName}</Link></li>)
           }
         </ul>
         <table className='table table-striped'>

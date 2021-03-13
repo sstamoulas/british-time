@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import LandingPage from './pages/landing-page/landing-page.component';
-import NotFoundPage from './pages/not-found-page/not-found-page.component';
 import SignUpPage from './pages/sign-up-page/sign-up-page.component';
 import SignInPage from './pages/sign-in-page/sign-in-page.component';
 import ForgotPasswordPage from './pages/forgot-password-page/forgot-password-page.component';
@@ -24,8 +23,15 @@ import StudentCoursePage from './pages/student-course-page/student-course-page.c
 import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.component';
 import CourseRatingPage from './pages/course-rating-page/course-rating-page.component';
 import ChatRoomPage from './pages/chat-room-page/chat-room-page.component';
-import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
 import PaymentPage from './pages/payment-page/payment-page.component';
+
+import NotFoundPage from './pages/not-found-page/not-found-page.component';
+import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
+import TermsPage from './pages/terms-page/terms-page.component';
+import AddendumPage from './pages/addendum-page/addendum-page.component';
+import AboutUsPage from './pages/about-us-page/about-us-page.component';
+import ContactUsPage from './pages/contact-us-page/contact-us-page.component';
+import TeachingPage from './pages/teaching-page/teaching-page.component';
 
 import Navigation from './components/navigation/navigation.component';
 import Footer from './components/footer/footer.component';
@@ -64,6 +70,11 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
           <Route exact path={ROUTES.COURSES} component={CoursesPage} />
           <Route exact path={ROUTES.DETAILS_COURSE} component={CourseDetailsPage} />
           <Route exact path={ROUTES.PRIVACY_POLICY} component={PrivacyPolicyPage} />
+          <Route exact path={ROUTES.TERMS} component={TermsPage} />
+          <Route exact path={ROUTES.ADDENDUM} component={AddendumPage} />
+          <Route exact path={ROUTES.ABOUT_US} component={AboutUsPage} />
+          <Route exact path={ROUTES.CONTACT_US} component={ContactUsPage} />
+          <Route exact path={ROUTES.TEACHING} component={TeachingPage} />
           <CustomRoute
             exact
             path={ROUTES.SIGN_IN}

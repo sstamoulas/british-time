@@ -33,9 +33,9 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
   const [fileType, setFileType] = useState(null);
   const { chapterTitle, lessons } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
-    `${process.env.BASE_URL}/api`
+    `${process.env.REACT_APP_BASE_URL}/api`
   : 
-    `${process.env.LOCAL_HOST_URL}/api`;
+    `${process.env.REACT_APP_LOCAL_HOST_URL}/api`;
 
   useEffect(() => {
     if(isObjectEmpty(lessonDetails)) {
@@ -69,11 +69,13 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
     let newLessons = [...lessons];
     const resourcesToRemove = newLessons.filter((lesson) => lesson.lessonId === lessonId)[0].lessonResources;
 
-    await resourcesToRemove.forEach((resource) => {
-      if(resource.resourceType !== "Text") {
-        handleRemoveResource(lessonId, resource.resourceId, true);
-      }
-    })
+    if(resourcesToRemove !== undefined) {
+      await resourcesToRemove.forEach((resource) => {
+        if(resource.resourceType !== "Text") {
+          handleRemoveResource(lessonId, resource.resourceId, true);
+        }
+      })
+    }
 
     newLessons = newLessons.filter((lesson) => lesson.lessonId !== lessonId);
 
@@ -111,18 +113,28 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
     const currentResource = lessonResources.filter((resource) => resource.resourceId === resourceId)[0];
     const resourceType = currentResource.resourceType;
 
+    console.log(currentResource, resourceType)
+
     if(resourceType === "Text") {
       lessonResources = lessonResources.filter((resource) => resource.resourceId !== resourceId);
       newLessons[index].lessonResources = lessonResources;
 
       setState(prevState => ({ ...prevState, lessons: newLessons }));
     }
-    else {
+    else if(currentResource.file !== undefined) {
       await fetch(`${baseURL}/file-delete/${currentResource.file.fileId}`, {
         method: 'DELETE',
       })
       .catch((error) => console.log('error: ', error));
 
+      lessonResources = lessonResources.filter((resource) => resource.resourceId !== resourceId);
+      newLessons[index].lessonResources = lessonResources;
+
+      if(!removeAll) {
+        setState(prevState => ({ ...prevState, lessons: newLessons }));
+      }
+    }
+    else {
       lessonResources = lessonResources.filter((resource) => resource.resourceId !== resourceId);
       newLessons[index].lessonResources = lessonResources;
 
