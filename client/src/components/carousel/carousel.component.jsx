@@ -22,6 +22,8 @@ const Carousel = ({ type, courses }) => {
       setItemWidth();
 
       carouselButton.current.forEach((elem) => elem.addEventListener("click", slide));
+
+      return () => window.removeEventListener("resize", setItemWidth);
     }
   }, [courses])
 
@@ -68,7 +70,7 @@ const Carousel = ({ type, courses }) => {
         <div className="carousel__container js-carousel-container">
           <div className={`carousel__list js-carousel-list-${type}`}>
           {
-            courses.map((course) => console.log(course) || (
+            courses.map((course) => (
               <div key={course.id} data-index="0" className={`carousel__item slick-slide slick-active slick-current js-carousel-item-${type}`} tabIndex="-1" aria-hidden="false" style={{outline: 'none', width: '231px'}}>
                 <div>
                   <div data-courseid="637930" className="course-discovery-unit--card-margin--2TVw4 merchandising-course-card--card--2UfMa">

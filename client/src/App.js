@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import {Switch, Route} from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import { createStructuredSelector } from 'reselect';
+
+import { useTranslation } from 'react-i18next';
 
 import LandingPage from './pages/landing-page/landing-page.component';
 import SignUpPage from './pages/sign-up-page/sign-up-page.component';
@@ -52,6 +53,7 @@ import './App.styles.scss';
 
 const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
   const isMounted = useRef(false);
+  const { t, i18n, ready } = useTranslation('translation', { useSuspense: false });
 
   useEffect(() => {
     document.querySelector('#zmmtg-root').style.display = 'none';
@@ -61,7 +63,7 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
     }
   }, [checkUserSessionStart]);
 
-  return isMounted.current && !isLoading ?
+  return isMounted.current && !isLoading && ready ?
     (
       <div className='main-container'>
         <Navigation />

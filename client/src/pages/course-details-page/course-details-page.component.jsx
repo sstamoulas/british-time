@@ -48,10 +48,6 @@ const CourseDetailsPage = ({
   useEffect(() => {
     window.addEventListener('scroll', fixSideBar);
 
-    return () => {
-      window.removeEventListener('scroll', fixSideBar);
-    };
-
     function fixSideBar() {
       if(window.scrollY >= 360) {
         setSideBarFixed(true);
@@ -60,6 +56,8 @@ const CourseDetailsPage = ({
         setSideBarFixed(false);
       }
     }
+
+    return () => window.removeEventListener('scroll', fixSideBar);
   }, []);
 
   useEffect(() => {

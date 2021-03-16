@@ -109,10 +109,6 @@ const StudentCoursePage = ({
     lessonAccordion = document.querySelectorAll('.section--section-heading--2k6aW');
     lessonAccordion.forEach((elem) => elem.addEventListener("click", openClose));
 
-    return () => {
-      lessonAccordion.forEach((elem) => elem.removeEventListener("click", openClose));
-    };
-
     function openClose() {
       let accordion = this;
 
@@ -127,6 +123,8 @@ const StudentCoursePage = ({
         accordion.children[1].classList.add('udi-angle-down');
       }
     }
+
+    return () => lessonAccordion.forEach((elem) => elem.removeEventListener("click", openClose));
   }, [lessonAccordion]);
 
   useEffect(() => {

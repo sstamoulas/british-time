@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
+import LocaleSelect from './../locale-select/locale-select.component';
+
 import * as ROUTES from './../../constants/routes';
 
 import { currentUser } from './../../redux/user/user.selectors';
@@ -17,6 +19,7 @@ const Footer = ({ currentUser }) => {
     <footer className="udlite-footer ud-app-loader udlite-in-udheavy ud-app-loaded">
       <div className="footer-section footer-section-main">
         <div className="links">
+          <LocaleSelect />
           <ul className="unstyled-list link-column">
             <li>
               <Link to={ROUTES.TEACHING} className="link udlite-text-sm">
@@ -51,14 +54,14 @@ const Footer = ({ currentUser }) => {
               </Link>
             </li>
           </ul>
-          </div>
-          <div className="logo-and-copyright">
-            <div className="logo-container">
-              <Link to={ROUTES.LANDING} className='logo'>Native Talk</Link>
-            </div>
-            <div className="copyright-container udlite-text-xs">© {currentYear} Native Talk, Inc.</div>
         </div>
+        <div className="logo-and-copyright">
+          <div className="logo-container">
+            <Link to={ROUTES.LANDING} className='logo'>Native Talk</Link>
+          </div>
+          <div className="copyright-container udlite-text-xs">© {currentYear} Native Talk, Inc.</div>
       </div>
+    </div>
 
 
     </footer>

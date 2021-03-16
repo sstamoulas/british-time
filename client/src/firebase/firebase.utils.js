@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/analytics';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -201,14 +202,28 @@ export const getAllInstructorCourses = async () => {
 
 export const getCoursesByInstructorId = async (instructorId) => {
   const collectionRef = firestore.collection('instructor-courses').where("instructorId", "==", instructorId);
-  const snapShot = await collectionRef.get();
+  const snapShot = await collectionRef.get()
+    .then((querySnapshot) => {
+      let promises = [];
 
-  const collectionOfInstructorCourses = convertInstructorCoursesCollectionsSnapshotToMap(snapShot);
-  const coursesByInstructorId = Object.entries(collectionOfInstructorCourses)
-    .map(([key, value]) => value)
-    .filter((instructorCourse) => instructorCourse.instructorId === instructorId);
+      querySnapshot.forEach((doc) => {
+        const { courseId } = doc.data();
+        promises.push({id: doc.id, ...doc.data()});
+      });
 
-  return coursesByInstructorId;
+      return Promise.all(promises)
+    })
+    .then((docs) => docs)
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+
+  const coursesByInstructorId = await snapShot.map(async (instructorCourse) => {
+    const snapShot = await getCourseById(instructorCourse.courseId);
+    return { ...instructorCourse, courseName: snapShot.courseName, imageExtension: snapShot.imageExtension };
+  })
+
+  return Promise.all(coursesByInstructorId);
 }
 
 export const getInstructorsByCourseId = async (courseId) => {
@@ -530,16 +545,57 @@ export const getAllStudentCourses = async () => {
   return convertStudentCoursesCollectionsSnapshotToMap(snapShot);
 }
 
+// export const getCoursesByInstructorId = async (instructorId) => {
+//   const collectionRef = firestore.collection('instructor-courses').where("instructorId", "==", instructorId);
+//   const snapShot = await collectionRef.get()
+//     .then((querySnapshot) => {
+//       let promises = [];
+
+//       querySnapshot.forEach((doc) => {
+//         const { courseId } = doc.data();
+//         promises.push({id: doc.id, ...doc.data()});
+//       });
+
+//       return Promise.all(promises)
+//     })
+//     .then((docs) => docs)
+//     .catch((error) => {
+//         console.log("Error getting documents: ", error);
+//     });
+
+//   const coursesByInstructorId = await snapShot.map(async (instructorCourse) => {
+//     const snapShot = await getCourseById(instructorCourse.courseId);
+//     return { ...instructorCourse, courseName: snapShot.courseName, imageExtension: snapShot.imageExtension };
+//   })
+
+//   return Promise.all(coursesByInstructorId);
+// }
+
 export const getCoursesByStudentId = async (studentId) => {
   let collectionRef = firestore.collection('student-courses').where("studentId", "==", studentId);
-  let snapShot = await collectionRef.get();
+  let snapShot = await collectionRef.get()
+    .then((querySnapshot) => {
+      let promises = [];
 
-  const collectionOfStudentCourses = convertStudentCoursesCollectionsSnapshotToMap(snapShot);
+      querySnapshot.forEach((doc) => {
+        const { courseId } = doc.data();
+        promises.push({id: doc.id, ...doc.data()});
+      });
 
-  return Promise.all(await Object.entries(collectionOfStudentCourses)
-    .map(async ([key, value]) => {
-      return {studentCourseId: value.id, instructorCourseId: value.instructorCourseId, ...(await getInstructorCourseByCourseId(value.instructorCourseId))}
-    }));
+      return Promise.all(promises)
+    })
+    .then((docs) => docs)
+    .catch((error) => {
+        console.log("Error getting documents: ", error);
+    });
+
+  const coursesByStudentId = await snapShot.map(async (studentCourse) => {
+    const courseSnapShot = await getCourseById(studentCourse.courseId);
+    const instructorSnapShot = await getInstructorCourseByCourseId(studentCourse.instructorCourseId);
+    return { ...studentCourse, ...instructorSnapShot, courseName: courseSnapShot.courseName, imageExtension: courseSnapShot.imageExtension };
+  })
+
+  return Promise.all(coursesByStudentId);
 }
 
 export const getStudentCourseByCourseId = async (courseId) => {

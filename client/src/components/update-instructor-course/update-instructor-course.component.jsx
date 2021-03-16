@@ -48,8 +48,6 @@ const UpdateInstructorCourse = ({ history, courseDetails, instructorLessons, fet
   const handleCheckbox = (event) => {
     const { name, checked } = event.target;
 
-    console.log(name, checked)
-
     setState(prevState => ({ ...prevState, [name]: checked }));
   }
 
