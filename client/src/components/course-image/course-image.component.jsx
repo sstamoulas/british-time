@@ -25,7 +25,7 @@ const CourseImage = ({ imageExtension, courseId, height, width, className, onUpl
     const fileName = event.target.files[0].name;
     const imageExtension = fileName.substring(fileName.indexOf('.') + 1);
     data.append('file', event.target.files[0]);
-    data.append('public_id', courseId);
+    data.append('publicId', courseId);
 
     setState(prevState => ({ ...prevState, imageLoading: true }));
 
