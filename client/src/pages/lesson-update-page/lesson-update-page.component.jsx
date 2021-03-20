@@ -9,6 +9,8 @@ import { selectedLessonDetails } from '../../redux/instructor-lesson/instructor-
 
 import * as ROUTES from './../../constants/routes';
 
+import './lesson-update-page.styles.scss';
+
 const INITIAL_STATE = {
   chapterTitle: '',
 }
@@ -27,21 +29,43 @@ const isObjectEmpty = (obj) => {
   return Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
-const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, updateInstructorLessonStart }) => {
+const LessonUpdatePage = ({ history, lessonDetails, fetchInstructorLessonStart, updateInstructorLessonStart }) => {
   const { courseId, lessonId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, ...lessonDetails });
   const [fileType, setFileType] = useState(null);
   const { chapterTitle, lessons } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
-    `${process.env.REACT_APP_BASE_URL}/api`
+    process.env.REACT_APP_BASE_URL
   : 
-    `${process.env.REACT_APP_LOCAL_HOST_URL}/api`;
+    process.env.REACT_APP_LOCAL_HOST_URL;
 
   useEffect(() => {
     if(isObjectEmpty(lessonDetails)) {
       fetchInstructorLessonStart(lessonId);
     }
-  }, [lessonId, lessonDetails, fetchInstructorLessonStart]);
+
+    const target = document.querySelectorAll('.active');
+    if(target) {
+      for(let i = 0; i < target.length; i++) {
+        const panel = target[i].nextElementSibling;
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    }
+  });
+
+  const handleAccordion = (event) => {
+    const target = event.target;
+    const panel = target.nextElementSibling;
+    target.classList.toggle('active');
+
+    panel.classList.toggle('hidden');
+
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    } 
+  }
 
   const handleChapterChange = (event) => {
     const { name, value } = event.target;
@@ -94,7 +118,7 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
     setState(prevState => ({ ...prevState, lessons: newLessons }));
   }
 
-  const handleAddResource = (lessonId) => {
+  const handleAddResource = (event, lessonId) => {
     let newLessons = [...lessons];
     const index = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
     let lessonResources = lessons[index].lessonResources || [];
@@ -176,96 +200,153 @@ const UpdateLessonPage = ({ history, lessonDetails, fetchInstructorLessonStart, 
     .catch((error) => console.log('error: ', error));
   }
 
+  const onVideoUpload = async (event, lessonId, resourceId) => {
+    const data = new FormData();
+    data.append('file', event.target.files[0]);
+
+    fetch(`${baseURL}/video-upload`, {
+      method: 'POST',
+      body: data,
+    })
+    .then((res) => res.json())
+    .then(({ fileId, fileName }) => {
+      const newLessons = [...lessons];
+      const lessonIndex = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
+
+      newLessons[lessonIndex] = { file: {fileId, fileName} };
+
+      setState(prevState => ({ ...prevState, lessons: newLessons }));
+    })
+    .catch((error) => console.log('error: ', error));
+  }
+
   return (
     <form onSubmit={handleSubmit}>
-      <input type='text' name='chapterTitle' value={chapterTitle} onChange={handleChapterChange} />
+      <div className='f-basis'>
+        <label className='form-label' >Section Title: </label>
+        <input type='text' name='chapterTitle' className='form-control f-grow' value={chapterTitle} onChange={handleChapterChange} />
+      </div>
       {
         lessons && 
         lessons.map((lesson, index) => (
           <div key={lesson.lessonId}>
-            <input type='text' name='lessonTitle' value={lesson.lessonTitle} onChange={(e) => handleLessonChange(e, lesson.lessonId)} />
-            {
-              !lesson.lessonType && (
-                <select name='lessonType' value={lesson.lessonType || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)}>
-                  <option defaultValue hidden>Select A Lesson Type</option>
-                  <option value='Content'>Content</option>
-                  <option value='Video'>Video</option>
-                </select>
-              )
-            }
-            {
-              lesson.lessonType && (
-                <span>{lesson.lessonType}</span>
-              )
-            }
-            {
-              lesson.lessonType === 'Content' && lesson.lessonResources && (
-                lesson.lessonResources.map((resource) => (
-                  <div key={resource.resourceId}>
-                  {
-                    !resource.resourceType && (
-                      <select name='resourceType' value={resource.resourceType || ''} onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)}>
-                        <option defaultValue hidden>Select A Resource Type</option>
-                        <option value='Text'>Text</option>
-                        <option value='Document'>Document</option>
-                        <option value='Audio'>Audio</option>
-                        <option value='Image'>Image</option>
-                      </select>
-                    )
-                  }
-                  {
-                    resource.resourceType && (
-                      <span>{resource.resourceType}</span>
-                    )
-                  }
-                    {
-                      ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file === undefined && (
-                        <div>
-                          <input type='file' name='file' onChange={(e) => onFileUpload(e, lesson.lessonId, resource.resourceId)} />
-                        </div>
-                      )
-                    }
-                    {
-                      ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file !== undefined && (
-                        <span key={resource.file.fileId}>{resource.file.fileType} - {resource.file.fileName} - {resource.file.fileId}</span>
-                      )
-                    }
-                    {
-                      resource.resourceType === 'Text' && (
-                        <textarea 
-                          name='resourceValue' 
-                          rows='11' 
-                          cols='50' 
-                          defaultValue={resource.resourceValue}
-                          onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)} 
-                          placeholder='Add Your Lesson Text...'
-                        >
-                        </textarea>
-                      )
-                    }
-                    <input type='button' value='Remove Resource' onClick={() => handleRemoveResource(lesson.lessonId, resource.resourceId)} />
+            <div className="accordion" onClick={handleAccordion}>{lesson.lessonTitle}</div>
+            <div className="accordion-panel hidden">
+              <div className='f-basis'>
+                <label className='form-label'>Lesson Title: </label>
+                <input type='text' name='lessonTitle' className='form-control f-grow' value={lesson.lessonTitle} onChange={(e) => handleLessonChange(e, lesson.lessonId)} />
+              </div>
+              {
+                !lesson.lessonType && (
+                  <div className='f-basis'>
+                    <select name='lessonType' className='form-control f-grow' value={lesson.lessonType || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)}>
+                      <option defaultValue hidden>Select A Lesson Type</option>
+                      <option value='Content'>Content</option>
+                      <option value='Video'>Video</option>
+                    </select>
                   </div>
-                ))
-              )
-            }
-            {
-              lesson.lessonType === 'Video' && (
-                <input type='text' name='videoId' placeholder='Type Youtube Video ID' value={lesson.videoId || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)} />
-              )
-            }
-
-            <input type='button' value='Remove Lesson' onClick={() => handleRemoveLesson(lesson.lessonId)} />
-            {
-              lesson.lessonType === 'Content' && (
-                <input type='button' value='Add Resource' onClick={() => handleAddResource(lesson.lessonId)} />
-              )
-            }
+                )
+              }
+              {
+                lesson.lessonType && (
+                  <div className='f-basis'>
+                    <label className='form-label'>Lesson Type: </label>
+                    <span className='f-grow'>{lesson.lessonType}</span>
+                  </div>
+                )
+              }
+              {
+                lesson.lessonType === 'Content' && lesson.lessonResources && (
+                  lesson.lessonResources.map((resource) => (
+                    <Fragment key={resource.resourceId}>
+                      {
+                        !resource.resourceType && (
+                          <div className='f-basis'>
+                            <select name='resourceType' className='form-control f-grow' value={resource.resourceType || ''} onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)}>
+                              <option defaultValue hidden>Select A Resource Type</option>
+                              <option value='Text'>Text</option>
+                              <option value='Document'>Document</option>
+                              <option value='Audio'>Audio</option>
+                              <option value='Image'>Image</option>
+                            </select>
+                          </div>
+                        )
+                      }
+                      {
+                        resource.resourceType && (
+                          <div className='f-basis'>
+                            <label className='form-label'>Add Your Lesson {resource.resourceType}: </label>
+                          </div>
+                        )
+                      }
+                      {
+                        resource.resourceType && ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file === undefined && (
+                          <div className='f-basis'>
+                            <input type='file' name='file' className='form-control f-grow' onChange={(e) => onFileUpload(e, lesson.lessonId, resource.resourceId)} />
+                          </div>
+                        )
+                      }
+                      {
+                        ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file !== undefined && (
+                          <div className='f-basis'>
+                            <span key={resource.file.fileId} className='center'>{resource.file.fileType} - {resource.file.fileName} - {resource.file.fileId}</span>
+                          </div>
+                        )
+                      }
+                      {
+                        resource.resourceType && resource.resourceType === 'Text' && (
+                          <div className='f-basis'>
+                            <textarea 
+                              name='resourceValue' 
+                              rows='11' 
+                              cols='50' 
+                              className='form-control f-grow'
+                              defaultValue={resource.resourceValue}
+                              onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)} 
+                              placeholder='Add Your Lesson Text...'
+                            >
+                            </textarea>
+                          </div>
+                        )
+                      }
+                      <div className='d-flex mt-2'>
+                        <input type='button' className='btn btn-lg f-grow' value='Remove Resource' onClick={() => handleRemoveResource(lesson.lessonId, resource.resourceId)} />
+                      </div>
+                    </Fragment>
+                  ))
+                )
+              }
+              {
+                lesson.lessonType === 'Content' && (
+                  <div className='d-flex mt-2'>
+                    <input type='button' className='btn btn-lg f-grow' value='Add Resource' onClick={(e) => handleAddResource(e, lesson.lessonId)} />
+                  </div>
+                )
+              }
+              {
+                lesson.lessonType === 'Video' && (
+                  <Fragment>
+                    <div className='f-basis'>
+                      <label className='form-label'>Add Your Lesson Video: </label>
+                    </div>
+                    <div className='f-basis'>
+                      <input type='file' name='file' className='form-control f-grow' onChange={(e) => onVideoUpload(e, lesson.lessonId)} />
+                    </div>
+                  </Fragment>
+                )
+              }
+              <div className='d-flex mt-2'>
+                <input type='button' className='btn btn-lg f-grow' value='Remove Lesson' onClick={() => handleRemoveLesson(lesson.lessonId)} />
+              </div>
+            </div>
           </div>
         ))
       }
 
-      <input type='button' value='Add Lesson' onClick={() => handleAddLesson()} />
-      <input type="submit" value="Update Lesson Plan" />
+      <div className='d-flex mt-2'>
+        <input type='button' className='btn btn-lg f-grow' value='Add Lesson' onClick={() => handleAddLesson()} />
+        <input type="submit" className='btn btn-lg f-grow' value="Update Lesson Plan" />
+      </div>
     </form>
   );
 };
@@ -281,4 +362,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updateInstructorLessonStart(lessonId, lessonDetails)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(UpdateLessonPage));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(LessonUpdatePage));

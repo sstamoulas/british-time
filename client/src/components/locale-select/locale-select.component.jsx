@@ -5,6 +5,7 @@ import './locale-select.styles.scss';
 
 const languages = {
   'en': 'English',
+  'gr': 'Ελληνικά',
   'tr': 'Türkçe',
 };
  
@@ -85,6 +86,11 @@ const LocaleSelect = () => {
                 <li>
                   <div onClick={() => changeHandler('en')} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-sm udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-neutral">
                     <div className="udlite-block-list-item-content">English</div>
+                  </div>
+                </li>
+                <li>
+                  <div onClick={() => changeHandler('gr')} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-sm udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-neutral">
+                    <div className="udlite-block-list-item-content">Ελληνικά</div>
                   </div>
                 </li>
                 <li>

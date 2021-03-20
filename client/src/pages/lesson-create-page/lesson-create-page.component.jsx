@@ -23,15 +23,15 @@ const EMPTY_RESOURCE = {
   resourceValue: '',
 }
 
-const CreateLessonPage = ({ history, createInstructorLessonStart }) => {
+const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, courseId });
   const [fileType, setFileType] = useState(null)
   const { chapterTitle, lessons } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
-    `${process.env.REACT_APP_BASE_URL}/api`
+    process.env.REACT_APP_BASE_URL
   : 
-    `${process.env.REACT_APP_LOCAL_HOST_URL}/api`;
+    process.env.REACT_APP_LOCAL_HOST_URL;
 
   const handleChapterChange = (event) => {
     const { name, value } = event.target;
@@ -246,4 +246,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(createInstructorLessonStart(lessonDetails)),
 })
 
-export default connect(null, mapDispatchToProps)(withRouter(CreateLessonPage));
+export default connect(null, mapDispatchToProps)(withRouter(LessonCreatePage));

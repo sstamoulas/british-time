@@ -16,8 +16,8 @@ const LandingPage = () => {
             <img src={hero} width="1340" height="100" alt="" />
           </div>
           <div className="billboard--content-box--JtXUJ">
-            <h1 className="udlite-heading-xxl" data-purpose="safely-set-inner-html:billboard:title">{t('logo.1')} by bit</h1>
-            <p className="udlite-text-md" data-purpose="safely-set-inner-html:billboard:subtitle">Learn for an hour and develop a new language with unlimited access to our content.</p>
+            <h1 className="udlite-heading-xxl" data-purpose="safely-set-inner-html:billboard:title">{t('billboard.title')}</h1>
+            <p className="udlite-text-md" data-purpose="safely-set-inner-html:billboard:subtitle">{t('billboard.sub-title')}</p>
           </div>
         </div>
       </div>

@@ -11,9 +11,9 @@ const ProfileImage = ({ imageExtension, publicId, height, width, className, onUp
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { bio, imageLoading } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
-    `${process.env.REACT_APP_BASE_URL}/api`
+    process.env.REACT_APP_BASE_URL
   : 
-    `${process.env.REACT_APP_LOCAL_HOST_URL}/api`;
+    process.env.REACT_APP_LOCAL_HOST_URL;
 
   const onClick = event => {
     document.querySelector(".img-upload").click();
