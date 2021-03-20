@@ -206,7 +206,7 @@ const StudentCoursePage = ({
                                                                 )
                                                               }
                                                               { lessonResource.resourceType === "Document" && (
-                                                                  <a href={`https://drive.google.com/uc?authuser=0&id=${lessonResource.file.fileId}&export=download`}>Download</a>
+                                                                  <a href={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`}>Download</a>
                                                                 )
                                                               }
                                                               { lessonResource.resourceType === "Audio" && (
