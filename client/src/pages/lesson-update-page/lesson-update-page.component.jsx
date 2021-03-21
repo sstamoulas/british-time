@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { withRouter, useParams } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
+import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 
 import { fetchInstructorLessonStart, updateInstructorLessonStart } from './../../redux/instructor-lesson/instructor-lesson.actions';
 
@@ -34,6 +35,7 @@ const LessonUpdatePage = ({ history, lessonDetails, fetchInstructorLessonStart, 
   const [state, setState] = useState({ ...INITIAL_STATE, ...lessonDetails });
   const [fileType, setFileType] = useState(null);
   const { chapterTitle, lessons } = state;
+  const [player, setPlayer] = useState(undefined);
   const baseURL = process.env.NODE_ENV === "production" ? 
     process.env.REACT_APP_BASE_URL
   : 
@@ -52,6 +54,15 @@ const LessonUpdatePage = ({ history, lessonDetails, fetchInstructorLessonStart, 
       }
     }
   });
+
+  useEffect(() => {
+    if(!player) {
+      setPlayer(new YouTubeToHtml5({ withAudio: true }));
+    }
+    else {
+      player.load();
+    }
+  }, [player])
 
   const handleAccordion = (event) => {
     const target = event.target;
@@ -200,25 +211,25 @@ const LessonUpdatePage = ({ history, lessonDetails, fetchInstructorLessonStart, 
     .catch((error) => console.log('error: ', error));
   }
 
-  const onVideoUpload = async (event, lessonId, resourceId) => {
-    const data = new FormData();
-    data.append('file', event.target.files[0]);
+  // const onVideoUpload = async (event, lessonId, resourceId) => {
+  //   const data = new FormData();
+  //   data.append('file', event.target.files[0]);
 
-    fetch(`${baseURL}/video-upload`, {
-      method: 'POST',
-      body: data,
-    })
-    .then((res) => res.json())
-    .then(({ fileId, fileName }) => {
-      const newLessons = [...lessons];
-      const lessonIndex = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
+  //   fetch(`${baseURL}/video-upload`, {
+  //     method: 'POST',
+  //     body: data,
+  //   })
+  //   .then((res) => res.json())
+  //   .then(({ videoId, fileName }) => {
+  //     const newLessons = [...lessons];
+  //     const lessonIndex = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
 
-      newLessons[lessonIndex] = { file: {fileId, fileName} };
+  //       newLessons[lessonIndex] = { ...newLessons[lessonIndex], file: {videoId, fileName} };
 
-      setState(prevState => ({ ...prevState, lessons: newLessons }));
-    })
-    .catch((error) => console.log('error: ', error));
-  }
+  //     setState(prevState => ({ ...prevState, lessons: newLessons }));
+  //   })
+  //   .catch((error) => console.log('error: ', error));
+  // }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -330,7 +341,15 @@ const LessonUpdatePage = ({ history, lessonDetails, fetchInstructorLessonStart, 
                       <label className='form-label'>Add Your Lesson Video: </label>
                     </div>
                     <div className='f-basis'>
-                      <input type='file' name='file' className='form-control f-grow' onChange={(e) => onVideoUpload(e, lesson.lessonId)} />
+                    {
+                      // <input type='file' name='file' className='form-control f-grow' onChange={(e) => onVideoUpload(e, lesson.lessonId)} />
+                    }
+                      <input type='text' name='videoId' className='form-control f-grow' placeholder='Type Youtube Video ID' value={lesson.videoId || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)} />
+                      {
+                        lesson.videoId && (
+                          <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" data-yt2html5={lesson.videoId}></video>
+                        )
+                      }
                     </div>
                   </Fragment>
                 )
