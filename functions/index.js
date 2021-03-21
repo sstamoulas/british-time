@@ -40,7 +40,6 @@ app.get('/*', function (req, res) {
 const SCOPES = [
   'https://www.googleapis.com/auth/drive', // See (not download), edit, create, and delete all of your Google Drive files
   'https://www.googleapis.com/auth/drive.readonly', // See and download all your Google Drive files
-  'https://www.googleapis.com/auth/youtube.upload', // Manage your YouTube videos
 ];
 
 // The file token.json stores the user's access and refresh tokens, and is
@@ -338,59 +337,5 @@ app.get('/file-download', (req, res) => {
     }
   );
 });
-
-app.post('/video-upload', (req, res) => {
-  req.setTimeout(0);
-  const youtube = google.youtube({version: 'v3', auth});
-
-  youtube.videos.insert(
-    {
-      auth: auth,
-      part: 'snippet, status',
-      resource: {
-        // Video title and description
-        snippet: {
-          title: 'My title',
-          description: 'My description'
-        },
-        // I set to private for tests
-        status: {
-          privacyStatus: 'unlisted'
-        }
-      },
-
-      // Create the readable stream to upload the video
-      media: {
-        body: fs.createReadStream('./images/test.webm') // Change here to your real video
-      }
-    },
-    async (err, file) => {
-      if (err) {
-        // Handle error
-        console.log(err)
-
-        return await res
-          .status(400)
-          .json({ errors: [{ msg: 'Server Error try again later' }] });
-      } else {
-        //fs.unlinkSync(req.file.path)
-        // if file upload success then return the unique google drive id
-        // this must be saved to firebase under the course or lesson id
-
-        console.log('channel details:', file);
-
-        console.log('https://www.youtube.com/watch?v=' + file.data.id);
-        await res.status(200).json({
-          fileId: file.data.id,
-          fileName: '',
-        });
-      }
-    }
-  );
-});
-
-app.get('/video-conference', (req, res) => {
-  res.send(`Hello from the video-conference gcloudName: ${process.env.GCLOUD_PROJECT} ${process.env.ENV}`)
-})
 
 exports.api = functions.https.onRequest(app)
