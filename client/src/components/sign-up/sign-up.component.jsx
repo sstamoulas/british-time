@@ -14,12 +14,11 @@ const INITIAL_STATE = {
   email: '', 
   password: '', 
   passwordConfirmation: '', 
-  isAdmin: false,
 }
 
 const SignUp = ({ currentUser, signUpStart, resetErrorMessage, error }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
-  const { userName, email, password, passwordConfirmation, isAdmin } = state;
+  const { userName, email, password, passwordConfirmation } = state;
 
   useEffect(() => {
     return () => resetErrorMessage();
@@ -35,11 +34,6 @@ const SignUp = ({ currentUser, signUpStart, resetErrorMessage, error }) => {
   const onChange = event => {
     const { name, value } = event.target;
     setState(prevState => ({ ...prevState, [name]: value }));
-  };
-
-  const onChangeCheckbox = event => {
-    const { name, checked } = event.target;
-    setState(prevState => ({ ...prevState, [name]: checked }));
   };
 
   const isInvalid =

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import Zoom from './../../components/zoom/zoom.component';
-import CountDownTimer from './../../components/count-down-timer/count-down-timer.component';
+// import CountDownTimer from './../../components/count-down-timer/count-down-timer.component';
 
 import { currentUser } from './../../redux/user/user.selectors';
 
@@ -11,8 +11,7 @@ import './live-session-button.styles.scss';
 
 const LiveSessionButton = ({ currentUser, error }) => {
   const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
-  const [hasLiveSession, setHasLiveSession] = useState(false)
-
+  // const [hasLiveSession, setHasLiveSession] = useState(false)
 
   const openLiveSession = () => {
     document.querySelector('#zmmtg-root').style.display = '';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -20,7 +20,7 @@ const InstructorCourses = ({ currentUser, instructorCourses }) => (
     {
       Object.keys(instructorCourses).length ?
         Object.entries(instructorCourses).map(([index, instructorCourse]) => {
-          const isPlural = instructorCourse.totalStudents != 1 ? 's' : '';
+          const isPlural = instructorCourse.totalStudents !== 1 ? 's' : '';
           const totalStudents = instructorCourse.totalStudents || 0;
           let renderRating = [];
 

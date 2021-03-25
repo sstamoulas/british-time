@@ -25,7 +25,7 @@ const Carousel = ({ type, courses }) => {
 
       return () => window.removeEventListener("resize", setItemWidth);
     }
-  }, [courses])
+  }, [courses, type]);
 
   let setItemWidth = function(){
     carouselList.current.removeAttribute("style");

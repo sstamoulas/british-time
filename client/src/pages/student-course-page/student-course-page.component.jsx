@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { connect, batch } from 'react-redux';
+import React, { Fragment, useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
 import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 
 import Zoom from './../../components/zoom/zoom.component';
-import CourseLessons from '../../components/course-lessons/course-lessons.component';
 
 import { fetchInstructorCourseDetailsByCourseIdStart } from './../../redux/instructor-course/instructor-course.actions';
 import { fetchInstructorLessonsStart } from '../../redux/instructor-lesson/instructor-lesson.actions';
 
 import { instructorLessons } from '../../redux/instructor-lesson/instructor-lesson.selectors';
 import { selectedCourseDetails } from '../../redux/instructor-course/instructor-course.selectors';
-
-import * as ROUTES from './../../constants/routes';
 
 import './student-course-page.styles.scss';
 
@@ -35,8 +32,6 @@ const StudentCoursePage = ({
   fetchInstructorCourseDetailsByCourseIdStart 
 }) => {
   const { courseId } = useParams();
-  const [state, setState] = useState({ ...courseDetails });
-  const [accordionOpen, setAccordionOpen] = useState(false);
   const [sideBarTop, setSideBarTop] = useState(0);
   const [sideBarHeight, setSideBarHeight] = useState(0);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
@@ -45,7 +40,6 @@ const StudentCoursePage = ({
   const [currentLesson, setCurrentLesson] = useState(!isArrayEmpty(instructorLessons) && instructorLessons[0].lessons[0]);
   const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
 
-  const { courseName } = state;
   let lessonAccordion;
 
   useEffect(() => {
@@ -206,17 +200,23 @@ const StudentCoursePage = ({
                                                                 )
                                                               }
                                                               { lessonResource.resourceType === "Document" && (
-                                                                  <a href={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`}>Download</a>
+                                                                  <span>{lessonResource.file.fileName}&nbsp;<a href={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`}>Download Document</a></span>
                                                                 )
                                                               }
                                                               { lessonResource.resourceType === "Audio" && (
-                                                                  <audio controls="controls">
-                                                                    <source src={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`} />
-                                                                  </audio>
+                                                                  <Fragment>
+                                                                    <audio controls="controls" controlsList="nodownload">
+                                                                      <source src={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`} />
+                                                                    </audio>
+                                                                    <span><a href={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`}>Download Audio</a></span>
+                                                                  </Fragment>
                                                                 )
                                                               }
                                                               { lessonResource.resourceType === "Image" && (
-                                                                  <img src={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`} width="300" height="200" />
+                                                                  <Fragment>
+                                                                    <img alt='resource' src={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`} width="300" height="200" />
+                                                                    <span><a href={`https://docs.google.com/uc?export=download&id=${lessonResource.file.fileId}`}>Download Image</a></span>
+                                                                  </Fragment>
                                                                 )
                                                               }
                                                               </div>
@@ -400,7 +400,7 @@ const StudentCoursePage = ({
                                                                        </li>
                                                                        <li role="separator" className=" menu--menu--2Pw42 menu--item--2IgLt divider"></li>
                                                                        <li role="presentation" className=" menu--menu--2Pw42 menu--item--2IgLt ">
-                                                                          <div tabIndex="-1" role="menuitemradio" className="dropdown-menu-link" aria-checked="true"><label className="video-viewer--autoplay-setting--3FB5q checkbox-slide checkbox-inline" title=""><input type="checkbox" onChange={() => false} checked="" onChange={() => true} onChange={() => true}/><span className="toggle-control-label checkbox-label"><span className="checkbox-slider"></span>Autoplay</span></label></div>
+                                                                          <div tabIndex="-1" role="menuitemradio" className="dropdown-menu-link" aria-checked="true"><label className="video-viewer--autoplay-setting--3FB5q checkbox-slide checkbox-inline" title=""><input type="checkbox" onChange={() => false} checked="" /><span className="toggle-control-label checkbox-label"><span className="checkbox-slider"></span>Autoplay</span></label></div>
                                                                        </li>
                                                                        <li role="presentation" className=" menu--menu--2Pw42 menu--item--2IgLt disabled ">
                                                                           <div role="menuitem" disabled="" data-purpose="download-lecture" className="dropdown-menu-link"><span aria-describedby="popper9" tabIndex="0" className="video-viewer--download-lecture-tooltip-icon--3OGdJ udi udi-info-circle"></span><span>Download lecture</span></div>
@@ -1221,7 +1221,7 @@ const StudentCoursePage = ({
                                                    <div>Instructor</div>
                                                    <div className="course-overview--wide--37Lev">
                                                       <div className="instructor-profile--header-row--n0Prm">
-                                                         <img alt="User photo" aria-label="User photo" className="user-avatar user-avatar--image" data-purpose="user-avatar" height="64" width="64" src="data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;%3E%3C/svg%3E" />
+                                                         <img alt="User" aria-label="User photo" className="user-avatar user-avatar--image" data-purpose="user-avatar" height="64" width="64" src="data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;%3E%3C/svg%3E" />
                                                          <div className="instructor-profile--title-wrapper--2V1u6">
                                                             <div className="instructor-profile--title--1rlDt"><a href="/user/robpercival/" data-purpose="instructor-url">Rob Percival</a></div>
                                                             <p>Web Developer And Teacher</p>
@@ -1243,7 +1243,7 @@ const StudentCoursePage = ({
                                                    <div>Instructor</div>
                                                    <div className="course-overview--wide--37Lev">
                                                       <div className="instructor-profile--header-row--n0Prm">
-                                                         <img alt="User photo" aria-label="User photo" className="user-avatar user-avatar--image" data-purpose="user-avatar" height="64" width="64" src="data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;%3E%3C/svg%3E" />
+                                                         <img alt="User" aria-label="User photo" className="user-avatar user-avatar--image" data-purpose="user-avatar" height="64" width="64" src="data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;%3E%3C/svg%3E" />
                                                          <div className="instructor-profile--title-wrapper--2V1u6">
                                                             <div className="instructor-profile--title--1rlDt"><a href="/user/mashrurhossain/" data-purpose="instructor-url">Mashrur Hossain</a></div>
                                                             <p>Technology Professional and Entrepreneur</p>
@@ -1265,7 +1265,7 @@ const StudentCoursePage = ({
                                                    <div>Instructor</div>
                                                    <div className="course-overview--wide--37Lev">
                                                       <div className="instructor-profile--header-row--n0Prm">
-                                                         <img alt="User photo" aria-label="User photo" className="user-avatar user-avatar--image" data-purpose="user-avatar" height="64" width="64" src="data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;%3E%3C/svg%3E" />
+                                                         <img alt="User" aria-label="User photo" className="user-avatar user-avatar--image" data-purpose="user-avatar" height="64" width="64" src="data:image/svg+xml,%3Csvg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;%3E%3C/svg%3E" />
                                                          <div className="instructor-profile--title-wrapper--2V1u6">
                                                             <div className="instructor-profile--title--1rlDt"><a href="/user/codestars/" data-purpose="instructor-url">Codestars by Rob Percival</a></div>
                                                             <p>Teaching the Next Generation of Coders</p>

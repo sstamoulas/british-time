@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Image } from 'cloudinary-react';
 
 import './profile-image.styles.scss';
@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 
 const ProfileImage = ({ imageExtension, publicId, height, width, className, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
-  const { bio, imageLoading } = state;
+  const { imageLoading } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
     process.env.REACT_APP_BASE_URL
   : 
@@ -19,16 +19,12 @@ const ProfileImage = ({ imageExtension, publicId, height, width, className, onUp
     document.querySelector(".img-upload").click();
   }
 
-  console.log(publicId)
-
   const onUpload = (event) => {
     const data = new FormData();
     const fileName = event.target.files[0].name;
     const imageExtension = fileName.substring(fileName.indexOf('.') + 1);
     data.append('file', event.target.files[0]);
     data.append('publicId', publicId);
-
-   console.log(publicId)
 
     setState(prevState => ({ ...prevState, imageLoading: true }));
 

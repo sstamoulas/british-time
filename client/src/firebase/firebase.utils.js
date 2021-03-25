@@ -166,16 +166,9 @@ export const updateInstructorRatingDocument = async (instructorId, oldRating, ra
     oldRating = 0;
   }
 
-  console.log('instructorDetails.rating', instructorDetails.rating);
-  console.log('totalStudents', totalStudents)
-  console.log('rating', rating)
-  console.log('oldRating', oldRating)
-
   if(instructorDetails.rating) {
     rating = ((instructorDetails.rating * (oldRating === 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
   }
-
-  console.log('new rating', rating)
 
   try {
     await docRef.update({
@@ -207,7 +200,6 @@ export const getCoursesByInstructorId = async (instructorId) => {
       let promises = [];
 
       querySnapshot.forEach((doc) => {
-        const { courseId } = doc.data();
         promises.push({id: doc.id, ...doc.data()});
       });
 
@@ -304,16 +296,9 @@ export const updateInstructorCourseRatingDocument = async (instructorCourseId, o
     oldRating = 0;
   }
 
-  console.log('courseDetails.rating', courseDetails.rating);
-  console.log('totalStudents', totalStudents)
-  console.log('rating', rating)
-  console.log('oldRating', oldRating)
-
   if(courseDetails.rating) {
     rating = ((courseDetails.rating * (oldRating === 0 ? (totalStudents - 1) : totalStudents)) - oldRating + rating)/totalStudents;
   }
-
-  console.log('new rating', rating)
 
   try {
     await docRef.update({
@@ -388,7 +373,6 @@ export const createCourseDocument = async (course) => {
 }
 
 export const updateCourseDocument = async (course) => {
-  console.log('updateCourseDocument', course)
   const docRef = firestore.collection('courses/').doc(course.courseId);
 
   try {
@@ -578,7 +562,6 @@ export const getCoursesByStudentId = async (studentId) => {
       let promises = [];
 
       querySnapshot.forEach((doc) => {
-        const { courseId } = doc.data();
         promises.push({id: doc.id, ...doc.data()});
       });
 
@@ -609,8 +592,6 @@ export const createStudentCourseDetailsDocument = async (studentId, courseDetail
   const docRef = firestore.collection('student-courses').doc();
   const snapShot = await docRef.get();
   const createdAt = new Date();
-
-  console.log('createStudentCourseDetailsDocument', courseDetails)
 
   if(!snapShot.exists) {
     const { courseId, instructorId, instructorCourseId, courseName, userName } = courseDetails;
@@ -703,7 +684,6 @@ export const getPaymentsByUserId = async (userId) => {
 export const createPaymentsDocument = async (userId) => {
   const docRef = firestore.collection('payment-history').doc(userId);
   const snapShot = await docRef.get();
-  const createdAt = new Date();
 
   if(!snapShot.exists) {
     try {
@@ -720,7 +700,6 @@ export const createPaymentsDocument = async (userId) => {
 
 export const updatePaymentsDocument = async (userId, transactions) => {
   const docRef = firestore.collection('payment-history').doc(userId);
-  const updatedAt = new Date();
 
   try {
     await docRef.update({
@@ -736,14 +715,9 @@ export const updatePaymentsDocument = async (userId, transactions) => {
 export const addPaymentTransaction = async (userId, transaction) => {
   const docRef = firestore.collection('payment-history').doc(userId);
   const snapShot = await docRef.get();
-  console.log('snapShot', snapShot)
   let { transactions } = snapShot.data();
-  console.log('transactions', transactions)
-  const updatedAt = new Date();
 
   transactions.push(transaction);
-
-  console.log('new transactions', transactions)
 
   try {
     await docRef.update({

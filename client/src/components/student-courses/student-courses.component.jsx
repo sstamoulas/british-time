@@ -27,7 +27,7 @@ const StudentCourses = ({ history, currentUser, studentCourses }) => {
       {
         Object.keys(studentCourses).length ?
           Object.entries(studentCourses).map(([index, studentCourse]) => {
-            const isPlural = studentCourse.totalStudents != 1 ? 's' : '';
+            const isPlural = studentCourse.totalStudents !== 1 ? 's' : '';
             const totalStudents = studentCourse.totalStudents || 0;
             let renderRating = [];
 

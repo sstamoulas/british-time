@@ -35,7 +35,7 @@ const CourseRatingPage = ({
 }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, ...courseDetails });
-  const { rating, tempRating, review } = state;
+  const { rating, review } = state;
   const oldRating = courseDetails.rating;
   let ratingDisplay = [];
 
@@ -46,7 +46,7 @@ const CourseRatingPage = ({
 
   const handleSubmit = (event) => {
     delete state.tempRating;
-    console.log(state)
+
     batch(() => {
       updateStudentCourseStart(courseId, {...state });
       updateInstructorCourseRatingStart(state.instructorCourseId, oldRating, rating);

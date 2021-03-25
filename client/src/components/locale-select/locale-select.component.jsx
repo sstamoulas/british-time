@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import './locale-select.styles.scss';
 
 const languages = {
+  'ar': 'عربي',
+  'el': 'Ελληνικά',
   'en': 'English',
-  'gr': 'Ελληνικά',
   'tr': 'Türkçe',
 };
  
@@ -18,7 +19,28 @@ const LocaleSelect = () => {
   useEffect(() => {
     i18n.changeLanguage(lang);
 
-    const modal = document.querySelector(".react-tiny-popover-container");
+    const content = document.querySelector(".content");
+    content.dir = i18n.dir();
+
+    const outsideClick = (event) => {
+      if(isPopoverOpen) {
+        const flyoutElement = document.getElementsByClassName("react-tiny-popover-container")[0];
+        let targetElement = event.target; // clicked element
+
+        do {
+          if (targetElement === flyoutElement) {
+            // This is a click inside. Do nothing, just return.
+            // document.getElementById("flyout-debug").textContent = "Clicked inside!";
+            setIsPopoverOpen(isPopoverOpen);
+          }
+          // Go up the DOM
+          targetElement = targetElement.parentNode;
+        } while (targetElement);
+
+        // This is a click outside.
+        setIsPopoverOpen(false);
+      }
+    }
 
     window.addEventListener("resize", setItemWidth);
     window.addEventListener('click', outsideClick);
@@ -27,11 +49,10 @@ const LocaleSelect = () => {
       window.removeEventListener("resize", setItemWidth);
       window.removeEventListener("click", outsideClick);
     }
-  }, [lang, isPopoverOpen]);
+  }, [i18n, lang, isPopoverOpen]);
 
   useEffect(() => {
     const btn = document.querySelector(".locale-select--select-button--DVnTw");
-    const popover = document.querySelector(".react-tiny-popover-container");
 
     setBtnPosition(prevState => ({ 
       ...prevState, 
@@ -40,35 +61,15 @@ const LocaleSelect = () => {
     }));
   }, [isPopoverOpen])
 
-  let setItemWidth = function(){
+
+  const setItemWidth = () => {
     const btn = document.querySelector(".locale-select--select-button--DVnTw");
-    const popover = document.querySelector(".react-tiny-popover-container");
 
     setBtnPosition(prevState => ({ 
       ...prevState, 
       offsetLeft: btn.offsetLeft, 
       offsetTop: btn.offsetTop,
     }));
-  }
-
-  const outsideClick = (event) => {
-    if(isPopoverOpen) {
-      const flyoutElement = document.getElementsByClassName("react-tiny-popover-container")[0];
-      let targetElement = event.target; // clicked element
-
-      do {
-        if (targetElement == flyoutElement) {
-          // This is a click inside. Do nothing, just return.
-          // document.getElementById("flyout-debug").textContent = "Clicked inside!";
-          setIsPopoverOpen(isPopoverOpen);
-        }
-        // Go up the DOM
-        targetElement = targetElement.parentNode;
-      } while (targetElement);
-
-      // This is a click outside.
-      setIsPopoverOpen(false);
-    }
   }
 
   const changeHandler = (language) => {
@@ -78,26 +79,20 @@ const LocaleSelect = () => {
 
   return (
     <Fragment>
-      <div className="locale-select-container ud-component--footer--locale-select react-tiny-popover-container" style={{display: isPopoverOpen ? 'block' : 'none', overflow: 'visible', height: '306px', top: (btnPosition.offsetTop - 108), left: btnPosition.offsetLeft - 1, position: 'absolute'}}>
+      <div className="locale-select-container ud-component--footer--locale-select react-tiny-popover-container" style={{display: isPopoverOpen ? 'block' : 'none', overflow: 'visible', height: '306px', top: (btnPosition.offsetTop - (Object.keys(languages).length * 43) - 4), left: btnPosition.offsetLeft, position: 'absolute'}}>
         <div id="u68-popper-content--6" className="locale-select--popover--ir6OZ udlite-popper-open popper--popper--19faV popper--popper-content--2KQmm udlite-popover-dropdown-menu">
           <div className="popover--popover--t3rNO popover--popover--top--22FW9">
             <div className="popover--inner--373-v">
               <ul className="unstyled-list udlite-block-list locale-select--language-list--2OB0j">
-                <li>
-                  <div onClick={() => changeHandler('en')} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-sm udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-neutral">
-                    <div className="udlite-block-list-item-content">English</div>
-                  </div>
-                </li>
-                <li>
-                  <div onClick={() => changeHandler('gr')} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-sm udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-neutral">
-                    <div className="udlite-block-list-item-content">Ελληνικά</div>
-                  </div>
-                </li>
-                <li>
-                  <div onClick={() => changeHandler('tr')} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-sm udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-neutral">
-                    <div className="udlite-block-list-item-content">Türkçe</div>
-                  </div>
-                </li>
+                {
+                  Object.entries(languages).map(([code, language]) => (
+                    <li key={code}>
+                      <div onClick={() => changeHandler(code)} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-sm udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-neutral">
+                        <div className="udlite-block-list-item-content">{language}</div>
+                      </div>
+                    </li>
+                  ))
+                }
                 {
                   // <li>
                   //   <div onClick={() => setLang('en-US')} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-sm udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-neutral">

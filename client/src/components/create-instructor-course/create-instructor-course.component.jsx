@@ -20,12 +20,6 @@ const CreateInstructorCourse = ({ courseDetails, createInstructorCourseDetailsSt
     setState(prevState => ({ ...prevState, ...courseDetails }));
   }, [courseDetails]);
 
-  const handleChange = (event, dayOfWeek) => {
-    const { name, value } = event.target;
-
-    setState(prevState => ({ ...prevState, [name]: value }));
-  }
-
   const handleSubmit = (event) => {
     createInstructorCourseDetailsStart(state);
     event.preventDefault();

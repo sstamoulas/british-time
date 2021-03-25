@@ -3,17 +3,21 @@ import { initReactI18next } from 'react-i18next';
 // import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+import translationAR from './assets/locales/ar/translation.json';
+import translationEL from './assets/locales/el/translation.json';
 import translationEN from './assets/locales/en/translation.json';
-import translationGR from './assets/locales/gr/translation.json';
 import translationTR from './assets/locales/tr/translation.json';
 
 // the translations
 const resources = {
+  ar: {
+    translation: translationAR
+  },
+  el: {
+    translation: translationEL
+  },
   en: {
     translation: translationEN
-  },
-  gr: {
-    translation: translationGR
   },
   tr: {
     translation: translationTR

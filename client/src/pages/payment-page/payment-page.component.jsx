@@ -11,6 +11,8 @@ import { currentUser } from './../../redux/user/user.selectors';
 
 import * as ROLES from './../../constants/roles';
 
+import './payment-page.styles.scss';
+
 const EMPTY_TRANSACTION = {
   title: '',
   type: '',
@@ -138,9 +140,9 @@ const PaymentPage = ({ currentUser, userTransactions, fetchPaymentHistoryStart, 
         <tbody>
         {
           transactions &&
-          transactions.map((transaction) => {
+          transactions.map((transaction, index) => {
             return editingTransactionId === transaction.transactionId ? (
-              <tr key={transaction.transactionId}>
+              <tr key={`${transaction.transactionId}-${index}`}>
                 <th scope='row'>
                   <input type='text' name='transactionId' onChange={(e) => handleChange(e, transaction.transactionId)} value={transaction.transactionId} />
                 </th>
@@ -151,19 +153,19 @@ const PaymentPage = ({ currentUser, userTransactions, fetchPaymentHistoryStart, 
                     </option> 
                     <option value="Debit">Debit</option>
                     <option value="Credit">Credit</option>
-                    <option value="Pedning Debit">Pending Debit</option>
+                    <option value="Pending Debit">Pending Debit</option>
                   </select>
                 </td>
                 <td><input type='text' name='title' onChange={(e) => handleChange(e, transaction.transactionId)} value={transaction.title} /></td>
                 <td><input type='number' name='amount' onChange={(e) => handleChange(e, transaction.transactionId)} value={transaction.amount} /></td>
                 <td><input type='date' name='date' onChange={(e) => handleChange(e, transaction.transactionId)} value={transaction.date} /></td>
                 <td>
-                  <a onClick={handleTransactionChange}>Save</a>
-                  <a onClick={(event) => handleTransactionRemove(event, transaction.transactionId)}>Remove</a>
+                  <div className='link' onClick={handleTransactionChange}>Save</div>
+                  <div className='link' onClick={(event) => handleTransactionRemove(event, transaction.transactionId)}>Remove</div>
                 </td>
               </tr>
             ) : (
-              <tr key={transaction.transactionId}>
+              <tr key={`${transaction.transactionId}-${index}`}>
                 <th scope='row'>{transaction.transactionId}</th>
                 <td>{transaction.type}</td>
                 <td>{transaction.title}</td>
@@ -172,8 +174,8 @@ const PaymentPage = ({ currentUser, userTransactions, fetchPaymentHistoryStart, 
                 {
                   currentUser.role === ROLES.ADMIN && (
                     <td>
-                      <a onClick={(event) => handleEditMode(event, transaction.transactionId)}>Edit</a>
-                      <a onClick={(event) => handleTransactionRemove(event, transaction.transactionId)}>Remove</a>
+                      <div className='link' onClick={(event) => handleEditMode(event, transaction.transactionId)}>Edit</div>
+                      <div className='link' onClick={(event) => handleTransactionRemove(event, transaction.transactionId)}>Remove</div>
                     </td>
                   )
                 }

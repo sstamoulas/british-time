@@ -25,6 +25,7 @@ import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.c
 import CourseRatingPage from './pages/course-rating-page/course-rating-page.component';
 import ChatRoomPage from './pages/chat-room-page/chat-room-page.component';
 import PaymentPage from './pages/payment-page/payment-page.component';
+import PreviewVideoPage from './pages/preview-video-page/preview-video-page.component';
 
 import NotFoundPage from './pages/not-found-page/not-found-page.component';
 import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
@@ -53,7 +54,7 @@ import './App.styles.scss';
 
 const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
   const isMounted = useRef(false);
-  const { t, i18n, ready } = useTranslation('translation', { useSuspense: false });
+  const { ready } = useTranslation('translation', { useSuspense: false });
 
   useEffect(() => {
     document.querySelector('#zmmtg-root').style.display = 'none';
@@ -67,135 +68,143 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
     (
       <div className='main-container'>
         <Navigation />
-        <Switch>
-          <Route exact path={ROUTES.LANDING} component={LandingPage} />
-          <Route exact path={ROUTES.COURSES} component={CoursesPage} />
-          <Route exact path={ROUTES.DETAILS_COURSE} component={CourseDetailsPage} />
-          <Route exact path={ROUTES.PRIVACY_POLICY} component={PrivacyPolicyPage} />
-          <Route exact path={ROUTES.TERMS} component={TermsPage} />
-          <Route exact path={ROUTES.ADDENDUM} component={AddendumPage} />
-          <Route exact path={ROUTES.ABOUT_US} component={AboutUsPage} />
-          <Route exact path={ROUTES.CONTACT_US} component={ContactUsPage} />
-          <Route exact path={ROUTES.TEACHING} component={TeachingPage} />
-          <CustomRoute
-            exact
-            path={ROUTES.SIGN_IN}
-            condition={currentUser}
-            component={SignInPage} 
-          />
-          <CustomRoute
-            exact
-            path={ROUTES.SIGN_UP}
-            condition={currentUser}
-            component={SignUpPage} 
-          />
-          <CustomRoute
-            exact
-            path={ROUTES.FORGOT_PASSWORD}
-            condition={currentUser}
-            component={ForgotPasswordPage} 
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.HOME} 
-            condition={currentUser}
-            component={HomePage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.ACCOUNT}
-            condition={currentUser}
-            component={AccountPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.PAYMENT}
-            condition={currentUser}
-            component={PaymentPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.INSTRUCTOR}
-            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
-            component={InstructorPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.CREATE_INSTRUCTOR_COURSE}
-            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
-            component={CreateInstructorCourse}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.UPDATE_INSTRUCTOR_COURSE}
-            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
-            component={UpdateInstructorCourse}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.CREATE_LESSON}
-            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
-            component={LessonCreatePage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.UPDATE_LESSON}
-            condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
-            component={LessonUpdatePage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.CREATE_COURSE}
-            condition={currentUser && currentUser.role === ROLES.ADMIN}
-            component={CourseCreatePage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.UPDATE_COURSE}
-            condition={currentUser && currentUser.role === ROLES.ADMIN}
-            component={CourseUpdatePage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.ADMIN}
-            condition={currentUser && currentUser.role === ROLES.ADMIN}
-            component={AdminPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.STUDENT}
-            condition={currentUser && currentUser.role === ROLES.STUDENT}
-            component={StudentPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.STUDENT_COURSE}
-            condition={currentUser && currentUser.role === ROLES.STUDENT}
-            component={StudentCoursePage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.STUDENT_LESSON_DETAILS}
-            condition={currentUser && currentUser.role === ROLES.STUDENT}
-            component={StudentLessonPage}
-          />
-          <PrivateRoute 
-            exact
-            path={ROUTES.COURSE_RATING}
-            condition={currentUser && currentUser.role === ROLES.STUDENT}
-            component={CourseRatingPage}
-          />
-          <PrivateRoute
-            exact
-            path={ROUTES.CHAT_ROOMS}
-            condition={currentUser && currentUser.role === ROLES.STUDENT}
-            component={ChatRoomPage}
-          />
-          <Route
-            path='/*' 
-            component={NotFoundPage}
-          />
-        </Switch>
+        <div className='content'>
+          <Switch>
+            <Route exact path={ROUTES.LANDING} component={LandingPage} />
+            <Route exact path={ROUTES.COURSES} component={CoursesPage} />
+            <Route exact path={ROUTES.DETAILS_COURSE} component={CourseDetailsPage} />
+            <Route exact path={ROUTES.PRIVACY_POLICY} component={PrivacyPolicyPage} />
+            <Route exact path={ROUTES.TERMS} component={TermsPage} />
+            <Route exact path={ROUTES.ADDENDUM} component={AddendumPage} />
+            <Route exact path={ROUTES.ABOUT_US} component={AboutUsPage} />
+            <Route exact path={ROUTES.CONTACT_US} component={ContactUsPage} />
+            <Route exact path={ROUTES.TEACHING} component={TeachingPage} />
+            <CustomRoute
+              exact
+              path={ROUTES.SIGN_IN}
+              condition={currentUser}
+              component={SignInPage} 
+            />
+            <CustomRoute
+              exact
+              path={ROUTES.SIGN_UP}
+              condition={currentUser}
+              component={SignUpPage} 
+            />
+            <CustomRoute
+              exact
+              path={ROUTES.FORGOT_PASSWORD}
+              condition={currentUser}
+              component={ForgotPasswordPage} 
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.HOME} 
+              condition={currentUser}
+              component={HomePage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.ACCOUNT}
+              condition={currentUser}
+              component={AccountPage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.PAYMENT}
+              condition={currentUser}
+              component={PaymentPage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.INSTRUCTOR}
+              condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+              component={InstructorPage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.CREATE_INSTRUCTOR_COURSE}
+              condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+              component={CreateInstructorCourse}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.UPDATE_INSTRUCTOR_COURSE}
+              condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+              component={UpdateInstructorCourse}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.CREATE_LESSON}
+              condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+              component={LessonCreatePage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.UPDATE_LESSON}
+              condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+              component={LessonUpdatePage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.PREVIEW_VIDEO}
+              condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+              component={PreviewVideoPage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.CREATE_COURSE}
+              condition={currentUser && currentUser.role === ROLES.ADMIN}
+              component={CourseCreatePage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.UPDATE_COURSE}
+              condition={currentUser && currentUser.role === ROLES.ADMIN}
+              component={CourseUpdatePage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.ADMIN}
+              condition={currentUser && currentUser.role === ROLES.ADMIN}
+              component={AdminPage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.STUDENT}
+              condition={currentUser && currentUser.role === ROLES.STUDENT}
+              component={StudentPage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.STUDENT_COURSE}
+              condition={currentUser && currentUser.role === ROLES.STUDENT}
+              component={StudentCoursePage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.STUDENT_LESSON_DETAILS}
+              condition={currentUser && currentUser.role === ROLES.STUDENT}
+              component={StudentLessonPage}
+            />
+            <PrivateRoute 
+              exact
+              path={ROUTES.COURSE_RATING}
+              condition={currentUser && currentUser.role === ROLES.STUDENT}
+              component={CourseRatingPage}
+            />
+            <PrivateRoute
+              exact
+              path={ROUTES.CHAT_ROOMS}
+              condition={currentUser && currentUser.role === ROLES.STUDENT}
+              component={ChatRoomPage}
+            />
+            <Route
+              path='/*' 
+              component={NotFoundPage}
+            />
+          </Switch>
+        </div>
         <Footer />
       </div>
     )

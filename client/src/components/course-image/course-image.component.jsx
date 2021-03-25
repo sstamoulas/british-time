@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Image } from 'cloudinary-react';
 
 import './course-image.styles.scss';
@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 
 const CourseImage = ({ imageExtension, courseId, height, width, className, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
-  const { bio, imageLoading } = state;
+  const { imageLoading } = state;
 
   const baseURL = process.env.NODE_ENV === "production" ? 
     process.env.REACT_APP_BASE_URL

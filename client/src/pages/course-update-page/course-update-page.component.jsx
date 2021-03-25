@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
-import { Image } from 'cloudinary-react';
 
 import CourseImage from './../../components/course-image/course-image.component';
 

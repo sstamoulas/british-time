@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  //  res.header("Access-Control-Allow-Origin", "https://www.nativetalk.live");
+  // res.header("Access-Control-Allow-Origin", "https://www.nativetalk.live");
   res.header("Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept");
   next();
@@ -40,6 +40,7 @@ app.get('/*', function (req, res) {
 const SCOPES = [
   'https://www.googleapis.com/auth/drive', // See (not download), edit, create, and delete all of your Google Drive files
   'https://www.googleapis.com/auth/drive.readonly', // See and download all your Google Drive files
+  'https://www.googleapis.com/auth/youtube.upload', // Manage your YouTube videos
 ];
 
 // The file token.json stores the user's access and refresh tokens, and is

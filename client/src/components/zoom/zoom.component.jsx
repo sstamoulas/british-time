@@ -12,9 +12,9 @@ const Zoom = ({ meetingNumber, userName, userEmail, passWord, role }) => {
   const API_SECRET = "f42ilZOVKnJY5Obc6EnzhceBmxPNxxg8iQc7";
 
   const baseURL = process.env.NODE_ENV === "production" ? 
-    process.env.REACT_APP_PUBLIC_URL
+    process.env.REACT_APP_PRODUCTION_PUBLIC_URL
   : 
-    'http://localhost:3000';
+    process.env.REACT_APP_DEVELOPMENT_PUBLIC_URL;
 
   const meetConfig = {
     apiKey: API_KEY,

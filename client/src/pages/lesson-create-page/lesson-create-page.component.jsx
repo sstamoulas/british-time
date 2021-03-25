@@ -12,6 +12,7 @@ import * as ROUTES from './../../constants/routes';
 const INITIAL_STATE = {
   chapterTitle: '',
   lessons: [],
+  errors: {},
 }
 
 const EMPTY_LESSON = {
@@ -27,8 +28,7 @@ const EMPTY_RESOURCE = {
 const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, courseId });
-  const [fileType, setFileType] = useState(null);
-  const { chapterTitle, lessons } = state;
+  const { chapterTitle, lessons, errors } = state;
   const [player, setPlayer] = useState(undefined);
   const baseURL = process.env.NODE_ENV === "production" ? 
     process.env.REACT_APP_BASE_URL
@@ -138,8 +138,6 @@ const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
     const currentResource = lessonResources.filter((resource) => resource.resourceId === resourceId)[0];
     const resourceType = currentResource.resourceType;
 
-    console.log(currentResource, resourceType)
-
     if(resourceType === "Text") {
       lessonResources = lessonResources.filter((resource) => resource.resourceId !== resourceId);
       newLessons[index].lessonResources = lessonResources;
@@ -175,30 +173,50 @@ const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
     event.preventDefault();
   }
 
-  const onSelectChange = (event) => {
-    setFileType(event.target.value);
-  }
+  const bytesToMegaBytes = bytes => bytes / (1024*1024);
 
   const onFileUpload = async (event, lessonId, resourceId) => {
-    const data = new FormData();
-    data.append('file', event.target.files[0]);
+    const sizeInBytes = event.target.files[0].size;
+    const sizeInMegaBytes = bytesToMegaBytes(sizeInBytes);
 
-    fetch(`${baseURL}/file-upload`, {
-      method: 'POST',
-      body: data,
-    })
-    .then((res) => res.json())
-    .then(({ fileId, fileName }) => {
-      const newLessons = [...lessons];
-      const lessonIndex = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
-      const newResources = lessons[lessonIndex].lessonResources;
-      const resourceIndex = newResources.findIndex((resource) => resource.resourceId === resourceId);
+    if(sizeInMegaBytes <= 10) {
+      const data = new FormData();
+      data.append('file', event.target.files[0]);
 
-      newLessons[lessonIndex].lessonResources[resourceIndex] = { ...newResources[resourceIndex], file: {fileId, fileName} };
+      fetch(`${baseURL}/file-upload`, {
+        method: 'POST',
+        body: data,
+      })
+      .then((res) => res.json())
+      .then(({ fileId, fileName }) => {
+        const newLessons = [...lessons];
+        const lessonIndex = lessons.findIndex((lesson) => lesson.lessonId === lessonId);
+        const newResources = lessons[lessonIndex].lessonResources;
+        const resourceIndex = newResources.findIndex((resource) => resource.resourceId === resourceId);
 
-      setState(prevState => ({ ...prevState, lessons: newLessons }));
-    })
-    .catch((error) => console.log('error: ', error));
+        newLessons[lessonIndex].lessonResources[resourceIndex] = { ...newResources[resourceIndex], file: {fileId, fileName} };
+
+        setState(prevState => ({ ...prevState, lessons: newLessons, errors: {}}));
+      })
+      .catch((error) => console.log('error: ', error));
+    }
+    else {
+      setState(prevState => ({ ...prevState, errors: { lessonId, resourceId }}));
+    }
+  }
+
+  const previewResource = (fileId) => {
+    window.open(`https://docs.google.com/uc?export=&id=${fileId}`, 'Preview', 'height=200, width=200');
+  }
+
+  const previewVideo = (fileId) => {
+    window.open(`${process.env.NODE_ENV === "production" ? 
+        process.env.REACT_APP_PRODUCTION_PUBLIC_URL 
+      : 
+        process.env.REACT_APP_DEVELOPMENT_PUBLIC_URL}/preview-video/${fileId}`, 
+      'Preview', 
+      'height=200, width=200'
+    );
   }
 
   return (
@@ -263,14 +281,22 @@ const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
                       {
                         resource.resourceType && ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file === undefined && (
                           <div className='f-basis'>
+                            <input type='text' name='fileName' className='form-control f-grow' value={resource.fileName || ''} onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)} />
                             <input type='file' name='file' className='form-control f-grow' onChange={(e) => onFileUpload(e, lesson.lessonId, resource.resourceId)} />
+                            {
+                              errors.lessonId === lesson.lessonId && errors.resourceId === resource.resourceId && (
+                                <span style={{color: "red"}}>File Size Cannot Exceed 10MB.</span>
+                              )
+                            }
                           </div>
                         )
                       }
                       {
                         ['Document', 'Audio', 'Image'].includes(resource.resourceType) && resource.file !== undefined && (
                           <div className='f-basis'>
-                            <span key={resource.file.fileId} className='center'>{resource.file.fileType} - {resource.file.fileName} - {resource.file.fileId}</span>
+                            <input type='text' name='fileName' className='form-control f-grow'  value={resource.fileName || ''} onChange={(e) => handleResourceChange(e, lesson.lessonId, resource.resourceId)} />
+                            <div onClick={() => previewResource(resource.file.fileId)}>Preview</div>
+                            <span key={resource.file.fileId} className='center'>{resource.resourceType} - {resource.file.fileName} - {resource.file.fileId}</span>
                           </div>
                         )
                       }
@@ -317,7 +343,7 @@ const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
                       <input type='text' name='videoId' className='form-control f-grow' placeholder='Type Youtube Video ID' value={lesson.videoId || ''} onChange={(e) => handleLessonChange(e, lesson.lessonId)} />
                       {
                         lesson.videoId && (
-                          <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" data-yt2html5={lesson.videoId}></video>
+                          <div onClick={() => previewVideo(lesson.videoId)}>Preview Video</div>
                         )
                       }
                     </div>

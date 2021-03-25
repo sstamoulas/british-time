@@ -15,7 +15,6 @@ import './student-page.styles.scss';
 
 const INITIAL_STATE = {
   bio: '',
-  imageLoading: false,
 }
 
 const StudentPage = ({ 
@@ -26,7 +25,7 @@ const StudentPage = ({
     error 
   }) => {
   const [state, setState] = useState({ ...INITIAL_STATE, ...studentDetails });
-  const { bio, imageLoading } = state;
+  const { bio } = state;
   const isInvalid = bio === '' && !studentDetails.imageExtension;
 
   const isObjectEmpty = (obj) => {
