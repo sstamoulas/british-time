@@ -31,7 +31,7 @@ const LiveSessionButton = ({ currentUser, error }) => {
       </button>
       {
         isLiveSessionOpen && (
-          <Zoom meetingNumber={'82267762341'} userName={currentUser.userName} userEmail={currentUser.email} passWord={'ZGRpZWZiNU1DUGhGelNQbEJlUUxiQT09'} role={1} />
+          <Zoom meetingNumber={process.env.REACT_APP_ZOOM_MEETING_NUMBER} userName={currentUser.userName} userEmail={currentUser.email} passWord={process.env.REACT_APP_ZOOM_MEETING_PASSWORD} role={1} />
         )
       }
     </div>

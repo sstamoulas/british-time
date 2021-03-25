@@ -502,7 +502,7 @@ const StudentCoursePage = ({
          </div>
         {
           isLiveSessionOpen && (
-            <Zoom meetingNumber={'82267762341'} userName={'Stamatios Stamoulas'} userEmail={'tstamoulas@gmail.com'} passWord={'ZGRpZWZiNU1DUGhGelNQbEJlUUxiQT09'} role={0} />
+            <Zoom meetingNumber={process.env.REACT_APP_ZOOM_MEETING_NUMBER} userName={'Stamatios Stamoulas'} userEmail={'tstamoulas@gmail.com'} passWord={process.env.REACT_APP_ZOOM_MEETING_PASSWORD} role={0} />
           )
         }
          <div className="app--row--1ydzX app--dashboard--dXVM6">
