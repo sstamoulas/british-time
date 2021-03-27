@@ -229,7 +229,7 @@ const CourseDetailsPage = ({
                           <Link to={`/student/course/${selectedInstructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4">Go to Course</Link>
                         ) : (
                           <button type="button" className={`udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4 ${(currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? 'udlite-btn-disabled' : ''}`} onClick={handleClick} disabled={(currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? true : false}>
-                            <span>{ (currentUser && currentUser.funds < 30) || isObjectEmpty(instructorDetails) ? 'Not Available' : ('Insufficient Funds' : 'Add to Cart') }</span>
+                            <span>{ isObjectEmpty(instructorDetails) ? 'Not Available' : ((currentUser && currentUser.funds < 30) ? 'Insufficient Funds' : 'Add to Cart') }</span>
                           </button>
                         )
                       }
