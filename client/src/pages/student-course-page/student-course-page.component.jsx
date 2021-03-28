@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { withRouter, useParams } from 'react-router-dom';
-import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 
 import Zoom from './../../components/zoom/zoom.component';
 
@@ -33,10 +32,8 @@ const StudentCoursePage = ({
 }) => {
   const { courseId } = useParams();
   const [sideBarTop, setSideBarTop] = useState(0);
-  const [sideBarHeight, setSideBarHeight] = useState(0);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [activeTab, setActiveTab] = useState('Overview');
-  const [player, setPlayer] = useState(undefined);
   const [currentLesson, setCurrentLesson] = useState(!isArrayEmpty(instructorLessons) && instructorLessons[0].lessons[0]);
   const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
 
@@ -57,27 +54,15 @@ const StudentCoursePage = ({
 
     function fixSideBarHeight() {
       const header = document.querySelector('.header');
-      const footer = document.querySelector('.udlite-footer');
-
-      // if the footer is visible then the bottom of the sidebar should not 
-      // overlap the top of the footer
-      if(window.innerHeight + window.scrollY >= footer.offsetTop) {
-        setSideBarHeight(footer.offsetTop - window.scrollY);
-      }
-      // if the footer is not visible then the sidebar should extend
-      // to the bottom of the page
-      else {
-        setSideBarHeight(0);
-      }
 
       // if the header is not visible then the sidebar should extend
       // to the top of the page
-      if(window.scrollY >= header.getBoundingClientRect().height) {
+      if(header && window.scrollY >= header.getBoundingClientRect().height) {
         setSideBarTop(0);
       }
       // otherwise the top of the sidebar should not overlap the bottom of the 
       // header
-      else {
+      else if(header) {
         setSideBarTop(header.getBoundingClientRect().height - window.scrollY);
       }
     }
@@ -86,8 +71,7 @@ const StudentCoursePage = ({
       const courseContentHeight = document.querySelector(".sidebar--content---4z0-");
       
       if(courseContentHeight) {
-        courseContentHeight.removeAttribute("style");
-        courseContentHeight.style.height = `${sideBarHeight - 57}px`;
+        courseContentHeight.style.height = `${window.innerHeight - 57}px`;
       }
 
       if(window.innerWidth < 992) {
@@ -97,7 +81,7 @@ const StudentCoursePage = ({
         setIsSidebarVisible(true);
       }
     }
-  }, [sideBarTop, sideBarHeight, isSidebarVisible, activeTab]);
+  }, [sideBarTop, isSidebarVisible, activeTab]);
 
   useEffect(() => {
     lessonAccordion = document.querySelectorAll('.section--section-heading--2k6aW');
@@ -130,15 +114,6 @@ const StudentCoursePage = ({
     }
   }, [courseId, courseDetails, instructorLessons, fetchInstructorLessonsStart, fetchInstructorCourseDetailsByCourseIdStart])
 
-  useEffect(() => {
-    if(!player) {
-      setPlayer(new YouTubeToHtml5({ withAudio: true }));
-    }
-    else {
-      player.load();
-    }
-  }, [player, currentLesson.videoId])
-
   const loadNewContent = (lesson) => {
     setCurrentLesson(lesson)
   }
@@ -167,6 +142,12 @@ const StudentCoursePage = ({
   }
 
   instructorLessons.sort(sortInstructorLessons);
+
+  if(currentLesson.videoId) {
+    console.log('videoId', currentLesson.videoId.substring("https://youtu.be/".length))
+  }
+
+  console.log(instructorLessons, 'https://youtu.be/')
 
   return !isObjectEmpty(courseDetails) && (
     <div className={`app--column-container--3AItG ${!isSidebarVisible ? 'app--no-sidebar--1naXE' : ''}`}>
@@ -266,13 +247,20 @@ const StudentCoursePage = ({
                                           }
 
 
+
+
+
+
                                           {
                                             currentLesson.lessonType === "Video" &&
                                             <div className="video-viewer--container--23VX7">
                                                <div className="video-player--container--YDQRW">
                                                   <div className="video-player--video-wrapper--1L212 user-activity--user-inactive--2uBeO">
                                                      <div id="playerId__8036556--3" className="video-js video-player--video-player--1sfof vjs-paused vjs-controls-enabled vjs-workinghover vjs-v6 vjs-user-inactive" lang="en-us" role="region" aria-label="Video Player">
-                                                        <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" autoPlay data-yt2html5={currentLesson.videoId}></video>
+                                                        <div className="vjs-tech" style={{width: '100%', height: '100%', position: 'relative'}}>
+                                                          <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/${currentLesson.videoId.substring('https://youtu.be/'.length)}?autoplay=1&rel=0&modestbranding=1`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                                                          <div style={{width: '100%', height: '20%', position: 'absolute', opacity: '0', right: '0px', top: '0px'}}>&nbsp;</div>
+                                                        </div>
                                                         <div className="vjs-control-bar user-activity--hide-when-user-inactive--pDPGx" dir="ltr">
                                                            <div className="control-bar--popover-area--1LX56"></div>
                                                            <div className="vjs-progress-control vjs-control">
@@ -464,7 +452,7 @@ const StudentCoursePage = ({
          <div className="app--sidebar-column--2t0E8" style={{top: `${sideBarTop}px`, display: `${!isSidebarVisible ? 'none' : ''}`}}>
             <div data-purpose="sidebar">
                <h2 className="udlite-heading-md sidebar--course-content-text--1-32R">Course content</h2>
-               <div className="sidebar--content---4z0-">
+               <div className="sidebar--content---4z0-" style={{height: '580px'}}>
                   <div data-purpose="curriculum-section-container">
                      {
                       instructorLessons.map((instructorLesson, index) => (

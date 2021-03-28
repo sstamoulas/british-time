@@ -37,9 +37,9 @@ const LessonUpdatePage = ({ history, lessonDetails, fetchInstructorLessonStart, 
   const { chapterTitle, lessons, errors } = state;
   const [player, setPlayer] = useState(undefined);
   const baseURL = process.env.NODE_ENV === "production" ? 
-    process.env.REACT_APP_BASE_URL
+    process.env.REACT_APP_PRODUCTION_BASE_URL
   : 
-    process.env.REACT_APP_LOCAL_HOST_URL;
+    process.env.REACT_APP_DEVELOPMENT_BASE_URL;
 
   useEffect(() => {
     if(isObjectEmpty(lessonDetails)) {

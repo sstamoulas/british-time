@@ -4,16 +4,26 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/analytics';
 
-const config = {
-  apiKey: process.env.REACT_APP_API_KEY,
-  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASE_URL,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_APP_ID,
-  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
-};
+const config = process.env.NODE_ENV === 'production' ? 
+  {
+    apiKey: process.env.REACT_APP_PRODUCTION_API_KEY,
+    authDomain: process.env.REACT_APP_PRODUCTION_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_PRODUCTION_DATABASE_URL,
+    projectId: process.env.REACT_APP_PRODUCTION_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_PRODUCTION_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_PRODUCTION_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_PRODUCTION_APP_ID,
+    measurementId: process.env.REACT_APP_PRODUCTION_MEASUREMENT_ID,
+  } : {
+    apiKey: process.env.REACT_APP_DEVELOPMENT_API_KEY,
+    authDomain: process.env.REACT_APP_DEVELOPMENT_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_DEVELOPMENT_DATABASE_URL,
+    projectId: process.env.REACT_APP_DEVELOPMENT_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_DEVELOPMENT_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_DEVELOPMENT_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_DEVELOPMENT_APP_ID,
+    measurementId: process.env.REACT_APP_DEVELOPMENT_MEASUREMENT_ID,
+  }
 
 firebase.initializeApp(config);
 
@@ -29,6 +39,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   const userRef = firestore.doc(`users/${userAuth.uid}`);
   const snapShot = await userRef.get();
+  console.log('createUserProfileDocument read outside if')
 
   if(!snapShot.exists) {
     const { email } = userAuth;
@@ -43,9 +54,13 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     } catch(error) {
       console.log('error creating user', error.message);
     }
-  }
 
-  return userRef;
+    console.log('createUserProfileDocument read inside if')
+    return await userRef.get();
+  }
+  else {
+    return snapShot;
+  }
 }
  
 export const doPasswordUpdate = password =>
@@ -684,6 +699,8 @@ export const getPaymentsByUserId = async (userId) => {
 export const createPaymentsDocument = async (userId) => {
   const docRef = firestore.collection('payment-history').doc(userId);
   const snapShot = await docRef.get();
+
+  console.log('called createPaymentsDocument')
 
   if(!snapShot.exists) {
     try {

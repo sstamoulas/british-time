@@ -2,7 +2,12 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 
 import InstructorLessonActionTypes from './instructor-lesson.types';
 
-import { actionStart, actionStop } from './../ui/ui.actions';
+import { 
+  actionStart, 
+  actionStop,
+  subActionStart, 
+  subActionStop 
+} from './../ui/ui.actions';
 import { 
   fetchInstructorLessonsSuccess,
   fetchInstructorLessonsFailure,
@@ -23,14 +28,14 @@ import {
 
 export function* fetchInstructorLessonsAsync({ type, payload: { instructorCourseId }}) {
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const instructorLessonsRef = yield call(getLessonsByCourseId, instructorCourseId);
 
     yield put(fetchInstructorLessonsSuccess({ ...instructorLessonsRef }));
   } catch(error) {
     yield put(fetchInstructorLessonsFailure(error));
   } finally {
-    yield put(actionStop(type));
+    yield put(subActionStop(type));
   }
 }
 

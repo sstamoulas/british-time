@@ -36,7 +36,7 @@ const AdminPage = ({ users, error, courses, updateUserStart }) => {
       <div>
         <Link to={ROUTES.CREATE_COURSE}>Create A Course</Link>
         <ul>
-          { courses.length && 
+          { courses.length > 0 && 
             courses.sort(sortCourses).map((course) => <li key={course.id}><Link to={`course/${course.id}`}>{course.courseName}</Link></li>)
           }
         </ul>

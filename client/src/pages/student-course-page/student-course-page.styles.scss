@@ -8056,9 +8056,9 @@
         width: 0;
     }
 
-    .carousel--scroll-lock--3AYO9 {
-        overflow-x: hidden;
-    }
+    // .carousel--scroll-lock--3AYO9 {
+    //     overflow-x: hidden;
+    // }
 
     .carousel--scroll-item--3Wciz {
         scroll-snap-align: start;
@@ -30634,6 +30634,7 @@
         position: fixed;
         right: 0;
         width: 25%;
+        z-index: 1;
     }
 
     @media(min-width: 992px) and (max-width:1199px) {

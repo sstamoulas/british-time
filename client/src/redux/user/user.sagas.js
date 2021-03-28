@@ -25,8 +25,10 @@ import {
 
 export function* getSnapshotFromUserAuth(userAuth, additionalData) {
   try {
-    const userRef = yield call(createUserProfileDocument, userAuth, additionalData);
-    const userSnapshot = yield userRef.get();
+    const userSnapshot = yield call(createUserProfileDocument, userAuth, additionalData);
+    // const userSnapshot = yield userRef.get();
+
+    console.log('called createUserProfileDocument', userSnapshot.id)
 
     yield call(createPaymentsDocument, userSnapshot.id);
 
