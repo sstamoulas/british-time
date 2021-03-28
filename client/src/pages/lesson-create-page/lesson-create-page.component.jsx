@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { withRouter, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 
 import { createInstructorLessonStart } from './../../redux/instructor-lesson/instructor-lesson.actions';
 
@@ -29,7 +28,6 @@ const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE, courseId });
   const { chapterTitle, lessons, errors } = state;
-  const [player, setPlayer] = useState(undefined);
   const baseURL = process.env.NODE_ENV === "production" ? 
     process.env.REACT_APP_PRODUCTION_BASE_URL
   : 
@@ -44,15 +42,6 @@ const LessonCreatePage = ({ history, createInstructorLessonStart }) => {
       }
     }
   });
-
-  useEffect(() => {
-    if(!player) {
-      setPlayer(new YouTubeToHtml5({ withAudio: true }));
-    }
-    else {
-      player.load();
-    }
-  }, [player])
 
   const handleAccordion = (event) => {
     const target = event.target;

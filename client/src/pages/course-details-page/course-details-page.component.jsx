@@ -20,6 +20,7 @@ import { instructorDetails } from './../../redux/instructor/instructor.selectors
 import { currentUser } from './../../redux/user/user.selectors';
 
 import * as ROUTES from './../../constants/routes';
+import { courseInfo } from './../../constants/constants';
 
 import './course-details-page.styles.scss';
 
@@ -299,12 +300,12 @@ const CourseDetailsPage = ({
                  <h2 className="udlite-heading-xl what-you-will-learn--title--hropy">What you'll learn</h2>
                   <div className="what-you-will-learn--content-spacing--3btHJ">
                     <ul className="unstyled-list udlite-block-list what-you-will-learn--objectives-list--2cWZN">
-                      { courseDetails.objectives &&
-                        courseDetails.objectives.map((courseObjective) => (
-                          <li key={courseObjective.id}>
+                      { courseDetails.level &&
+                        courseInfo.filter((courseInfo) => courseInfo.level === courseDetails.level).objectives.map((courseObjective) => (
+                          <li key={courseObjective}>
                             <div data-purpose="objective" className="udlite-block-list-item udlite-blok-list-item-small udlite-block-list-item-tight udlie-block-list-item-neutral udlite-text-sm">
                               <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>
-                              <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">{courseObjective.text}</span></div>
+                              <div className="udlite-block-list-item-content"><span className="what-you-will-learn--objective-item--ECarc">{courseObjective}</span></div>
                             </div>
                           </li>
                         ))

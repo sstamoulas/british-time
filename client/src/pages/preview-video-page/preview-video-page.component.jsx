@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 
 import './preview-video-page.styles.scss';
 
 const PreviewVideoPage = () => {
   const { videoId } = useParams();
-  const [player, setPlayer] = useState(undefined);
-
-  useEffect(() => {
-    if(!player) {
-      setPlayer(new YouTubeToHtml5({ withAudio: true }));
-    }
-    else {
-      player.load();
-    }
-  }, [player, videoId])
 
   return (
-    <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" autoPlay data-yt2html5={videoId}></video>
+    <div className="vjs-tech" style={{width: '100%', height: '100%', position: 'relative'}}>
+      <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/${videoId.substring('https://youtu.be/'.length)}?autoplay=1&rel=0&modestbranding=1`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      <div style={{width: '100%', height: '20%', position: 'absolute', opacity: '0', right: '0px', top: '0px'}}>&nbsp;</div>
+    </div>
   )
 }
 

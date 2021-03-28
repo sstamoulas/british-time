@@ -147,7 +147,7 @@ const StudentCoursePage = ({
     console.log('videoId', currentLesson.videoId.substring("https://youtu.be/".length))
   }
 
-  console.log(instructorLessons, 'https://youtu.be/')
+  console.log(currentLesson.videoId.substring("https://youtu.be/".length), 'https://youtu.be/')
 
   return !isObjectEmpty(courseDetails) && (
     <div className={`app--column-container--3AItG ${!isSidebarVisible ? 'app--no-sidebar--1naXE' : ''}`}>
