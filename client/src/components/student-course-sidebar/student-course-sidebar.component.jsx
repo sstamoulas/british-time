@@ -37,9 +37,12 @@ const StudentCourseSidebar = ({ activeTab, isSidebarVisible, setIsSidebarVisible
 
     function setCourseContentHeight() {
       const courseContentHeight = document.querySelector(".sidebar--content---4z0-");
+      const header = document.querySelector('.header');
       
       if(courseContentHeight) {
-        courseContentHeight.style.height = `${window.innerHeight - 57}px`;
+        let heightHeader = header.getBoundingClientRect().height;
+        let remainingHeight = (window.scrollY < heightHeader ? window.scrollY : heightHeader);
+        courseContentHeight.style.height = `${window.innerHeight - 72 - 57 + remainingHeight}px`;
       }
 
       if(window.innerWidth < 992) {
