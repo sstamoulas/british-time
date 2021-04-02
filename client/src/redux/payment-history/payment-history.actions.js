@@ -30,7 +30,7 @@ export const updatePaymentHistoryFailure = (error) => ({
   payload: error,
 });
 
-export const addPaymentHistoryTransactionStart = (userId, transaction) => console.log(transaction) || ({
+export const addPaymentHistoryTransactionStart = (userId, transaction) => ({
   type: PaymentHistoryActionTypes.ADD_PAYMENT_HISTORY_TRANSACTION_START,
   payload: { userId, transaction },
 });

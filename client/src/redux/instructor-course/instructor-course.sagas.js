@@ -1,6 +1,5 @@
 import { takeLatest, put, all, call, select } from 'redux-saga/effects';
 
-import UserActionTypes from './../user/user.types';
 import InstructorCourseActionTypes from './instructor-course.types';
 
 import { actionStart, actionStop, subActionStart, subActionStop } from './../ui/ui.actions';
@@ -31,8 +30,6 @@ import {
   updateInstructorCourseRatingDocument,
 } from '../../firebase/firebase.utils';
 
-import * as ROLES from './../../constants/roles';
-
 export function* fetchAllCoursesAsync({ type }) {
   try {
     yield put(subActionStart(type));
@@ -48,14 +45,14 @@ export function* fetchAllCoursesAsync({ type }) {
 
 export function* fetchInstructorsByCourseIdAsync({ type, payload: { courseId }}) {
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const instructorsRef = yield call(getInstructorsByCourseId, courseId);
 
     yield put(fetchInstructorsByCourseIdSuccess({ ...instructorsRef }));
   } catch(error) {
     yield put(fetchInstructorsByCourseIdFailure(error));
   } finally {
-    yield put(actionStop(type));
+    yield put(subActionStop(type));
   }
 }
 
@@ -63,27 +60,27 @@ export function* fetchInstructorCourseDetailsAsync({ type }) {
   const {user: { currentUser: { id }}} = yield select();
 
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const instructorCoursesRef = yield call(getCoursesByInstructorId, id);
 
     yield put(fetchInstructorCourseDetailsSuccess({ ...instructorCoursesRef }));
   } catch(error) {
     yield put(fetchInstructorCourseDetailsFailure(error));
   } finally {
-    yield put(actionStop(type));
+    yield put(subActionStop(type));
   }
 }
 
 export function* fetchInstructorCourseDetailsByCourseIdAsync({ type, payload: { courseId }}) {
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const instructorCourseRef = yield call(getInstructorCourseByCourseId, courseId);
 
     yield put(fetchInstructorCourseDetailsByCourseIdSuccess({ ...instructorCourseRef }));
   } catch(error) {
     yield put(fetchInstructorCourseDetailsByCourseIdFailure(error));
   } finally {
-    yield put(actionStop(type));
+    yield put(subActionStop(type));
   }
 }
 
@@ -130,21 +127,6 @@ export function* updateInstructorCourseRatingAsync({type, payload: { instructorC
   } finally {
     yield put(actionStop(type));
   }
-}
-
-export function* isInstructor({ type }) {
-  const {user: { currentUser: { role }}} = yield select();
-
-  if(role === ROLES.INSTRUCTOR) {
-    yield fetchInstructorCourseDetailsAsync({ type });
-  }
-}
-
-export function* onSignInSuccess() {
-  yield takeLatest(
-    UserActionTypes.SIGN_IN_SUCCESS, 
-    isInstructor
-  );
 }
 
 export function* onFetchAllCoursesStart() {
@@ -198,7 +180,6 @@ export function* onUpdateInstructorCourseRatingStart() {
 
 export function* instructorCourseSagas() {
   yield all([
-    call(onSignInSuccess),
     call(onFetchAllCoursesStart),
     call(onFetchInstructorsByCourseIdStart),
     call(onFetchInstructorCourseDetailsStart),

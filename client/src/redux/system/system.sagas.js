@@ -1,6 +1,5 @@
-import { takeLatest, put, all, call, select } from 'redux-saga/effects';
+import { takeLatest, put, all, call } from 'redux-saga/effects';
 
-import UserActionTypes from './../user/user.types';
 import SystemActionTypes from './system.types';
 
 import { 
@@ -18,8 +17,6 @@ import {
 
 import { getAllUsers, updateUser } from '../../firebase/firebase.utils';
 
-import * as ROLES from './../../constants/roles';
-
 export function* fetchUsersAsync({ type }) {
   try {
     yield put(subActionStart(type));
@@ -34,23 +31,13 @@ export function* fetchUsersAsync({ type }) {
 
 export function* updateUserAsync({type, payload: { userId, userDetails }}) {
   try {
-    yield put(subActionStart(type));
+    yield put(actionStart(type));
     yield call(updateUser, userId, userDetails);
     const users = yield call(getAllUsers);
     yield put(updateUserSuccess(users));
   } catch(error) {
     yield put(updateUserFailure(error));
   } finally {
-    yield put(subActionStop(type));
-  }
-}
-
-export function* isAdmin({ type }) {
-  const {user: { currentUser: { role }}} = yield select();
-
-  if(role === ROLES.ADMIN) {
-    yield put(actionStart(type));
-    yield fetchUsersAsync({type});
     yield put(actionStop(type));
   }
 }
@@ -69,17 +56,9 @@ export function* onUpdateUserStart() {
   );
 }
 
-export function* onSignInSuccess() {
-  yield takeLatest(
-    UserActionTypes.SIGN_IN_SUCCESS, 
-    isAdmin
-  );
-}
-
 export function* systemSagas() {
   yield all([
     call(onFetchUsersStart),
     call(onUpdateUserStart),
-    call(onSignInSuccess),
   ]);
 }

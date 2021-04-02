@@ -1,9 +1,8 @@
 import { takeLatest, put, all, call, select } from 'redux-saga/effects';
 
-import UserActionTypes from './../user/user.types';
 import StudentActionTypes from './student.types';
 
-import { actionStart, actionStop } from './../ui/ui.actions';
+import { subActionStart, subActionStop, actionStart, actionStop } from './../ui/ui.actions';
 import { 
   fetchStudentDetailsSuccess, 
   fetchStudentDetailsFailure,
@@ -16,12 +15,26 @@ import {
 } from './student.actions';
 
 import { 
-  getCurrentStudent, 
+  fetchCurrentStudent, 
   createStudentDetailsDocument, 
   updateStudentDetailsDocument,
 } from '../../firebase/firebase.utils';
 
-import * as ROLES from './../../constants/roles';
+export function* fetchStudentDetailsAsync({ type }) {
+  const {user: { currentUser: { id }}} = yield select();
+  try {
+    yield put(subActionStart(type));
+    const studentDetails = yield fetchCurrentStudent(id);
+
+    if (!studentDetails)
+      return yield put(fetchStudentDetailsSuccess(null));
+    yield put(fetchStudentDetailsSuccess({...studentDetails, studentId: id}));
+  } catch(error) {
+    yield put(fetchStudentDetailsFailure(error));
+  } finally {
+    yield put(subActionStop(type));
+  }
+}
 
 export function* createStudentDetailsAsync({type, payload: { studentDetails }}) {
   const {user: { currentUser: { id, userName }}} = yield select();
@@ -69,30 +82,10 @@ export function* updateStudentFundsAsync({type, payload: { userId, funds }}) {
   }
 }
 
-export function* isStudent({ type }) {
-  const {user: { currentUser: { id, role }}} = yield select();
-
-  if(role === ROLES.STUDENT) {
-    try {
-      yield put(actionStart(type));
-      const studentDetails = yield getCurrentStudent(id);
-
-      if (!studentDetails)
-        return yield put(fetchStudentDetailsSuccess(null));
-
-      yield put(fetchStudentDetailsSuccess(studentDetails));
-    } catch(error) {
-      yield put(fetchStudentDetailsFailure(error));
-    } finally {
-      yield put(actionStop(type));
-    }
-  }
-}
-
-export function* onSignInSuccess() {
+export function* onFetchStudentDetailsStart() {
   yield takeLatest(
-    UserActionTypes.SIGN_IN_SUCCESS, 
-    isStudent
+    StudentActionTypes.FETCH_STUDENT_DETAILS_START, 
+    fetchStudentDetailsAsync
   );
 }
 
@@ -119,7 +112,7 @@ export function* onUpdateStudentFundsStart() {
 
 export function* studentSagas() {
   yield all([
-    call(onSignInSuccess),
+    call(onFetchStudentDetailsStart),
     call(onCreateStudentDetailsStart),
     call(onUpdateStudentDetailsStart),
     call(onUpdateStudentFundsStart),

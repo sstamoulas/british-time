@@ -1,102 +1,68 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { connect, batch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import StudentCourses from './../../components/student-courses/student-courses.component';
-import ProfileImage from './../../components/profile-image/profile-image.component';
+import CustomLoader from './../../components/custom-loader/custom-loader.component';
+import Student from './../../components/student/student.component';
 
-import { createStudentDetailsStart, updateStudentDetailsStart } from './../../redux/student/student.actions';
+import { fetchStudentDetailsStart, updateStudentDetailsStart } from './../../redux/student/student.actions';
+import { fetchStudentCoursesStart } from './../../redux/student-course/student-course.actions';
 
-import { studentDetails } from './../../redux/student/student.selectors';
-import { currentUser } from './../../redux/user/user.selectors';
+import { isSubLoading } from './../../redux/ui/ui.selectors';
 
 import './student-page.styles.scss';
 
-const INITIAL_STATE = {
-  bio: '',
-}
+const StudentPage = ({ isSubLoading, fetchStudentCoursesStart, fetchStudentDetailsStart, updateStudentDetailsStart }) => {
+  const isMounted = useRef(false)
 
-const StudentPage = ({ 
-    currentUser, 
-    studentDetails, 
-    createStudentDetailsStart, 
-    updateStudentDetailsStart, 
-    error 
-  }) => {
-  const [state, setState] = useState({ ...INITIAL_STATE, ...studentDetails });
-  const { bio } = state;
-  const isInvalid = bio === '' && !studentDetails.imageExtension;
+  useEffect(() => {
+    if(!isMounted.current) {
+      batch(() => {
+        fetchStudentDetailsStart();
+        fetchStudentCoursesStart();
+      });
 
-  const isObjectEmpty = (obj) => {
-    return Object.keys(obj).length === 0 && obj.constructor === Object
-  }
-
-  const onSubmit = event => {
-    if(isObjectEmpty(studentDetails)) {
-      createStudentDetailsStart({ bio });
+      isMounted.current = true;
     }
-    else {
-      updateStudentDetailsStart({ bio });
-    }
+  }, [isSubLoading, fetchStudentDetailsStart, fetchStudentCoursesStart]);
 
+  const handleSubmit = (event, studentDetails) => {
+    let { imageExtension, bio } = studentDetails;
+
+    imageExtension = imageExtension || '';
+    bio = bio || '';
+
+    updateStudentDetailsStart({ imageExtension, bio });
     event.preventDefault();
   }
- 
-  const onChange = event => {
-    const { name, value } = event.target;
-    setState(prevState => ({ ...prevState, [name]: value }));
-  };
 
-  const onUploadCallback = (imageExtension) => {
-    if(isObjectEmpty(studentDetails)) {
-      createStudentDetailsStart({ imageExtension });
-    }
-    else {
-      updateStudentDetailsStart({ imageExtension });
-    }
+  const onUploadCallback = (studentDetails) => {
+    let { imageExtension, bio } = studentDetails;
+
+    imageExtension = imageExtension || '';
+    bio = bio || '';
+
+    updateStudentDetailsStart({ imageExtension, bio });
   }
 
-  return (
-    <div>
-      <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
-      <form onSubmit={onSubmit} className='student-form d-flex flex-column m-default'>
-        <ProfileImage className='p-default cursor-pointer' imageExtension={studentDetails.imageExtension} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
-        <textarea 
-          name='bio' 
-          className='m-default mx-7 p-2'
-          rows='11' 
-          cols='50' 
-          defaultValue={bio}
-          onChange={onChange} 
-          placeholder='Add Your Bio...'
-        >
-        </textarea>
-        <button 
-          disabled={isInvalid} 
-          type="submit"
-          className='m-default mx-7 p-2 cursor-pointer'
-        >
-          Submit Details
-        </button>
-
-        {error && <p>{error.message}</p>}
-      </form>
-      <StudentCourses />
-    </div>
+  return isMounted.current && !isSubLoading ? (
+    <Student handleSubmit={handleSubmit} onUploadCallback={onUploadCallback} />
+  ) : (
+    <CustomLoader message={'Loading'} />
   )
-};
+}
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: currentUser,
-  studentDetails: studentDetails,
+  isSubLoading: isSubLoading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchStudentDetailsStart: () => 
+    dispatch(fetchStudentDetailsStart()),
+  fetchStudentCoursesStart: () => 
+    dispatch(fetchStudentCoursesStart()),
   updateStudentDetailsStart: (studentDetails) => 
     dispatch(updateStudentDetailsStart(studentDetails)),
-  createStudentDetailsStart: (studentDetails) => 
-    dispatch(createStudentDetailsStart(studentDetails)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(StudentPage));
+export default connect(mapStateToProps, mapDispatchToProps)(StudentPage);

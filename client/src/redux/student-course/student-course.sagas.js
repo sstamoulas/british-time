@@ -1,9 +1,8 @@
 import { takeLatest, put, all, call, select } from 'redux-saga/effects';
 
-import UserActionTypes from './../user/user.types';
 import StudentCourseActionTypes from './student-course.types';
 
-import { actionStart, actionStop } from './../ui/ui.actions';
+import { actionStart, actionStop, subActionStart, subActionStop } from './../ui/ui.actions';
 import { 
   fetchStudentCoursesSuccess,
   fetchStudentCoursesFailure,
@@ -22,33 +21,31 @@ import {
   updateStudentCourseDetailsDocument,
 } from '../../firebase/firebase.utils';
 
-import * as ROLES from './../../constants/roles';
-
 export function* fetchStudentCoursesAsync({ type }) {
   const {user: { currentUser: { id }}} = yield select();
 
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const studentCoursesRef = yield call(getCoursesByStudentId, id);
 
     yield put(fetchStudentCoursesSuccess({ ...studentCoursesRef }));
   } catch(error) {
     yield put(fetchStudentCoursesFailure(error));
   } finally {
-    yield put(actionStop(type));
+    yield put(subActionStop(type));
   }
 }
 
 export function* fetchStudentCourseAsync({ type, payload: { courseId }}) {
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const studentCourseRef = yield call(getStudentCourseByCourseId, courseId);
 
     yield put(fetchStudentCourseSuccess({ ...studentCourseRef }));
   } catch(error) {
     yield put(fetchStudentCourseFailure(error));
   } finally {
-    yield put(actionStop(type));
+    yield put(subActionStop(type));
   }
 }
 
@@ -70,7 +67,7 @@ export function* createStudentCourseAsync({type, payload: { courseDetails }}) {
 
 export function* updateStudentCourseAsync({type, payload: { courseId, courseDetails }}) {
   const {user: { currentUser: { id }}} = yield select();
-  
+
   try {
     yield put(actionStart(type));
     yield call(updateStudentCourseDetailsDocument, courseId, courseDetails);
@@ -82,21 +79,6 @@ export function* updateStudentCourseAsync({type, payload: { courseId, courseDeta
   } finally {
     yield put(actionStop(type));
   }
-}
-
-export function* isStudent({ type }) {
-  const {user: { currentUser: { role }}} = yield select();
-
-  if(role === ROLES.STUDENT) {
-    yield fetchStudentCoursesAsync({ type });
-  }
-}
-
-export function* onSignInSuccess() {
-  yield takeLatest(
-    UserActionTypes.SIGN_IN_SUCCESS, 
-    isStudent
-  );
 }
 
 export function* onFetchStudentCoursesStart() {
@@ -129,7 +111,6 @@ export function* onUpdateStudentCourseStart() {
 
 export function* studentCourseSagas() {
   yield all([
-    call(onSignInSuccess),
     call(onFetchStudentCoursesStart),
     call(onFetchStudentCourseStart),
     call(onCreateStudentCourseStart),

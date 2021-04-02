@@ -1,86 +1,46 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { connect, batch } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import * as ROLES from './../../constants/roles';
-import * as ROUTES from './../../constants/routes';
+import CustomLoader from './../../components/custom-loader/custom-loader.component';
+import AdminUserManager from './../../components/admin-user-manager/admin-user-manager.component';
+import AdminCourseManager from './../../components/admin-course-manager/admin-course-manager.component';
 
-import { updateUserStart } from '../../redux/system/system.actions';
-import { selectUsersForManaging, selectSystemError } from '../../redux/system/system.selectors';
-import { selectCoursesForManaging } from './../../redux/course/course.selectors';
+import { fetchCoursesStart } from './../../redux/course/course.actions';
+import { fetchUsersStart } from './../../redux/system/system.actions';
 
-import './admin-page.styles.scss';
- 
-const AdminPage = ({ users, error, courses, updateUserStart }) => {
-  const updateUser = ({ target }, user) => {
-    updateUserStart(user.id, {[target.getAttribute('data')]: target.value});
-  }
+import { isSubLoading } from './../../redux/ui/ui.selectors';
 
-  const sortCourses = (courseA, courseB) => {
-    if (courseA.courseName < courseB.courseName) {
-      return -1;
+const AdminPage = ({ isSubLoading, fetchCoursesStart }) => {
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (!isMounted.current) {
+      batch(() => {
+        fetchUsersStart();
+        fetchCoursesStart();
+      });
+      isMounted.current = true;
     }
-    else if (courseA.courseName > courseB.courseName) {
-      return 1;
-    }
-    else {
-      return 0;
-    }
-  }
+  }, [isSubLoading, fetchCoursesStart]);
 
-  return (
-    <div>
-      <h1>Admin Page</h1>
-      <p>The Admin Page is accessible by every signed in user.</p>
-      <div>
-        <Link to={ROUTES.CREATE_COURSE}>Create A Course</Link>
-        <ul>
-          { courses.length > 0 && 
-            courses.sort(sortCourses).map((course) => <li key={course.id}><Link to={`course/${course.id}`}>{course.courseName}</Link></li>)
-          }
-        </ul>
-        <table className='table table-striped'>
-          <thead>
-            <tr>
-              <th scope='col'>User Id</th>
-              <th scope='col'>Email</th>
-              <th scope='col'>User Name</th>
-              <th scope='col'>Is Admin?</th>
-              <th scope='col'>Is Instructor?</th>
-              <th scope='col'>Is Student?</th>
-              <th scope='col'>Payment</th>
-            </tr>
-          </thead>
-          <tbody>
-          {
-            users.map((user) => (
-                <tr key={user.email}>
-                  <th scope='row'>{user.id}</th>
-                  <td>{user.email}</td>
-                  <td>{user.userName}</td>
-                  <td><input type='radio' value='ADMIN' name={`role-${user.id}`} data='role' defaultChecked={user.role === ROLES.ADMIN} onChange={(e) => updateUser(e, user)} /></td>
-                  <td><input type='radio' value='INSTRUCTOR' name={`role-${user.id}`} data='role' defaultChecked={user.role === ROLES.INSTRUCTOR}  onChange={(e) => updateUser(e, user)} /></td>
-                  <td><input type='radio' value='STUDENT' name={`role-${user.id}`} data='role' defaultChecked={user.role === ROLES.STUDENT}  onChange={(e) => updateUser(e, user)} /></td>
-                  <td><Link to={`/payment-history/${user.id}`}>Edit</Link></td>
-                </tr>
-            ))
-          }
-          </tbody>
-        </table>
-      </div>
+  return isMounted.current && !isSubLoading ? (
+    <div className='admin-container'>
+      <AdminCourseManager />
+      <AdminUserManager />
     </div>
+  ) : (
+    <CustomLoader message={'Loading'} />
   )
-};
+}
 
 const mapStateToProps = createStructuredSelector({
-  users: selectUsersForManaging,
-  courses: selectCoursesForManaging,
-  error: selectSystemError,
+  isSubLoading: isSubLoading,
 });
- 
+
 const mapDispatchToProps = (dispatch) => ({
-  updateUserStart: (userId, userDetails) => dispatch(updateUserStart(userId, userDetails)),
+  fetchUsersStart: () => dispatch(fetchUsersStart()),
+  fetchCoursesStart: () => dispatch(fetchCoursesStart()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminPage);

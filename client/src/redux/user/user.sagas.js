@@ -20,16 +20,12 @@ import {
   auth, 
   createUserProfileDocument,
   createPaymentsDocument,
-  getCurrentUser
+  fetchCurrentUser
 } from '../../firebase/firebase.utils';
 
 export function* getSnapshotFromUserAuth(userAuth, additionalData) {
   try {
     const userSnapshot = yield call(createUserProfileDocument, userAuth, additionalData);
-    // const userSnapshot = yield userRef.get();
-
-    console.log('called createUserProfileDocument', userSnapshot.id)
-
     yield call(createPaymentsDocument, userSnapshot.id);
 
     yield put(signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
@@ -72,7 +68,7 @@ export function* signInWithEmail({ type, payload: { email, password }}) {
 export function* isUserAuthenticated({ type }) {
   try {
     yield put(actionStart(type));
-    const userAuth = yield getCurrentUser();
+    const userAuth = yield fetchCurrentUser();
 
     if (!userAuth)
       return null;

@@ -7,7 +7,6 @@ const INITIAL_STATE = {
 const instructorReducer = (state = INITIAL_STATE, action) => {
   switch(action.type) {
     case InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_START:
-    case InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_START:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_START:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_RATING_START:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_RATING_SUCCESS:
@@ -16,7 +15,6 @@ const instructorReducer = (state = INITIAL_STATE, action) => {
         error: null,
       };
     case InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_SUCCESS:
-    case InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_SUCCESS:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_SUCCESS:
       return {
         ...state,
@@ -24,7 +22,6 @@ const instructorReducer = (state = INITIAL_STATE, action) => {
         error: null,
       };
     case InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_FAILURE:
-    case InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_FAILURE:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_FAILURE:
     case InstructorActionTypes.UPDATE_INSTRUCTOR_RATING_FAILURE:
       return {

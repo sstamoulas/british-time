@@ -14,9 +14,9 @@ export const createCourseFailure = (error) => ({
   payload: error,
 });
 
-export const updateCourseStart = (courseDetails) => ({
+export const updateCourseStart = (courseId, courseDetails) => ({
   type: CourseActionTypes.UPDATE_COURSE_START,
-  payload: { courseDetails },
+  payload: { courseId, courseDetails },
 });
 
 export const updateCourseSuccess = (courses) => ({

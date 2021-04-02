@@ -2,6 +2,7 @@ import InstructorCourseActionTypes from './instructor-course.types';
 
 const INITIAL_STATE = {
   'instructors': {},
+  'instructorCourse': {},
   'instructorCourses': {},
   'courseDetails': {},
 };
@@ -41,6 +42,11 @@ const instructorCourseReducer = (state = INITIAL_STATE, action) => {
         courseDetails: {},
         instructorCourses: action.payload,
         error: null,
+      };
+    case InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_SUCCESS:
+      return {
+        ...state,
+        instructorCourse: action.payload,
       };
     case InstructorCourseActionTypes.FETCH_ALL_COURSES_FAILURE:
     case InstructorCourseActionTypes.FETCH_INSTRUCTORS_BY_COURSE_ID_FAILURE:

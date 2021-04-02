@@ -1,33 +1,32 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import Carousel from './../carousel/carousel.component';
-
-import { fetchCoursesStart } from './../../redux/course/course.actions';
 
 import { selectCoursesForManaging } from './../../redux/course/course.selectors';
 
 import './courses.styles.scss';
 
-const isArrayEmpty = (obj) => {
-  return obj.length === 0;
+const sortCourses = (courseA, courseB) => {
+  if (courseA.courseName < courseB.courseName) {
+    return -1;
+  }
+  else if (courseA.courseName > courseB.courseName) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }
 
-const Courses = ({ history, courses, fetchCoursesStart }) => {
-  useEffect(() => {
-    if(isArrayEmpty(courses)) {
-      fetchCoursesStart();
-    }
-  }, [courses, fetchCoursesStart])
-
-  const beginnerCourses = courses.filter((course) => parseInt(course.level) === 0);
-  const elementaryCourses = courses.filter((course) => parseInt(course.level) === 1);
-  const preIntermediateCourses = courses.filter((course) => parseInt(course.level) === 2);
-  const intermediateCourses = courses.filter((course) => parseInt(course.level) === 3);
-  const upperIntermediateCourses = courses.filter((course) => parseInt(course.level) === 4);
-  const advancedCourses = courses.filter((course) => parseInt(course.level) === 5);
+const Courses = ({ courses }) => {
+  const beginnerCourses = courses.filter((course) => parseInt(course.level) === 0).sort(sortCourses);
+  const elementaryCourses = courses.filter((course) => parseInt(course.level) === 1).sort(sortCourses);
+  const preIntermediateCourses = courses.filter((course) => parseInt(course.level) === 2).sort(sortCourses);
+  const intermediateCourses = courses.filter((course) => parseInt(course.level) === 3).sort(sortCourses);
+  const upperIntermediateCourses = courses.filter((course) => parseInt(course.level) === 4).sort(sortCourses);
+  const advancedCourses = courses.filter((course) => parseInt(course.level) === 5).sort(sortCourses);
 
   return (
     <div>
@@ -62,8 +61,4 @@ const mapStateToProps = createStructuredSelector({
   courses: selectCoursesForManaging,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchCoursesStart: () => dispatch(fetchCoursesStart()),
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Courses));
+export default connect(mapStateToProps)(Courses);

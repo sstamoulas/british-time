@@ -41,14 +41,14 @@ export function* fetchInstructorLessonsAsync({ type, payload: { instructorCourse
 
 export function* fetchInstructorLessonAsync({ type, payload: { lessonId }}) {
   try {
-    yield put(actionStart(type));
+    yield put(subActionStart(type));
     const instructorLessonRef = yield call(getLessonByLessonId, lessonId);
 
     yield put(fetchInstructorLessonSuccess({ ...instructorLessonRef }));
   } catch(error) {
     yield put(fetchInstructorLessonFailure(error));
   } finally {
-    yield put(actionStop(type));
+    yield put(subActionStop(type));
   }
 }
 

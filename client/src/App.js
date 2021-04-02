@@ -21,11 +21,12 @@ import LessonCreatePage from './pages/lesson-create-page/lesson-create-page.comp
 import LessonUpdatePage from './pages/lesson-update-page/lesson-update-page.component';
 import CourseDetailsPage from './pages/course-details-page/course-details-page.component';
 import StudentCoursePage from './pages/student-course-page/student-course-page.component';
-import StudentLessonPage from './pages/student-lesson-page/student-lesson-page.component';
 import CourseRatingPage from './pages/course-rating-page/course-rating-page.component';
 import ChatRoomPage from './pages/chat-room-page/chat-room-page.component';
 import PaymentPage from './pages/payment-page/payment-page.component';
 import PreviewVideoPage from './pages/preview-video-page/preview-video-page.component';
+import InstructorCourseCreatePage from './pages/instructor-course-create-page/instructor-course-create-page.component';
+import InstructorCourseUpdatePage from './pages/instructor-course-update-page/instructor-course-update-page.component';
 
 import NotFoundPage from './pages/not-found-page/not-found-page.component';
 import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
@@ -40,8 +41,6 @@ import Footer from './components/footer/footer.component';
 import CustomLoader from './components/custom-loader/custom-loader.component';
 import PrivateRoute from './components/private-route/private-route.component';
 import CustomRoute from './components/custom-route/custom-route.component';
-import CreateInstructorCourse from './components/create-instructor-course/create-instructor-course.component';
-import UpdateInstructorCourse from './components/update-instructor-course/update-instructor-course.component';
 
 import * as ROUTES from './constants/routes';
 import * as ROLES from './constants/roles';
@@ -52,7 +51,7 @@ import { isLoading } from './redux/ui/ui.selectors';
 
 import './App.styles.scss';
 
-const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
+const App = ({ currentUser, isLoading, checkUserSessionStart }) => {
   const isMounted = useRef(false);
   const { ready } = useTranslation('translation', { useSuspense: false });
 
@@ -62,9 +61,9 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
       checkUserSessionStart();
       isMounted.current = true;
     }
-  }, [checkUserSessionStart]);
+  }, [isLoading, checkUserSessionStart]);
 
-  return isMounted.current && !isLoading && ready ?
+  return isMounted.current && ready && !isLoading ?
     (
       <div className='main-container'>
         <Navigation />
@@ -125,13 +124,13 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
               exact
               path={ROUTES.CREATE_INSTRUCTOR_COURSE}
               condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
-              component={CreateInstructorCourse}
+              component={InstructorCourseCreatePage}
             />
             <PrivateRoute 
               exact
               path={ROUTES.UPDATE_INSTRUCTOR_COURSE}
               condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
-              component={UpdateInstructorCourse}
+              component={InstructorCourseUpdatePage}
             />
             <PrivateRoute 
               exact
@@ -180,12 +179,6 @@ const App = ({ currentUser, checkUserSessionStart, isLoading }) => {
               path={ROUTES.STUDENT_COURSE}
               condition={currentUser && currentUser.role === ROLES.STUDENT}
               component={StudentCoursePage}
-            />
-            <PrivateRoute 
-              exact
-              path={ROUTES.STUDENT_LESSON_DETAILS}
-              condition={currentUser && currentUser.role === ROLES.STUDENT}
-              component={StudentLessonPage}
             />
             <PrivateRoute 
               exact

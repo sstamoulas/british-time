@@ -101,3 +101,8 @@ export const updateInstructorCourseDetailsFailure = (error) => ({
   type: InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_DETAILS_FAILURE,
   payload: error,
 });
+
+export const updateInstructorCourseSuccess = (instructorCourse) => ({
+  type: InstructorCourseActionTypes.UPDATE_INSTRUCTOR_COURSE_SUCCESS,
+  payload: instructorCourse,
+});

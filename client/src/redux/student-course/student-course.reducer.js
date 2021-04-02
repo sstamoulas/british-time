@@ -26,7 +26,7 @@ const studentCourseReducer = (state = INITIAL_STATE, action) => {
     case StudentCourseActionTypes.UPDATE_STUDENT_COURSE_SUCCESS:
       return {
         ...state,
-        courseDetails: {},
+        // courseDetails: {},
         studentCourses: action.payload,
         error: null,
       };

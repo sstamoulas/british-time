@@ -29,6 +29,5 @@ export const PREVIEW_VIDEO = '/preview-video/:videoId';
 
 export const STUDENT = '/student';
 export const STUDENT_COURSE = '/student/course/:courseId';
-export const STUDENT_LESSON_DETAILS = '/course/:instructorCourseId/lesson/details/:lessonId';
 export const COURSE_RATING = '/course-rating/:courseId';
 export const CHAT_ROOMS = '/chat-rooms';

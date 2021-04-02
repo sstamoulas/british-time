@@ -55,7 +55,7 @@ const StudentCourses = ({ history, currentUser, studentCourses }) => {
                 <Link className='card--learning__details' to={`/student/course/${studentCourse.instructorCourseId}`}>
                   <div className="card__details">
                     <strong className="details__name">{studentCourse.courseName}</strong>
-                    <div className="details__instructor">{studentCourse.userName}<span>, {studentCourse.jobTitle}</span></div>
+                    <div className="details__instructor">{studentCourse.instructorName}<span>, {studentCourse.jobTitle}</span></div>
                     <div className="details__bottom">
                       <span className="details__progress"><span className="progress__bar" style={{width: '1%'}}></span></span>
                       <span className="a11 text-midnight-lighter progress__text tooltip-container">
@@ -69,7 +69,7 @@ const StudentCourses = ({ history, currentUser, studentCourses }) => {
                               renderRating
                             }
                             </div>
-                            <span onClick={(e) => handleRating(e, studentCourse.studentCourseId)} className="leave-rating--helper-text--21RPx" data-purpose="helper-text">Leave a rating</span>
+                            <span onClick={(e) => handleRating(e, studentCourse.id)} className="leave-rating--helper-text--21RPx" data-purpose="helper-text">Leave a rating</span>
                           </div>
                         </div>
                       </div>

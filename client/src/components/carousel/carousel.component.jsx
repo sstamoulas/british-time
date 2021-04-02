@@ -63,7 +63,7 @@ const Carousel = ({ type, courses }) => {
     carouselList.current.style.left = `${moveTo}px`;
   }
 
-  return courses.length && (
+  return (
     <div className="carousel-width">
       <div className="carousel js-carousel">
         <button className={`carousel__button--prev js-carousel-button-${type} carousel--button--21JBZ udlite-btn-icon-round udlite-btn-large udlite-btn-icon-large`} data-dir="prev"></button>

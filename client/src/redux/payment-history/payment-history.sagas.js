@@ -1,9 +1,8 @@
-import { takeLatest, put, all, call, select } from 'redux-saga/effects';
+import { takeLatest, put, all, call } from 'redux-saga/effects';
 
-import UserActionTypes from './../user/user.types';
 import PaymentHistoryActionTypes from './payment-history.types';
 
-import { actionStart, actionStop } from './../ui/ui.actions';
+import { actionStart, actionStop, subActionStart, subActionStop } from './../ui/ui.actions';
 import { 
   fetchPaymentHistorySuccess,
   fetchPaymentHistoryFailure,
@@ -19,20 +18,18 @@ import {
   addPaymentTransaction,
 } from './../../firebase/firebase.utils';
 
-import * as ROLES from './../../constants/roles';
-
 export function* fetchPaymentHistoryAsync({ type, payload: { userId }}) {
   try {
-   // yield put(actionStart(type));
+   yield put(subActionStart(type));
     const paymentHistoryRef = yield call(getPaymentsByUserId, userId);
 
     yield put(fetchPaymentHistorySuccess({ ...paymentHistoryRef }));
   } catch(error) {
     yield put(fetchPaymentHistoryFailure(error));
   } 
-  // finally {
-  //   yield put(actionStop(type));
-  // }
+  finally {
+    yield put(subActionStop(type));
+  }
 }
 
 export function* updatePaymentHistoryAsync({type, payload: { userId, transactions }}) {
@@ -61,16 +58,6 @@ export function* addPaymentHistoryTransactionAsync({type, payload: { userId, tra
   }
 }
 
-export function* hasPaymentHistory({ type }) {
-  const {user: { currentUser: { id, role }}} = yield select();
-
-  if(role === ROLES.STUDENT || role === ROLES.INSTRUCTOR) {
-    yield put(actionStart(type));
-    yield fetchPaymentHistoryAsync({type, payload: { userId: id }});
-    yield put(actionStop(type));
-  }
-}
-
 export function* onFetchPaymentHistoryStart() {
   yield takeLatest(
     PaymentHistoryActionTypes.FETCH_PAYMENT_HISTORY_START, 
@@ -92,18 +79,10 @@ export function* onAddPaymentHistorTransactionStart() {
   );
 }
 
-export function* onSignInSuccess() {
-  yield takeLatest(
-    UserActionTypes.SIGN_IN_SUCCESS, 
-    hasPaymentHistory
-  );
-}
-
 export function* paymentHistorySagas() {
   yield all([
     call(onFetchPaymentHistoryStart),
     call(onUpdatePaymentHistoryStart),
     call(onAddPaymentHistorTransactionStart),
-    call(onSignInSuccess),
   ]);
 }

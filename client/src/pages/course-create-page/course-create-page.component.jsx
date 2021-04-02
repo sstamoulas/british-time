@@ -1,38 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import CourseCreateUpdate from './../../components/course-create-update/course-create-update.component';
+
 import { createCourseStart } from '../../redux/course/course.actions';
+
 import * as ROUTES from './../../constants/routes';
- 
-const INITIAL_STATE = {
-  courseName: '',
-}
 
 const CourseCreatePage = ({ history, createCourseStart }) => {
-  const [state, setState] = useState({ ...INITIAL_STATE });
-  const { courseName } = state;
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setState(prevState => ({ ...prevState, [name]: value }));
+  const onUploadCallback = (courseDetails) => {
+    const { imageExtension, level, courseName, headline } = courseDetails;
+    createCourseStart({ imageExtension, level, courseName, headline });
   }
 
-  const handleSubmit = (event) => {
-    createCourseStart(state);
+  const handleSubmit = (event, courseDetails) => {
+    const { imageExtension, level, courseName, headline } = courseDetails;
+    createCourseStart({ imageExtension, level, courseName, headline });
     history.push(ROUTES.ADMIN);
     event.preventDefault();
   }
 
-  return (
-    <div>
-      <h1>Create Course Page</h1>
-      <form onSubmit={handleSubmit}>
-        <input type='text' name='courseName' value={courseName} onChange={handleChange} />
-        <input type="submit" value="Create Course" />
-      </form>
-    </div>
-  )
+  return <CourseCreateUpdate isNew={true} handleSubmit={handleSubmit} onUploadCallback={onUploadCallback} />;
 };
 
 const mapDispatchToProps = (dispatch) => ({

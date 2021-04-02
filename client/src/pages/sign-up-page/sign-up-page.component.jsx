@@ -7,9 +7,7 @@ import './sign-up-page.styles.scss';
 
 const SignUpPage = () => (
   <div className="modal-content-wrapper">
-    <div className="signup-header">
-    Sign Up and Start Learning!
-    </div>
+    <div className="signup-header">Sign Up and Start Learning!</div>
     <SignUp />
     <SignInLink />
   </div>

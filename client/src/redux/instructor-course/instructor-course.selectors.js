@@ -22,3 +22,8 @@ export const selectCourseInstructors = createSelector(
   [selectInstructorCourses],
   instructorCourses => instructorCourses.instructors
 );
+
+export const instructorCourse = createSelector(
+  [selectInstructorCourses],
+  instructorCourses => instructorCourses.instructorCourse
+);

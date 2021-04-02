@@ -1,8 +1,7 @@
 import InstructorActionTypes from './instructor.types';
 
-export const fetchInstructorDetailsStart = (instructorId) => ({
+export const fetchInstructorDetailsStart = () => ({
   type: InstructorActionTypes.FETCH_INSTRUCTOR_DETAILS_START,
-  payload: { instructorId },
 });
 
 export const fetchInstructorDetailsSuccess = (instructorDetails) => ({
@@ -15,20 +14,20 @@ export const fetchInstructorDetailsFailure = (error) => ({
   payload: error,
 });
 
-export const createInstructorDetailsStart = (instructorDetails) => ({
-  type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_START,
-  payload: { instructorDetails },
-});
+// export const createInstructorDetailsStart = (instructorDetails) => ({
+//   type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_START,
+//   payload: { instructorDetails },
+// });
 
-export const createInstructorDetailsSuccess = ({ instructorDetails }) => ({
-  type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_SUCCESS,
-  payload: { instructorDetails },
-});
+// export const createInstructorDetailsSuccess = ({ instructorDetails }) => ({
+//   type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_SUCCESS,
+//   payload: { instructorDetails },
+// });
 
-export const createInstructorDetailsFailure = (error) => ({
-  type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_FAILURE,
-  payload: error,
-});
+// export const createInstructorDetailsFailure = (error) => ({
+//   type: InstructorActionTypes.CREATE_INSTRUCTOR_DETAILS_FAILURE,
+//   payload: error,
+// });
 
 export const updateInstructorDetailsStart = (instructorDetails) => ({
   type: InstructorActionTypes.UPDATE_INSTRUCTOR_DETAILS_START,
