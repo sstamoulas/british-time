@@ -1,9 +1,20 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
+import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
 
 import './student-course-lesson.styles.scss';
 
 const StudentCourseLesson = ({ currentLesson }) => {
-  const subString = 'https://youtu.be/';
+  const [player, setPlayer] = useState(undefined);
+  // const subString = 'https://youtu.be/';
+
+  useEffect(() => {
+    if(!player) {
+      setPlayer(new YouTubeToHtml5({ withAudio: true }));
+    }
+    else {
+      player.load();
+    }
+  }, [player, currentLesson.videoId])
   
   return (
     <div className="app--row--1ydzX app--body-container--10gJo">
@@ -103,10 +114,13 @@ const StudentCourseLesson = ({ currentLesson }) => {
                                          <div className="video-player--container--YDQRW">
                                             <div className="video-player--video-wrapper--1L212 user-activity--user-inactive--2uBeO">
                                                <div id="playerId__8036556--3" className="video-js video-player--video-player--1sfof vjs-paused vjs-controls-enabled vjs-workinghover vjs-v6 vjs-user-inactive" lang="en-us" role="region" aria-label="Video Player">
-                                                  <div className="vjs-tech" style={{width: '100%', height: '100%', position: 'relative'}}>
-                                                    <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/${currentLesson.videoId.substring(subString.length)}?autoplay=1&rel=0&modestbranding=1`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-                                                    <div style={{width: '100%', height: '20%', position: 'absolute', opacity: '0', right: '0px', top: '0px'}}>&nbsp;</div>
-                                                  </div>
+                                                <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" autoPlay data-yt2html5={currentLesson.videoId}></video>
+                                                {                                                  
+                                                  // <div className="vjs-tech" style={{width: '100%', height: '100%', position: 'relative'}}>
+                                                  //   <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/${currentLesson.videoId.substring(subString.length)}?autoplay=1&rel=0&modestbranding=1`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                                                  //   <div style={{width: '100%', height: '20%', position: 'absolute', opacity: '0', right: '0px', top: '0px'}}>&nbsp;</div>
+                                                  // </div>
+                                                }
                                                   <div className="vjs-control-bar user-activity--hide-when-user-inactive--pDPGx" dir="ltr">
                                                      <div className="control-bar--popover-area--1LX56"></div>
                                                      <div className="vjs-progress-control vjs-control">

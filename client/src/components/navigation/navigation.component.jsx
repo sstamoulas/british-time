@@ -152,7 +152,7 @@ const Navigation = ({ currentUser, isSubLoading }) => {
           </div>
         </div>
         <div className='nav-container'>
-          <Link to={ROUTES.LANDING} className='logo'>Native Talk</Link>
+          <Link to={ROUTES.LANDING} className='logo'><div className='center'>Native Talk</div><div>All you need is time</div></Link>
           {
             currentUser ? 
               currentUser.role === ROLES.ADMIN ?
