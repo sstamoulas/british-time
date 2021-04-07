@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 
 import StudentCourses from './../../components/student-courses/student-courses.component';
 import ProfileImage from './../../components/profile-image/profile-image.component';
+import LiveSessionButton from './../../components/live-session-button/live-session-button.component';
 
 import { studentDetails } from './../../redux/student/student.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
@@ -25,41 +26,41 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit, onUploadCal
     setState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  useEffect(() => {
-    const btn = document.querySelector('.live-session-link');
-    const ripple = document.createElement("span"); 
+  // useEffect(() => {
+  //   const btn = document.querySelector('.live-session-link');
+  //   const ripple = document.createElement("span"); 
 
-    const addRipple = () => {
+  //   const addRipple = () => {
 
-      // Add ripple class to span 
-      ripple.classList.add("ripple"); 
+  //     // Add ripple class to span 
+  //     ripple.classList.add("ripple"); 
 
-      // Add span to the button  
-      btn.appendChild(ripple); 
+  //     // Add span to the button  
+  //     btn.appendChild(ripple); 
 
-      // Get position of X 
-      let x = (btn.offsetWidth)/2; 
+  //     // Get position of X 
+  //     let x = (btn.offsetWidth)/2; 
 
-      // Get position of Y  
-      let y = (btn.offsetHeight)/2; 
+  //     // Get position of Y  
+  //     let y = (btn.offsetHeight)/2; 
 
-      // Position the span element 
-      ripple.style.left = `${x}px`; 
-      ripple.style.top = `${y}px`; 
-    }
-    
-    addRipple();
-  }, [])
+  //     // Position the span element 
+  //     ripple.style.left = `${x}px`; 
+  //     ripple.style.top = `${y}px`; 
+  //   }
+
+  //   addRipple();
+  // }, [])
 
   return (
     <div>
       <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
-      <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='d-flex justify-center'>
-        <div className='live-session-link'>Launch Live Session</div>
-      {
-        //<Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='live-session-link'><span>Launch Live Session</span></Link>
+      <LiveSessionButton />
+      {      
+        // <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='d-flex justify-center'>
+        //   <div className='live-session-link'>Launch Live Session</div>
+        // </Link>
       }
-      </Link>
       {
         // studentDetails.sessionId && (
         //   <Link to={`/video-conference/${studentDetails.sessionId}`}>Launch Live Session</Link>

@@ -27,43 +27,43 @@ const Instructor = ({ currentUser, instructorDetails, handleSubmit, onUploadCall
     setState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  useEffect(() => {
-    const btn = document.querySelector('.live-session-link');
-    const ripple = document.createElement("span"); 
+  // useEffect(() => {
+  //   const btn = document.querySelector('.live-session-link');
+  //   const ripple = document.createElement("span"); 
 
-    const addRipple = () => {
+  //   const addRipple = () => {
 
-      // Add ripple class to span 
-      ripple.classList.add("ripple"); 
+  //     // Add ripple class to span 
+  //     ripple.classList.add("ripple"); 
 
-      // Add span to the button  
-      btn.appendChild(ripple); 
+  //     // Add span to the button  
+  //     btn.appendChild(ripple); 
 
-      // Get position of X 
-      let x = (btn.offsetWidth)/2; 
+  //     // Get position of X 
+  //     let x = (btn.offsetWidth)/2; 
 
-      // Get position of Y  
-      let y = (btn.offsetHeight)/2; 
+  //     // Get position of Y  
+  //     let y = (btn.offsetHeight)/2; 
 
-      // Position the span element 
-      ripple.style.left = `${x}px`; 
-      ripple.style.top = `${y}px`; 
-    }
+  //     // Position the span element 
+  //     ripple.style.left = `${x}px`; 
+  //     ripple.style.top = `${y}px`; 
+  //   }
     
-    addRipple();
-  }, [])
+  //   addRipple();
+  // }, [])
 
   return (
     <div>
       <h1>Greetings {currentUser.userName}</h1>
       <p>The Instructor Page is accessible by only the Instructor in Question.</p>
       <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
-      <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='d-flex justify-center'>
-        <div className='live-session-link'>Launch Live Session</div>
-      {
-        //<Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='live-session-link'><span>Launch Live Session</span></Link>
+      <LiveSessionButton />
+      {      
+        // <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='d-flex justify-center'>
+        //   <div className='live-session-link'>Launch Live Session</div>
+        // </Link>
       }
-      </Link>
       {
         instructorDetails.sessionId && (
           <Link to={`/video-conference/${instructorDetails.sessionId}`}>Launch Live Session</Link>
