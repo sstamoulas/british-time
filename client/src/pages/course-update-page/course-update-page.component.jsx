@@ -24,13 +24,13 @@ const CourseUpdatePage = ({ history, isSubLoading, fetchCourseByIdStart, updateC
   }, [courseId, isSubLoading, fetchCourseByIdStart]);
 
   const onUploadCallback = (courseDetails) => {
-    const { imageExtension, level, courseName, headline } = courseDetails;
-    updateCourseStart(courseId, { imageExtension, level, courseName, headline });
+    const { level, courseName, headline } = courseDetails;
+    updateCourseStart(courseId, { level, courseName, headline });
   }
 
   const handleSubmit = (event, courseDetails) => {
-    const { imageExtension, level, courseName, headline } = courseDetails;
-    updateCourseStart(courseId, { imageExtension, level, courseName, headline });
+    const { level, courseName, headline } = courseDetails;
+    updateCourseStart(courseId, { level, courseName, headline });
     history.push(ROUTES.ADMIN);
     event.preventDefault();
   }

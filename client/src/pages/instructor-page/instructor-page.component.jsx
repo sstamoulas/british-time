@@ -27,24 +27,20 @@ const InstructorPage = ({ isSubLoading, fetchInstructorDetailsStart, fetchInstru
   }, [isSubLoading, fetchInstructorDetailsStart, fetchInstructorCourseDetailsStart]);
 
   const handleSubmit = (event, instructorDetails) => {
-    let { imageExtension, bio, rating } = instructorDetails;
-    
-    imageExtension = imageExtension || '';
+    let { bio, rating } = instructorDetails;
     bio = bio || '';
     rating = rating || 0;
 
-    updateInstructorDetailsStart({ imageExtension, bio, rating });
+    updateInstructorDetailsStart({ bio, rating });
     event.preventDefault();
   }
 
   const onUploadCallback = (event, instructorDetails) => {
-    let { imageExtension, bio, rating } = instructorDetails;
-
-    imageExtension = imageExtension || '';
+    let { bio, rating } = instructorDetails;
     bio = bio || '';
     rating = rating || 0;
 
-    updateInstructorDetailsStart({ imageExtension, bio, rating });
+    updateInstructorDetailsStart({ bio, rating });
     event.preventDefault();
   }
 

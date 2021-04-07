@@ -25,7 +25,6 @@ const LessonUpdatePage = ({ history, isSubLoading, fetchInstructorLessonStart, u
 
   const handleSubmit = (event, lessonDetails) => {
     const { chapterTitle, lessons } = lessonDetails;
-    console.log(lessonDetails)
     updateInstructorLessonStart(lessonId, { chapterTitle, lessons });
     history.push(ROUTES.INSTRUCTOR);
     event.preventDefault();

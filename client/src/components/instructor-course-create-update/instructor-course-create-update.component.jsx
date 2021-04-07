@@ -5,7 +5,8 @@ import { createStructuredSelector } from 'reselect';
 
 import { selectedCourseDetails } from '../../redux/instructor-course/instructor-course.selectors';
 import { instructorLessons } from '../../redux/instructor-lesson/instructor-lesson.selectors';
-import { selectCoursesForManaging } from './../../redux/course/course.selectors';
+
+import { courses } from './../../constants/constants';
 
 import './instructor-course-create-update.styles.scss';
 
@@ -16,7 +17,7 @@ const INITIAL_STATE = {
   isVisible: false,
 }
 
-const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons, availableCourses, handleSubmit }) => {
+const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons, handleSubmit }) => {
   const { courseId } = useParams();
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { courseName, isVisible } = state;
@@ -35,11 +36,11 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
 
   const onSelectChange = (event) => {
     const { value } = event.target;
-    const selectedIndex = availableCourses.map((course) => course.id).indexOf(value);
+    const selectedIndex = courses.map((course) => course.id).indexOf(value);
     setState(prevState => ({ 
       ...prevState, 
-      courseName: availableCourses[selectedIndex].courseName, 
-      id: availableCourses[selectedIndex].id
+      courseName: courses[selectedIndex].courseName, 
+      id: courses[selectedIndex].id
     }));
   }
 
@@ -82,7 +83,7 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
 
   // }
 
-  availableCourses.sort(sortCourses)
+  courses.sort(sortCourses)
   instructorLessons.sort(sortInstructorLessons);
 
   return (
@@ -96,7 +97,7 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
             <select className='course-selection' value={state.courseId} onChange={onSelectChange}>
               <option>Select A Course</option>
               {
-                availableCourses.sort(sortCourses).map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
+                courses.sort(sortCourses).map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
               }
             </select>
           )
@@ -136,7 +137,6 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
 const mapStateToProps = createStructuredSelector({
   courseDetails: selectedCourseDetails,
   instructorLessons: instructorLessons,
-  availableCourses: selectCoursesForManaging,
 });
 
 export default connect(mapStateToProps)(InstructorCourseCreateUpdate);

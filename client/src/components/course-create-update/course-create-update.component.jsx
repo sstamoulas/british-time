@@ -7,7 +7,6 @@ import CourseImage from './../../components/course-image/course-image.component'
 import { selectCurrentCourse } from '../../redux/course/course.selectors';
  
 const INITIAL_STATE = {
-  imageExtension: '',
   courseName: '', 
   headline: '',
   level: '',
@@ -15,7 +14,7 @@ const INITIAL_STATE = {
 
 const CourseCreateUpdate = ({ isNew, currentCourse, handleSubmit, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
-  const { courseName, level, headline, imageExtension } = state;
+  const { courseName, level, headline } = state;
 
   useEffect(() => {
     if(!isNew) {
@@ -32,7 +31,7 @@ const CourseCreateUpdate = ({ isNew, currentCourse, handleSubmit, onUploadCallba
     <div>
       <h1>{!isNew ? 'Update' : 'Create'} Course Page</h1>
       <form onSubmit={(e) => handleSubmit(e, state)}>
-        <CourseImage imageExtension={imageExtension} onUploadCallback={(imageExtension) => onUploadCallback({ ...state, imageExtension })} />
+        <CourseImage onUploadCallback={() => onUploadCallback({ ...state })} />
         <select name='level' value={level} onChange={handleChange}>
           <option defaultValue hidden> 
             Select a Level 

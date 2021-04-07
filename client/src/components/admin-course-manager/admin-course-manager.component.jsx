@@ -6,13 +6,13 @@ import { createStructuredSelector } from 'reselect';
 import CustomLoader from './../custom-loader/custom-loader.component';
 
 import * as ROUTES from './../../constants/routes';
+import { courses } from './../../constants/constants';
 
 import { isLoading } from './../../redux/ui/ui.selectors';
-import { selectCoursesForManaging } from './../../redux/course/course.selectors';
 
 import './admin-course-manager.styles.scss';
  
-const AdminCourseManager = ({ courses, isLoading }) => {
+const AdminCourseManager = ({ isLoading }) => {
   const sortCourses = (courseA, courseB) => {
     if (courseA.courseName < courseB.courseName) {
       return -1;
@@ -40,7 +40,6 @@ const AdminCourseManager = ({ courses, isLoading }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  courses: selectCoursesForManaging,
   isLoading: isLoading,
 });
 

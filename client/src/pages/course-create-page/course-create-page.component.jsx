@@ -10,13 +10,13 @@ import * as ROUTES from './../../constants/routes';
 
 const CourseCreatePage = ({ history, createCourseStart }) => {
   const onUploadCallback = (courseDetails) => {
-    const { imageExtension, level, courseName, headline } = courseDetails;
-    createCourseStart({ imageExtension, level, courseName, headline });
+    const { level, courseName, headline } = courseDetails;
+    createCourseStart({ level, courseName, headline });
   }
 
   const handleSubmit = (event, courseDetails) => {
-    const { imageExtension, level, courseName, headline } = courseDetails;
-    createCourseStart({ imageExtension, level, courseName, headline });
+    const { level, courseName, headline } = courseDetails;
+    createCourseStart({ level, courseName, headline });
     history.push(ROUTES.ADMIN);
     event.preventDefault();
   }

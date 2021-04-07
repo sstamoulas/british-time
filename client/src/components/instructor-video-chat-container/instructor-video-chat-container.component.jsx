@@ -7,12 +7,21 @@ import { currentUser } from './../../redux/user/user.selectors';
 
 import './instructor-video-chat-container.styles.scss';
 
-const InstructorVideoChatContainer = ({ currentUser }) => {
+const InstructorVideoChatContainer = ({ conferenceId, currentUser }) => {
   // Global State
   const localStream = useRef(undefined);
   const remoteStream = useRef(undefined);
+
+  const resize = (toBeLarge, toBeSmall) => {
+    document.querySelector(`#${toBeLarge}`)
+    document.querySelector(`#${toBeSmall}`)    
+  }
     
   useEffect(() => {
+    document.querySelector('.header').style.display = 'none';
+    document.querySelector('.nav-container').style.display = 'none';
+    document.querySelector('.locale-select--select-button--DVnTw').style.display = 'none';
+
     const servers = {
       iceServers: [
         {
@@ -62,7 +71,8 @@ const InstructorVideoChatContainer = ({ currentUser }) => {
     // 2. Create an offer
     callButton.onclick = async () => {
       // Reference Firestore collections for signaling
-      const callDoc = firestore.collection('calls').doc('1KWzj6WjMwEmwOOtL3mq');
+      document.querySelector('.join-dialog').style.display = 'none';
+      const callDoc = firestore.collection('calls').doc(conferenceId);
       const offerCandidates = callDoc.collection('offerCandidates');
       const answerCandidates = callDoc.collection('answerCandidates');
 
@@ -101,32 +111,47 @@ const InstructorVideoChatContainer = ({ currentUser }) => {
         });
       });
 
-      hangupButton.disabled = false;
+      // hangupButton.disabled = false;
     };
   }, [])
 
   return (
-    <Fragment>
-      <h2>1. Start your Webcam</h2>
-      <div className="videos">
-        <span>
-          <h3>Local Stream</h3>
-          <video id="webcamVideo" autoPlay playsInline></video>
-        </span>
-        <span>
-          <h3>Remote Stream</h3>
-          <video id="remoteVideo" autoPlay playsInline></video>
-        </span>
+    <div style={{backgroundColor: 'black'}}>
+      <div className="root-inner">
+        <div className="meeting-app">
+          <span></span><span></span>
+          <div>
+            <div role="presentation" className="meeting-client">
+              <div className="meeting-client-inner">
+                <div id="wc-content">
+                  <div id="wc-container-left" className="" style={{width: '100%', /* width: 1039px;*/}}>
+                    <div className="main-layout" style={{display: 'block', background: 'rgb(17, 17, 17)', height: '100%'}}>
+                      <div style={{display: 'block'}}>
+                        <div className="gallery-video-container__main-view" style={{marginTop: '0'}}>
+                          <div className="gallery-video-container__wrap" style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
+                            <video id="webcamVideo" className='gallery-video-container__canvas' autoPlay playsInline></video>
+                            <video id="remoteVideo" className='gallery-video-container__canvas' autoPlay playsInline></video>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="join-dialog" role="presentation" style={{bottom: '0px', width: '100%'}}>
+                  <div className="zmu-tabs__tabpanel zmu-tabs__tabpanel--active" role="tabpanel" id="voip-tab" aria-labelledby="voip" aria-hidden="false">
+                    <div className="join-audio-by-voip"><button tabIndex="0" type="button" id='webcamButton' className="zm-btn join-audio-by-voip__join-btn zm-btn--primary zm-btn__outline--white zm-btn--lg" aria-label="">Open Webcam?<span className="loading" style={{display: 'none'}}></span></button></div>
+                  </div>
+                  <div className="zmu-tabs__tabpanel zmu-tabs__tabpanel--active" role="tabpanel" id="voip-tab" aria-labelledby="voip" aria-hidden="false">
+                    <div className="join-audio-by-voip"><button tabIndex="0" type="button" id='callButton' className="zm-btn join-audio-by-voip__join-btn zm-btn--primary zm-btn__outline--white zm-btn--lg" aria-label="">Join Call?<span className="loading" style={{display: 'none'}}></span></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span></span>
+        </div>
       </div>
-
-      <button id="webcamButton">Start webcam</button>
-      <h2>2. Create a new Call</h2>
-      <button id="callButton" disabled>Create Call (offer)</button>
-
-      <h2>4. Hangup</h2>
-
-      <button id="hangupButton" disabled>Hangup</button>
-    </Fragment>
+    </div>
   )
 }
 

@@ -99,7 +99,7 @@ const CourseDetailsPage = ({
                       <div className="intro-asset--asset--1eSsi" data-purpose="introduction-asset">
                         <button type="button" className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-heading-md udlite-custom-focus-visible intro-asset--placeholder--16yPA" aria-label="Play course preview">
                           <span className="intro-asset--img-aspect--1UbeZ">
-                            <CourseImage imageExtension={courseDetails.imageExtension} courseId={courseDetails.id} alt="" width="240" height="135" />
+                            <CourseImage courseId={courseDetails.courseName} alt="" width="240" height="135" />
                           </span>
                           <span className="intro-asset--overlay--3Z3co intro-asset--gradient--Od7zs"></span>
                           <span className="udlite-play-overlay">

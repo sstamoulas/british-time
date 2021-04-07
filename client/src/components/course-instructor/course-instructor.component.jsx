@@ -54,7 +54,6 @@ const CourseInstructor = ({ instructors, instructorCourse, handleChange }) => {
                             <ProfileImage 
                               alt={instructorCourse.userName} 
                               className="instructor--instructor__image--va-P5 udlite-avatar udlite-avatar-image" 
-                              imageExtension={instructorCourse.imageExtension}  
                               publicId={instructorCourse.instructorId} 
                               width="64" 
                               height="64" 

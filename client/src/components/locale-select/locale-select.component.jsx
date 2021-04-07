@@ -1,14 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { languages } from './../../constants/constants';
 
 import './locale-select.styles.scss';
-
-const languages = {
-  'ar': 'عربي',
-  'el': 'Ελληνικά',
-  'en': 'English',
-  'tr': 'Türkçe',
-};
  
 const LocaleSelect = () => {
   const { i18n } = useTranslation();

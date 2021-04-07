@@ -154,8 +154,6 @@ export const updateInstructorDetailsDocument = async (userId, instructorDetails)
   const instructor = snapShot.data();
   const updatedAt = new Date();
 
-  console.log('instructorDetails', instructorDetails)
-
   try {
     await instructorRef.update({
       ...instructor,
@@ -228,7 +226,7 @@ export const getCoursesByInstructorId = async (instructorId) => {
 
   const coursesByInstructorId = await snapShot.map(async (instructorCourse) => {
     const snapShot = await getCourseById(instructorCourse.courseId);
-    return { ...instructorCourse, courseName: snapShot.courseName, imageExtension: snapShot.imageExtension };
+    return { ...instructorCourse, courseName: snapShot.courseName };
   })
 
   return Promise.all(coursesByInstructorId);
@@ -258,7 +256,6 @@ export const getInstructorsByCourseId = async (courseId) => {
     return { 
       ...instructorCourse, 
       userName: snapShot.userName, 
-      imageExtension: snapShot.imageExtension,
       bio: snapShot.bio,
     };
   })
@@ -418,13 +415,12 @@ export const updateCourseDocument = async (courseId, course) => {
 
 export const convertCoursesCollectionsSnapshotToMap = (collections) => {
   const transformedCollection = collections.docs.map(doc => {
-    const { courseName, headline, imageExtension, level } = doc.data();
+    const { courseName, headline, level } = doc.data();
 
     return {
       id: doc.id,
       courseName,
       headline,
-      imageExtension, 
       level,
     }
   });
@@ -578,7 +574,7 @@ export const getAllStudentCourses = async () => {
 
 //   const coursesByInstructorId = await snapShot.map(async (instructorCourse) => {
 //     const snapShot = await getCourseById(instructorCourse.courseId);
-//     return { ...instructorCourse, courseName: snapShot.courseName, imageExtension: snapShot.imageExtension };
+//     return { ...instructorCourse, courseName: snapShot.courseName };
 //   })
 
 //   return Promise.all(coursesByInstructorId);
@@ -611,7 +607,6 @@ export const getCoursesByStudentId = async (studentId) => {
       ...instructorCourseSnapShot, 
       instructorName: instructor.userName, 
       courseName: courseSnapShot.courseName, 
-      imageExtension: courseSnapShot.imageExtension 
     };
   })
 

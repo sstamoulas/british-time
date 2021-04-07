@@ -1,3 +1,58 @@
+export const courses = [{
+  id: 'OWknwaWy6DMXxuv2r9xK',
+  courseName: 'Arabic',
+  code: 'ar',
+}, {
+  id: 'XgvlIfL4RuXjXO8USkHw',
+  courseName: 'English',
+  code: 'en',
+}, {
+  id: 'VSDUELXiodYYObvnuinN',
+  courseName: 'Greek',
+  code: 'el',
+}, {
+  id: 'ik4MSXl2rOlPE5ghS5eB',
+  courseName: 'Spanish',
+  code: 'es'
+}, {
+  id: 'bSqnpHwuoVdX2wJkHFWo',
+  courseName: 'Turkish',
+  code: 'tr'
+}]
+
+export const languages = {
+  'ar': 'عربي',
+  'el': 'Ελληνικά',
+  'en': 'English',
+  'tr': 'Türkçe',
+};
+
+export const levels = [{
+  level: 0,
+  text: 'A1',
+  headline: 'Beginner',
+}, {
+  level: 0,
+  text: 'A2',
+  headline: 'Elementary',
+}, {
+  level: 0,
+  text: 'B1',
+  headline: 'Pre-Intermediate',
+}, {
+  level: 0,
+  text: 'B2',
+  headline: 'Intermediate',
+}, {
+  level: 0,
+  text: 'C1',
+  headline: 'Upper Intermediate',
+}, {
+  level: 0,
+  text: 'C2',
+  headline: 'Advanced',
+}]
+
 export const courseInfo = [
   {
     level: 0,

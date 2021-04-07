@@ -20,36 +20,38 @@ import {
 } from './course.actions';
 
 import { 
-  createCourseDocument, 
-  updateCourseDocument, 
+  //createCourseDocument, 
+  //updateCourseDocument, 
   getAllCourses, 
-  getCourseById 
+  //getCourseById 
 } from '../../firebase/firebase.utils';
 
-export function* createCourseAsync({type, payload: { courseDetails }}) {
-  try {
-    yield put(actionStart(type));
-    yield call(createCourseDocument, courseDetails);
+import { courses } from './../../constants/constants';
 
-    yield put(createCourseSuccess());
-  } catch(error) {
-    yield put(createCourseFailure(error));
-  } finally {
-    yield put(actionStop(type));
-  }
+export function* createCourseAsync({type, payload: { courseDetails }}) {
+  // try {
+  //   yield put(actionStart(type));
+  //   yield call(createCourseDocument, courseDetails);
+
+  //   yield put(createCourseSuccess());
+  // } catch(error) {
+  //   yield put(createCourseFailure(error));
+  // } finally {
+  //   yield put(actionStop(type));
+  // }
 }
 
 export function* updateCourseAsync({type, payload: { courseId, courseDetails }}) {
-  try {
-    yield put(actionStart(type));
-    yield call(updateCourseDocument, courseId, courseDetails);
+  // try {
+  //   yield put(actionStart(type));
+  //   yield call(updateCourseDocument, courseId, courseDetails);
 
-    yield put(updateCourseSuccess());
-  } catch(error) {
-    yield put(updateCourseFailure(error));
-  } finally {
-    yield put(actionStop(type));
-  }
+  //   yield put(updateCourseSuccess());
+  // } catch(error) {
+  //   yield put(updateCourseFailure(error));
+  // } finally {
+  //   yield put(actionStop(type));
+  // }
 }
 
 export function* fetchCoursesAsync({ type }) {
@@ -68,7 +70,8 @@ export function* fetchCoursesAsync({ type }) {
 export function* fetchCourseByIdAsync({ type, payload: { courseId }}) {
   try {
     yield put(subActionStart(type));
-    const currentCourse = yield call(getCourseById, courseId);
+    //const currentCourse = yield call(getCourseById, courseId);
+    const currentCourse = courses.filter((course) => course.id === courseId)[0];
 
     yield put(fetchCourseByIdSuccess({ ...currentCourse, courseId }));
   } catch(error) {

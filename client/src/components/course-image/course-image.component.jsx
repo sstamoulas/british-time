@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   imageLoading: false,
 }
 
-const CourseImage = ({ imageExtension, courseId, height, width, className, onUploadCallback }) => {
+const CourseImage = ({ courseId, height, width, className, onUploadCallback }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { imageLoading } = state;
 
@@ -23,7 +23,6 @@ const CourseImage = ({ imageExtension, courseId, height, width, className, onUpl
   const onUpload = (event) => {
     const data = new FormData();
     const fileName = event.target.files[0].name;
-    const imageExtension = fileName.substring(fileName.indexOf('.') + 1);
     data.append('file', event.target.files[0]);
     data.append('publicId', courseId);
 
@@ -35,7 +34,7 @@ const CourseImage = ({ imageExtension, courseId, height, width, className, onUpl
     })
     .then((response) => {
       setState(prevState => ({ ...prevState, imageLoading: false }));
-      onUploadCallback(imageExtension);
+      onUploadCallback();
     })  
     .catch((error) => {
       console.log(error);
@@ -48,18 +47,15 @@ const CourseImage = ({ imageExtension, courseId, height, width, className, onUpl
           imageLoading ? 
             <span>Loading</span>
           :
-            imageExtension ?
-              <Image 
-                className='p-default'
-                cloudName="everest-logix" 
-                publicId={`${courseId}.${imageExtension}`} 
-                width="300" 
-                height="300" 
-                crop="scale" 
-                onClick={onClick}
-              />
-            :
-              <span className='person' onClick={onClick}></span>
+            <Image 
+              className='p-default'
+              cloudName="everest-logix" 
+              publicId={`${courseId}.jpg`} 
+              width="300" 
+              height="300" 
+              crop="scale" 
+              onClick={onClick}
+            />
         }
         <input 
           type='file' 
@@ -74,7 +70,7 @@ const CourseImage = ({ imageExtension, courseId, height, width, className, onUpl
       <Image 
         className={className}
         cloudName="everest-logix" 
-        publicId={imageExtension ? `${courseId}.${imageExtension}` : 'Not Available.png'} 
+        publicId={`${courseId}.jpg`} 
         width={width}
         height={height}
         crop="scale" 

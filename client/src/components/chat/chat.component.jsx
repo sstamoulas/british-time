@@ -93,7 +93,6 @@ const Chat = ({ currentUser, room }) => {
                     <ProfileImage
                       className="icon" 
                       publicId={chat.uid.id} 
-                      imageExtension={currentUser.imageExtension}
                       width="64" 
                       height="64" 
                       style={{width: '6.4rem', height: '6.4rem'}} 

@@ -27,6 +27,7 @@ import PaymentPage from './pages/payment-page/payment-page.component';
 import PreviewVideoPage from './pages/preview-video-page/preview-video-page.component';
 import InstructorCourseCreatePage from './pages/instructor-course-create-page/instructor-course-create-page.component';
 import InstructorCourseUpdatePage from './pages/instructor-course-update-page/instructor-course-update-page.component';
+import VideoConferencePage from './pages/video-conference-page/video-conference-page.component';
 
 import NotFoundPage from './pages/not-found-page/not-found-page.component';
 import PrivacyPolicyPage from './pages/privacy-policy-page/privacy-policy-page.component';
@@ -113,6 +114,12 @@ const App = ({ currentUser, isLoading, checkUserSessionStart }) => {
               path={ROUTES.PAYMENT}
               condition={currentUser}
               component={PaymentPage}
+            />
+            <PrivateRoute
+              exact
+              path={ROUTES.VIDEO_CONFERENCE}
+              condition={currentUser && (currentUser.role === ROLES.INSTRUCTOR || currentUser.role === ROLES.STUDENT)}
+              component={VideoConferencePage}
             />
             <PrivateRoute 
               exact

@@ -47,7 +47,7 @@ const StudentCourses = ({ history, currentUser, studentCourses }) => {
               <div key={studentCourse.id} role="presentation" tabIndex="-1" className="card card--learning" data-purpose="enrolled-course-card">
                 <Link to={`/student/course/${studentCourse.instructorCourseId}`} className="card--learning__image" tabIndex="-1">
                   <div className="card__image play-button-trigger">
-                    <CourseImage className="course-image" imageExtension={studentCourse.imageExtension}  courseId={studentCourse.courseId} alt={studentCourse.courseName}  width="240" height="135" />
+                    <CourseImage className="course-image" courseId={studentCourse.courseName} alt={studentCourse.courseName}  width="240" height="135" />
                     <div className="play-button">
                     </div>
                   </div>

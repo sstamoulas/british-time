@@ -7,23 +7,27 @@ import { currentUser } from './../../redux/user/user.selectors';
 
 import './student-video-chat-container.styles.scss';
 
-const StudentVideoChatContainer = ({ currentUser }) => {
+const StudentVideoChatContainer = ({ conferenceId, currentUser }) => {
   // Global State
   const localStream = useRef(undefined);
   const remoteStream = useRef(undefined);
     
   useEffect(() => {
-  const servers = {
-    iceServers: [
-      {
-        urls: [
-          'stun:stun1.l.google.com:19302', 
-          'stun:stun2.l.google.com:19302'
-        ],
-      },
-    ],
-    iceCandidatePoolSize: 10,
-  };
+    document.querySelector('.header').style.display = 'none';
+    document.querySelector('.nav-container').style.display = 'none';
+    document.querySelector('.locale-select--select-button--DVnTw').style.display = 'none';
+
+    const servers = {
+      iceServers: [
+        {
+          urls: [
+            'stun:stun1.l.google.com:19302', 
+            'stun:stun2.l.google.com:19302'
+          ],
+        },
+      ],
+      iceCandidatePoolSize: 10,
+    };
     
     const pc = new RTCPeerConnection(servers);
 
@@ -37,6 +41,7 @@ const StudentVideoChatContainer = ({ currentUser }) => {
     // 1. Setup media sources
 
     webcamButton.onclick = async () => {
+      console.log('clicked')
       localStream.current = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       remoteStream.current = new MediaStream();
 
@@ -61,7 +66,12 @@ const StudentVideoChatContainer = ({ currentUser }) => {
 
     // 3. Answer the call with the unique ID
     answerButton.onclick = async () => {
-      const callDoc = firestore.collection('calls').doc('1KWzj6WjMwEmwOOtL3mq');
+      document.querySelector('.join-dialog').style.display = 'none';
+      // remoteVideo.style.position = 'absolute';
+      // remoteVideo.style.top = webcamVideo.offsetHeight;
+      // remoteVideo.style.left = webcamVideo.offsetWidth
+      //webcamVideo.offsetHeight, webcamVideo.offsetWidth
+      const callDoc = firestore.collection('calls').doc(conferenceId);
       const answerCandidates = callDoc.collection('answerCandidates');
       const offerCandidates = callDoc.collection('offerCandidates');
 
@@ -94,37 +104,47 @@ const StudentVideoChatContainer = ({ currentUser }) => {
         });
       });
 
-      hangupButton.disabled = false;
+      // hangupButton.disabled = false;
     };
   }, [])
 
   return (
-    <Fragment>
-      <h2>1. Start your Webcam</h2>
-      <div className="videos">
-        <span>
-          <h3>Local Stream</h3>
-          <video id="webcamVideo" autoPlay playsInline></video>
-        </span>
-        <span>
-          <h3>Remote Stream</h3>
-          <video id="remoteVideo" autoPlay playsInline></video>
-        </span>
-
-
+    <div style={{backgroundColor: 'black'}}>
+      <div className="root-inner">
+        <div className="meeting-app">
+          <span></span><span></span>
+          <div>
+            <div role="presentation" className="meeting-client">
+              <div className="meeting-client-inner">
+                <div id="wc-content">
+                  <div id="wc-container-left" className="" style={{width: '100%', /* width: 1039px;*/}}>
+                    <div className="main-layout" style={{display: 'block', background: 'rgb(17, 17, 17)', height: '100%'}}>
+                      <div style={{display: 'block'}}>
+                        <div className="gallery-video-container__main-view" style={{marginTop: '0'}}>
+                          <div className="gallery-video-container__wrap" style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
+                            <video id="webcamVideo" className='gallery-video-container__canvas' autoPlay playsInline></video>
+                            <video id="remoteVideo" className='gallery-video-container__canvas' autoPlay playsInline></video>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="join-dialog" role="presentation" style={{bottom: '0px', width: '100%'}}>
+                  <div className="zmu-tabs__tabpanel zmu-tabs__tabpanel--active" role="tabpanel" id="voip-tab" aria-labelledby="voip" aria-hidden="false">
+                    <div className="join-audio-by-voip"><button tabIndex="0" type="button" id='webcamButton' className="zm-btn join-audio-by-voip__join-btn zm-btn--primary zm-btn__outline--white zm-btn--lg" aria-label="">Open Webcam?<span className="loading" style={{display: 'none'}}></span></button></div>
+                  </div>
+                  <div className="zmu-tabs__tabpanel zmu-tabs__tabpanel--active" role="tabpanel" id="voip-tab" aria-labelledby="voip" aria-hidden="false">
+                    <div className="join-audio-by-voip"><button tabIndex="0" type="button" id='answerButton' className="zm-btn join-audio-by-voip__join-btn zm-btn--primary zm-btn__outline--white zm-btn--lg" aria-label="">Join Call?<span className="loading" style={{display: 'none'}}></span></button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span></span>
+        </div>
       </div>
-
-      <button id="webcamButton">Start webcam</button>
-
-      <h2>3. Join a Call</h2>
-      <p>Answer the call from a different browser window or device</p>
-      
-      <button id="answerButton" disabled>Answer</button>
-
-      <h2>4. Hangup</h2>
-
-      <button id="hangupButton" disabled>Hangup</button>
-    </Fragment>
+    </div>
   )
 }
 

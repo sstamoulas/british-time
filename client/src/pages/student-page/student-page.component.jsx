@@ -27,22 +27,18 @@ const StudentPage = ({ isSubLoading, fetchStudentCoursesStart, fetchStudentDetai
   }, [isSubLoading, fetchStudentDetailsStart, fetchStudentCoursesStart]);
 
   const handleSubmit = (event, studentDetails) => {
-    let { imageExtension, bio } = studentDetails;
-
-    imageExtension = imageExtension || '';
+    let { bio } = studentDetails;
     bio = bio || '';
 
-    updateStudentDetailsStart({ imageExtension, bio });
+    updateStudentDetailsStart({ bio });
     event.preventDefault();
   }
 
   const onUploadCallback = (studentDetails) => {
-    let { imageExtension, bio } = studentDetails;
-
-    imageExtension = imageExtension || '';
+    let { bio } = studentDetails;
     bio = bio || '';
 
-    updateStudentDetailsStart({ imageExtension, bio });
+    updateStudentDetailsStart({ bio });
   }
 
   return isMounted.current && !isSubLoading ? (

@@ -8,8 +8,6 @@ import ProfileImage from './../../components/profile-image/profile-image.compone
 import CountDownTimer from './../../components/count-down-timer/count-down-timer.component';
 import LiveSessionButton from './../../components/live-session-button/live-session-button.component';
 
-import InstructorVideoChatContainer from './../../components/instructor-video-chat-container/instructor-video-chat-container.component';
-
 import { instructorDetails } from './../../redux/instructor/instructor.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
 
@@ -34,12 +32,19 @@ const Instructor = ({ currentUser, instructorDetails, handleSubmit, onUploadCall
       <h1>Greetings {currentUser.userName}</h1>
       <p>The Instructor Page is accessible by only the Instructor in Question.</p>
       <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
-      <InstructorVideoChatContainer />
-      <CountDownTimer startTime={liveSessionDateTime} text={''}>
-        <LiveSessionButton />
-      </CountDownTimer>
+      <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`}>Launch Live Session</Link>
+      {
+        instructorDetails.sessionId && (
+          <Link to={`/video-conference/${instructorDetails.sessionId}`}>Launch Live Session</Link>
+        )
+      }
+      {
+        // <CountDownTimer startTime={liveSessionDateTime} text={''}>
+        //   <LiveSessionButton />
+        // </CountDownTimer>
+      }
       <form onSubmit={(e) => handleSubmit(e, state)} className='d-flex flex-column m-default'>
-        <ProfileImage className='p-default cursor-pointer' imageExtension={state.imageExtension} publicId={currentUser.id} onUploadCallback={onUploadCallback} />
+        <ProfileImage className='p-default cursor-pointer' publicId={currentUser.id} onUploadCallback={onUploadCallback} />
         <textarea 
           name='bio' 
           className='m-default mx-7 p-2'
