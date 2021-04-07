@@ -79,6 +79,7 @@ const Carousel = ({ type, course }) => {
                     <Link to={`/course/details/${course.id}`} data-purpose="merchandising-course-card-body-637930" target="_self" className="merchandising-course-card--mask--2-b-d">
                       <div className="merchandising-course-card--card-header--89z8L">
                         <CourseImage className="merchandising-course-card--course-image--3G7Kh" courseId={course.courseName}  alt="" width="240" height="135" />
+                        <div className="text">{level.text}</div>
                       </div>
                       <div className="merchandising-course-card--card-body--3OpAH">
                         <div>

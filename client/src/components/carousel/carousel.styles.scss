@@ -4,6 +4,18 @@
     position: relative;
   }
 
+  .text {
+    color: white;
+    font-size: 10vw; 
+    font-weight: bold;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: .2;
+  }
+
   .carousel-width {
     margin: 0 auto;
     width: 291px;

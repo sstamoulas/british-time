@@ -1,0 +1,47 @@
+#root {
+  .live-session-link {
+    padding: 12px 50px; 
+    border: none; 
+    border-radius: 5px; 
+    background-color: #0f7c90; 
+    color: #fff; 
+    font-size: 18px; 
+    outline: none; 
+    cursor: pointer; 
+
+    /* We need this to position 
+      span inside button */ 
+    position: relative; 
+    overflow: hidden; 
+    box-shadow: 6px 7px 40px -4px 
+        rgba(0, 0, 0, 0.2); 
+
+    span {
+      position: absolute; 
+      border-radius: 50%; 
+      /* To make it round */
+      background-color: white; 
+
+      width: 100px; 
+      height: 100px; 
+      margin-top: -50px; 
+      /* for positioning */
+      margin-left: -50px; 
+
+      animation: ripple 1s infinite forwards; 
+      opacity: .2; 
+    }
+  }
+}
+
+/* Add animation */
+@keyframes ripple { 
+  from { 
+    transform: scale(0); 
+  } 
+
+  to { 
+    opacity: 0; 
+    transform: scale(10); 
+  } 
+} 

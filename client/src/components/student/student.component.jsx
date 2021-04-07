@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
@@ -25,10 +25,41 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit, onUploadCal
     setState(prevState => ({ ...prevState, [name]: value }));
   };
 
+  useEffect(() => {
+    const btn = document.querySelector('.live-session-link');
+    const ripple = document.createElement("span"); 
+
+    const addRipple = () => {
+
+      // Add ripple class to span 
+      ripple.classList.add("ripple"); 
+
+      // Add span to the button  
+      btn.appendChild(ripple); 
+
+      // Get position of X 
+      let x = (btn.offsetWidth)/2; 
+
+      // Get position of Y  
+      let y = (btn.offsetHeight)/2; 
+
+      // Position the span element 
+      ripple.style.left = `${x}px`; 
+      ripple.style.top = `${y}px`; 
+    }
+    
+    addRipple();
+  }, [])
+
   return (
     <div>
       <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
-      <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`}>Launch Live Session</Link>
+      <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='d-flex justify-center'>
+        <div className='live-session-link'>Launch Live Session</div>
+      {
+        //<Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='live-session-link'><span>Launch Live Session</span></Link>
+      }
+      </Link>
       {
         // studentDetails.sessionId && (
         //   <Link to={`/video-conference/${studentDetails.sessionId}`}>Launch Live Session</Link>
