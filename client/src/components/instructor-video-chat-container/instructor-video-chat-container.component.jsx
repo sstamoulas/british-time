@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef } from 'react'
+import React, { Fragment, useState, useEffect, useRef } from 'react'
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { firestore } from './../../firebase/firebase.utils'
@@ -13,6 +13,7 @@ const InstructorVideoChatContainer = ({ conferenceId, currentUser }) => {
   const remoteStream = useRef(undefined);
   const webcamVideo = useRef(undefined);
   const remoteVideo = useRef(undefined);
+  const [hasVideo, setHasVideo] = useState(true);
 
   const resize = (toBeLarge, toBeSmall) => {
     document.querySelector(`#${toBeLarge}`)
@@ -43,6 +44,14 @@ const InstructorVideoChatContainer = ({ conferenceId, currentUser }) => {
     remoteVideo.current = document.getElementById('remoteVideo');
   }, [])
 
+  const toggleVideo = async () => {
+    localStream.current.getVideoTracks()[0].enabled = !localStream.current.getVideoTracks()[0].enabled;
+  }
+
+  const toggleAudio = () => {
+    localStream.current.getAudioTracks()[0].enabled = !localStream.current.getAudioTracks()[0].enabled;
+  }
+
 
   // 1. Setup media sources
   const webcamHandler = async () => {
@@ -63,9 +72,7 @@ const InstructorVideoChatContainer = ({ conferenceId, currentUser }) => {
     };
 
     webcamVideo.current.srcObject = localStream.current;
-    webcamVideo.current.play();
     remoteVideo.current.srcObject = remoteStream.current;
-    remoteVideo.current.play();
 
     webcamButton.disabled = true;
   };
@@ -128,8 +135,10 @@ const InstructorVideoChatContainer = ({ conferenceId, currentUser }) => {
                       <div style={{display: 'block'}}>
                         <div className="gallery-video-container__main-view" style={{marginTop: '0'}}>
                           <div className="gallery-video-container__wrap" style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>
-                            <video id="webcamVideo" className='gallery-video-container__canvas' muted="muted"></video>
-                            <video id="remoteVideo" className='gallery-video-container__canvas'></video>
+                            <video id="webcamVideo" className='gallery-video-container__canvas' autoPlay playsInline muted></video>
+                            <video id="remoteVideo" className='gallery-video-container__canvas' autoPlay playsInline></video>
+                            <button onClick={toggleAudio}>Toggle Audio</button>
+                            <button onClick={toggleVideo}>Toggle Video</button>
                           </div>
                         </div>
                       </div>
