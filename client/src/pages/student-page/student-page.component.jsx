@@ -34,15 +34,8 @@ const StudentPage = ({ isSubLoading, fetchStudentCoursesStart, fetchStudentDetai
     event.preventDefault();
   }
 
-  const onUploadCallback = (studentDetails) => {
-    let { bio } = studentDetails;
-    bio = bio || '';
-
-    updateStudentDetailsStart({ bio });
-  }
-
   return isMounted.current && !isSubLoading ? (
-    <Student handleSubmit={handleSubmit} onUploadCallback={onUploadCallback} />
+    <Student handleSubmit={handleSubmit} />
   ) : (
     <CustomLoader message={'Loading'} />
   )

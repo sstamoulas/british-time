@@ -11,6 +11,8 @@ import RatingFullStar from './../rating-full-star/rating-full-star.component';
 import { selectInstructorCoursesForManaging } from './../../redux/instructor-course/instructor-course.selectors';
 import { currentUser } from './../../redux/user/user.selectors';
 
+import { levels } from './../../constants/constants';
+
 import './instructor-courses.styles.scss';
 
 const InstructorCourses = ({ currentUser, instructorCourses }) => (
@@ -47,7 +49,7 @@ const InstructorCourses = ({ currentUser, instructorCourses }) => (
               </Link>
               <Link className='card--learning__details' to={`/instructor/course/${instructorCourse.id}`}>
                 <div className="card__details">
-                  <strong className="details__name">{instructorCourse.courseName}</strong>
+                  <strong className="details__name">{instructorCourse.courseName} {levels[instructorCourse.levelId || 0].text} - {levels[instructorCourse.levelId || 0].headline}</strong>
                   <div className="details__bottom">
                     <span className="details__progress"><span className="progress__bar" style={{width: '1%'}}></span></span>
                     <span className="a11 text-midnight-lighter progress__text tooltip-container">

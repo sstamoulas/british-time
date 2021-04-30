@@ -2,9 +2,9 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
-import { selectLessons, selectedLessonDetails } from '../../redux/instructor-lesson/instructor-lesson.selectors';
+import { selectLessons } from '../../redux/instructor-lesson/instructor-lesson.selectors';
 
-import './lesson-create-update.styles.scss';
+import './lesson-create.styles.scss';
 
 const INITIAL_STATE = {
   chapterTitle: '',
@@ -22,19 +22,13 @@ const EMPTY_RESOURCE = {
   resourceValue: '',
 }
 
-const LessonCreateUpdate = ({ isNew, courseLessons, lessonDetails, chapterIndex, handleSubmit }) => {
+const LessonCreate = ({ courseLessons, handleSubmit }) => {
   const [state, setState] = useState({ ...INITIAL_STATE });
   const { chapterTitle, lessons, errors } = state;
   const baseURL = process.env.NODE_ENV === "production" ? 
     process.env.REACT_APP_PRODUCTION_BASE_URL
   : 
     process.env.REACT_APP_DEVELOPMENT_BASE_URL;
-
-  useEffect(() => {
-    if(!isNew) {
-      setState(prevState => ({ ...prevState, ...lessonDetails }));
-    }
-  }, [isNew, lessonDetails])
 
   useEffect(() => {
     const target = document.querySelectorAll('.active');
@@ -225,8 +219,6 @@ const LessonCreateUpdate = ({ isNew, courseLessons, lessonDetails, chapterIndex,
   //   .catch((error) => console.log('error: ', error));
   // }
 
-  console.log('lesson-create-update', courseLessons, lessonDetails)
-
   return (
     <form onSubmit={(e) => handleSubmit(e, state, courseLessons)}>
       <div className='f-basis'>
@@ -365,7 +357,7 @@ const LessonCreateUpdate = ({ isNew, courseLessons, lessonDetails, chapterIndex,
 
       <div className='d-flex mt-2'>
         <input type='button' className='btn btn-lg f-grow' value='Add Lesson' onClick={() => handleAddLesson()} />
-        <input type="submit" className='btn btn-lg f-grow' value={`${!isNew ? 'Update' : 'Create'} Lesson Plan`} />
+        <input type="submit" className='btn btn-lg f-grow' value='Create Lesson Plan' />
       </div>
     </form>
   );
@@ -373,7 +365,6 @@ const LessonCreateUpdate = ({ isNew, courseLessons, lessonDetails, chapterIndex,
 
 const mapStateToProps = createStructuredSelector({
   courseLessons: selectLessons,
-  lessonDetails: selectedLessonDetails,
 });
 
-export default connect(mapStateToProps)(LessonCreateUpdate);
+export default connect(mapStateToProps)(LessonCreate);

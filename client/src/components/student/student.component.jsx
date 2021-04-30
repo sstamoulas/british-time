@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 
 import StudentCourses from './../../components/student-courses/student-courses.component';
-import ProfileImage from './../../components/profile-image/profile-image.component';
 import LiveSessionButton from './../../components/live-session-button/live-session-button.component';
 
 import { studentDetails } from './../../redux/student/student.selectors';
@@ -16,7 +15,7 @@ const INITIAL_STATE = {
   bio: '',
 }
 
-const Student = ({ currentUser, studentDetails, error, handleSubmit, onUploadCallback }) => {
+const Student = ({ currentUser, studentDetails, error, handleSubmit }) => {
   const [state, setState] = useState({ ...INITIAL_STATE, ...studentDetails });
   const { bio } = state;
   const isInvalid = bio === '';
@@ -26,42 +25,42 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit, onUploadCal
     setState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  // useEffect(() => {
-  //   const btn = document.querySelector('.live-session-link');
-  //   const ripple = document.createElement("span"); 
+  useEffect(() => {
+    const btn = document.querySelector('.live-session-link');
+    const ripple = document.createElement("span"); 
 
-  //   const addRipple = () => {
+    const addRipple = () => {
 
-  //     // Add ripple class to span 
-  //     ripple.classList.add("ripple"); 
+      // Add ripple class to span 
+      ripple.classList.add("ripple"); 
 
-  //     // Add span to the button  
-  //     btn.appendChild(ripple); 
+      // Add span to the button  
+      btn.appendChild(ripple); 
 
-  //     // Get position of X 
-  //     let x = (btn.offsetWidth)/2; 
+      // Get position of X 
+      let x = (btn.offsetWidth)/2; 
 
-  //     // Get position of Y  
-  //     let y = (btn.offsetHeight)/2; 
+      // Get position of Y  
+      let y = (btn.offsetHeight)/2; 
 
-  //     // Position the span element 
-  //     ripple.style.left = `${x}px`; 
-  //     ripple.style.top = `${y}px`; 
-  //   }
+      // Position the span element 
+      ripple.style.left = `${x}px`; 
+      ripple.style.top = `${y}px`; 
+    }
 
-  //   addRipple();
-  // }, [])
+    addRipple();
+  }, [])
 
   return (
     <div>
       <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
       {
-        <LiveSessionButton />
+        //<LiveSessionButton />
       }
       {      
-        // <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='d-flex justify-center'>
-        //   <div className='live-session-link'>Launch Live Session</div>
-        // </Link>
+        <Link to={`/video-conference/1KWzj6WjMwEmwOOtL3mq`} className='d-flex justify-center'>
+          <div className='live-session-link'>Launch Live Session</div>
+        </Link>
       }
       {
         studentDetails.sessionId && (
@@ -69,7 +68,6 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit, onUploadCal
         )
       }
       <form onSubmit={(e) => handleSubmit(e, state)} className='student-form d-flex flex-column m-default'>
-        <ProfileImage className='p-default cursor-pointer' publicId={currentUser.id} onUploadCallback={() => onUploadCallback({ ...state })} />
         <textarea 
           name='bio' 
           className='m-default mx-7 p-2'

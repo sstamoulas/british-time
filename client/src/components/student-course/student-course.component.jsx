@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import Zoom from './../../components/zoom/zoom.component';
-import StudentCourseNavigation from './../../components/student-course-navigation/student-course-navigation.component';
-import StudentCourseAnnouncements from './../../components/student-course-announcements/student-course-announcements.component';
-import StudentCourseContent from './../../components/student-course-content/student-course-content.component';
-import StudentCourseOverview from './../../components/student-course-overview/student-course-overview.component';
-import StudentCourseSidebar from './../../components/student-course-sidebar/student-course-sidebar.component';
-import StudentCourseLesson from './../../components/student-course-lesson/student-course-lesson.component';
+import Zoom from './../zoom/zoom.component';
+import StudentCourseNavigation from './../student-course-navigation/student-course-navigation.component';
+import StudentCourseAnnouncements from './../student-course-announcements/student-course-announcements.component';
+import StudentCourseContent from './../student-course-content/student-course-content.component';
+import Chat from './../chat/chat.component';
+//import StudentCourseOverview from './../student-course-overview/student-course-overview.component';
+import StudentCourseSidebar from './../student-course-sidebar/student-course-sidebar.component';
+import StudentCourseLesson from './../student-course-lesson/student-course-lesson.component';
 
 import { currentUser } from './../../redux/user/user.selectors';
 import { instructorLessons } from './../../redux/instructor-lesson/instructor-lesson.selectors';
@@ -17,10 +18,10 @@ import './student-course.styles.scss';
 
 const hasLiveSession = true;
 
-const StudentCourse = ({ currentUser, instructorLessons }) => {
+const StudentCourse = ({ courseId, currentUser, instructorLessons }) => {
   const lessonAccordion = useRef(undefined);
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-  const [activeTab, setActiveTab] = useState('Overview');
+  const [activeTab, setActiveTab] = useState('Announcements');
   const [currentLesson, setCurrentLesson] = useState(instructorLessons[0].lessons[0]);
   const [isLiveSessionOpen, setIsLiveSessionOpen] = useState(false);
 
@@ -61,19 +62,22 @@ const StudentCourse = ({ currentUser, instructorLessons }) => {
     setIsLiveSessionOpen(true);
   }
 
-  const sortInstructorLessons = (a, b) => {
-    if(a.createdAt.seconds > b.createdAt.seconds) {
-      return 1;
-    }
-    else if(a.createdAt.seconds < b.createdAt.seconds) {
-      return -1;
-    }
-    else {
-      return 0;
-    }
-  }
+  // const sortInstructorLessons = (a, b) => {
+  //   if(a.createdAt.seconds > b.createdAt.seconds) {
+  //     return 1;
+  //   }
+  //   else if(a.createdAt.seconds < b.createdAt.seconds) {
+  //     return -1;
+  //   }
+  //   else {
+  //     return 0;
+  //   }
+  // }
 
-  instructorLessons.sort(sortInstructorLessons);
+  // instructorLessons.sort(sortInstructorLessons);
+
+  //console.log(currentLesson)
+  //console.log(instructorLessons)
 
   return (
     <div className={`app--column-container--3AItG ${!isSidebarVisible ? 'app--no-sidebar--1naXE' : ''}`}>
@@ -117,11 +121,17 @@ const StudentCourse = ({ currentUser, instructorLessons }) => {
                                 isSidebarVisible={isSidebarVisible} 
                                 loadNewContent={loadNewContent} 
                               />
-                              <StudentCourseOverview 
-                                activeTab={activeTab} 
-                                isSidebarVisible={isSidebarVisible} 
-                              />
+                              {
+                                // <StudentCourseOverview 
+                                //   activeTab={activeTab} 
+                                //   isSidebarVisible={isSidebarVisible} 
+                                // />
+                              }
                               <StudentCourseAnnouncements 
+                                activeTab={activeTab} 
+                              />
+                              <Chat
+                                room={`${courseId}/${currentUser.userName}-${currentUser.id}`}
                                 activeTab={activeTab} 
                               />
                            </div>

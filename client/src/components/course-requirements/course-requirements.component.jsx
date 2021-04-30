@@ -8,8 +8,8 @@ import { courseInfo } from './../../constants/constants';
 
 import './course-requirements.styles.scss';
 
-const CourseRequirements = ({ courseDetails }) => {
-  const requirements = courseInfo.filter((courseInfo) => courseInfo.level == courseDetails.level)[0]?.requirements;
+const CourseRequirements = ({ level, courseDetails }) => {
+  const requirements = courseInfo.filter((courseInfo) => courseInfo.level == level)[0]?.requirements;
 
   return (
     <Fragment>
@@ -21,8 +21,7 @@ const CourseRequirements = ({ courseDetails }) => {
               <div>
                 <h2 className="udlite-heading-xl requirements--title--2j7S2">Requirements</h2>
                 <ul className="unstyled-list udlite-block-list">
-                  { courseDetails.level &&
-                      requirements.map((courseRequirement) => (
+                  { requirements.map((courseRequirement) => (
                       <li key={courseRequirement}>
                         <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
                           <svg aria-hidden="true" focusable="false" className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon">

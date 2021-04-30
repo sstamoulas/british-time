@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { selectedCourseDetails } from '../../redux/instructor-course/instructor-course.selectors';
 import { instructorLessons } from '../../redux/instructor-lesson/instructor-lesson.selectors';
 
-import { courses } from './../../constants/constants';
+import { courses, levels } from './../../constants/constants';
 
 import './instructor-course-create-update.styles.scss';
 
@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   totalStudents: 0,
   rating: 0,
   isVisible: false,
+  levelId: 0,
 }
 
 const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons, handleSubmit }) => {
@@ -44,6 +45,15 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
     }));
   }
 
+  const onLevelSelectChange = (event) => {
+    const { value } = event.target;
+
+    setState(prevState => ({ 
+      ...prevState, 
+      levelId: levels[value].level
+    }));
+  }
+
   const sortCourses = (courseA, courseB) => {
     if (courseA.courseName < courseB.courseName) {
       return -1;
@@ -56,17 +66,17 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
     }
   }
 
-  const sortInstructorLessons = (a, b) => {
-    if(a.createdAt.seconds > b.createdAt.seconds) {
-      return 1;
-    }
-    else if(a.createdAt.seconds < b.createdAt.seconds) {
-      return -1;
-    }
-    else {
-      return 0;
-    }
-  }
+  // const sortInstructorLessons = (a, b) => {
+  //   if(a.createdAt.seconds > b.createdAt.seconds) {
+  //     return 1;
+  //   }
+  //   else if(a.createdAt.seconds < b.createdAt.seconds) {
+  //     return -1;
+  //   }
+  //   else {
+  //     return 0;
+  //   }
+  // }
 
   // const addLiveSession = () => {
   //   const data = new FormData();
@@ -84,7 +94,7 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
   // }
 
   courses.sort(sortCourses)
-  instructorLessons.sort(sortInstructorLessons);
+  // instructorLessons.sort(sortInstructorLessons);
 
   return (
     <Fragment>
@@ -94,12 +104,20 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
           !isNew ? (
             <div className='course-selection'>{courseName}</div>
           ) : (
-            <select className='course-selection' value={state.courseId} onChange={onSelectChange}>
-              <option>Select A Course</option>
-              {
-                courses.sort(sortCourses).map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
-              }
-            </select>
+            <Fragment>
+              <select className='course-selection' value={state.courseId} onChange={onSelectChange}>
+                <option>Select A Course</option>
+                {
+                  courses.sort(sortCourses).map((course) => <option key={course.id} value={course.id}>{course.courseName}</option>)
+                }
+              </select>
+              <select className='course-selection' value={state.levelId} onChange={onLevelSelectChange}>
+                <option>Select A Course</option>
+                {
+                  levels.map((level) => <option key={level.level} value={level.level}>{level.text} - {level.headline}</option>)
+                }
+              </select>
+            </Fragment>
           )
         }
       </div>
@@ -111,22 +129,24 @@ const InstructorCourseCreateUpdate = ({ isNew, courseDetails, instructorLessons,
             <div>
               <input type='checkbox' name='isVisible' onChange={handleCheckbox} checked={isVisible} />
               <label style={{ verticalAlign: 'top' }}>&nbsp;&nbsp;Is Course Visible?</label>
+              <input type="submit" value={`${!isNew ? 'Update' : 'Create'} Course`} />
             </div>
           )
         }
-        <input type="submit" value={`${!isNew ? 'Update' : 'Create'} Course`} />
       </form>
     {      
       !isNew && (
         <div className='course-selection'>
-          <Link to={`/instructor/course/${courseId}/lesson/new`}>Add New Lesson</Link>
-          <ul>
-          {
-            instructorLessons.map((instructorLesson, index) => (
-              <li key={instructorLesson.id}><Link to={`/instructor/course/${courseId}/lesson/${instructorLesson.id}`}>Section {index + 1}: {instructorLesson.chapterTitle}</Link></li>
-            ))
-          }
-          </ul>
+          <div>
+            <Link to={`/instructor/course/${courseId}/lesson/new`}>Add New Lesson</Link>
+            <ul>
+            {
+              instructorLessons.map((instructorLesson, index) => (
+                <li key={index}><Link to={`/instructor/course/${courseId}/lesson/${index}`}>Section {index + 1}: {instructorLesson.chapterTitle}</Link></li>
+              ))
+            }
+            </ul>
+          </div>
         </div>
       )
     }

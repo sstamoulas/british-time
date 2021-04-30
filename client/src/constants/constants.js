@@ -32,23 +32,23 @@ export const levels = [{
   text: 'A1',
   headline: 'Beginner',
 }, {
-  level: 0,
+  level: 1,
   text: 'A2',
   headline: 'Elementary',
 }, {
-  level: 0,
+  level: 2,
   text: 'B1',
   headline: 'Pre-Intermediate',
 }, {
-  level: 0,
+  level: 3,
   text: 'B2',
   headline: 'Intermediate',
 }, {
-  level: 0,
+  level: 4,
   text: 'C1',
   headline: 'Upper Intermediate',
 }, {
-  level: 0,
+  level: 5,
   text: 'C2',
   headline: 'Advanced',
 }]

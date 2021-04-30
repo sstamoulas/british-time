@@ -1,20 +1,9 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import YouTubeToHtml5 from '@thelevicole/youtube-to-html5-loader';
+import React, { Fragment } from 'react';
 
 import './student-course-lesson.styles.scss';
 
 const StudentCourseLesson = ({ currentLesson }) => {
-  const [player, setPlayer] = useState(undefined);
-  // const subString = 'https://youtu.be/';
-
-  useEffect(() => {
-    if(!player) {
-      setPlayer(new YouTubeToHtml5({ withAudio: true }));
-    }
-    else {
-      player.load();
-    }
-  }, [player, currentLesson.videoId])
+  const subString = 'https://youtu.be/';
   
   return (
     <div className="app--row--1ydzX app--body-container--10gJo">
@@ -66,41 +55,6 @@ const StudentCourseLesson = ({ currentLesson }) => {
                                                         </div>
                                                       ))
                                                     }
-                                                     <p>That was a tough video! Lots of material covered, but keep in mind that when it comes to configuration files like yml files, there is nothing better than the online documentation to get yourself familiar with them. Although it may look daunting, most developers just check out and read the documentation when they have a problem to solve. For example, here are the resources I recommend you read up on based on the previous video:<br/><br/>1. How we set up the database with username and password: (see the environment variables section)&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://hub.docker.com/_/postgres/">https://hub.docker.com/_/postgres/</a><br/><br/>2. <code>psql </code>&nbsp;command:&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://www.postgresql.org/docs/9.2/static/app-psql.html">https://www.postgresql.org/docs/9.2/static/app-psql.html</a><br/><br/>3. Finally, if you haven't done so already, see if you can install PostgreSQL on your machine and use a GUI like I do in the video to make sure your docker-compose file is working:&nbsp;<br/><br/><br/></p>
-                                                     <p>To install PostgreSQL&nbsp;on your computer, follow the below steps:&nbsp;</p>
-                                                     <p><strong>Mac:&nbsp;</strong>Follow my previous video for instructions. You will need&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://brew.sh/">homebrew</a>&nbsp;for the easiest way to set up.&nbsp;keep in mind you may have to run with the 'sudo' command.&nbsp; Or you can follow&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://www.codementor.io/engineerapart/getting-started-with-postgresql-on-mac-osx-are8jcopb">this tutorial</a>.</p>
-                                                     <p><a target="_blank" rel="noopener noreferrer" href="http://www.psequel.com/">PSequel GUI</a>&nbsp;</p>
-                                                     <p><strong>Windows:&nbsp;</strong>Follow&nbsp;<a target="_blank" rel="noopener noreferrer" href="http://www.postgresqltutorial.com/install-postgresql/">this tutorial</a></p>
-                                                     <p><strong>Linux: Thanks to fellow student Dimitris for this great guide:</strong></p>
-                                                     <p>For any of the Linux users following the course and interested in installing PostgreSQL along with a GUI (eg. pgAdmin),&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://www.postgresql.org/download/">their website has wonderful instructions</a>, and so does their wiki (for example,&nbsp;<a target="_blank" rel="noopener noreferrer" href="https://wiki.postgresql.org/wiki/Apt">this link is for Debian and Ubuntu based distros</a>).&nbsp;&nbsp;</p>
-                                                     <p>Also, one&nbsp;way to issue the commands you typed in the video&nbsp;to start, stop, restart PostgreSQL in Linux is:&nbsp;</p>
-                                                     <div className="ud-component--base-components--code-block">
-                                                        <div>
-                                                           <pre className="prettyprint linenums prettyprinted" role="presentation">
-                                                            <ol className="linenums">
-                                                              <li className="L0">
-                                                                <span className="pln">sudo systemctl start postgresql     </span>
-                                                                <span className="com"># starts the server</span>
-                                                              </li>
-                                                              <li className="L1">
-                                                                <span className="pln">sudo systemctl stop postgresql      </span>
-                                                                <span className="com"># stops it</span>
-                                                              </li>
-                                                              <li className="L2">
-                                                                <span className="pln">sudo systemctl restart postgresql   </span>
-                                                                <span className="com"># restart it</span>
-                                                              </li>
-                                                              <li className="L3">
-                                                                <span className="pln">sudo systemctl status postgresql    </span>
-                                                                <span className="com"># check the server's status</span>
-                                                              </li>
-                                                            </ol>
-                                                          </pre>
-                                                        </div>
-                                                     </div>
-                                                     <p>The "<code>createdb test</code>&nbsp;"&nbsp;command and the "<code>psql 'test'</code>&nbsp;" command are the same (at least for Debian/Ubuntu systems) from what I saw.&nbsp;</p>
-                                                     <p>When it's first installed, PostgreSQL just has the 'postgres' user, and the way to initially enter PostgreSQL is by typing&nbsp;&nbsp;<code>sudo su - postgres</code>&nbsp;, and then&nbsp;<code>psql</code>&nbsp;.&nbsp; After Andrei creates the 'test' database, we can create a user with the same name as our current logged in user, to be a database administrator. This way we can just type in&nbsp;<code>psql 'test'</code>&nbsp; from the command line and enter the database without the need of logging in as&nbsp;the 'postgres' user,&nbsp;just like Andrei does in the lecture. This can be done with&nbsp;<code>CREATE USER your-user-name-here WITH SUPERUSER;</code>&nbsp;, and we can verify that he was created with&nbsp;<code>\du</code>&nbsp;. Now we can exit by typing&nbsp;<code>\q</code>&nbsp; and then&nbsp;<code>exit</code>&nbsp;, and enter our database just like Andrei does, with&nbsp;<code>psql 'test'</code>&nbsp;.&nbsp;</p>
-                                                     <p>Lastly, with pgAdmin4 we need to create a connection with the server the first time we use it, and this is done by right-clicking 'Servers' on the left pane, and choosing 'Create' &gt; 'Server'. We give our server a name, and in the 'Connection' tab we type in 'localhost' as the host, just like Andrei shows in the lecture, and press 'Save'.&nbsp;</p>
                                                   </div>
                                                </div>
                                                <div className="mt-space-sm"></div>
@@ -114,12 +68,14 @@ const StudentCourseLesson = ({ currentLesson }) => {
                                          <div className="video-player--container--YDQRW">
                                             <div className="video-player--video-wrapper--1L212 user-activity--user-inactive--2uBeO">
                                                <div id="playerId__8036556--3" className="video-js video-player--video-player--1sfof vjs-paused vjs-controls-enabled vjs-workinghover vjs-v6 vjs-user-inactive" lang="en-us" role="region" aria-label="Video Player">
-                                                <video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" autoPlay data-yt2html5={currentLesson.videoId}></video>
+                                                {
+                                                  //<video className="vjs-tech" id="playerId__8036556--3_html5_api" tabIndex="-1" controls="controls" controlsList="nodownload" autoPlay data-yt2html5={currentLesson.videoId}></video>
+                                                }
                                                 {                                                  
-                                                  // <div className="vjs-tech" style={{width: '100%', height: '100%', position: 'relative'}}>
-                                                  //   <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/${currentLesson.videoId.substring(subString.length)}?autoplay=1&rel=0&modestbranding=1`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-                                                  //   <div style={{width: '100%', height: '20%', position: 'absolute', opacity: '0', right: '0px', top: '0px'}}>&nbsp;</div>
-                                                  // </div>
+                                                  <div className="vjs-tech" style={{width: '100%', height: '100%', position: 'relative'}}>
+                                                    <iframe width="100%" height="100%" src={`https://www.youtube-nocookie.com/embed/${currentLesson.videoId}?autoplay=1&rel=0&modestbranding=1`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                                                    <div style={{width: '100%', height: '20%', position: 'absolute', opacity: '0', right: '0px', top: '0px'}}>&nbsp;</div>
+                                                  </div>
                                                 }
                                                   <div className="vjs-control-bar user-activity--hide-when-user-inactive--pDPGx" dir="ltr">
                                                      <div className="control-bar--popover-area--1LX56"></div>

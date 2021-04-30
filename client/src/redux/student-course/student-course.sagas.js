@@ -28,6 +28,8 @@ export function* fetchStudentCoursesAsync({ type }) {
     yield put(subActionStart(type));
     const studentCoursesRef = yield call(getCoursesByStudentId, id);
 
+    console.log(studentCoursesRef)
+
     yield put(fetchStudentCoursesSuccess({ ...studentCoursesRef }));
   } catch(error) {
     yield put(fetchStudentCoursesFailure(error));

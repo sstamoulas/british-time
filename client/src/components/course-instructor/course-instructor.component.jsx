@@ -4,7 +4,7 @@ import { createStructuredSelector } from 'reselect';
 
 import ProfileImage from './../../components/profile-image/profile-image.component';
 
-import { selectCourseInstructors } from './../../redux/instructor-course/instructor-course.selectors';
+import { instructors } from './../../redux/instructor-course/instructor-course.selectors';
 import { instructorCourse } from './../../redux/instructor-course/instructor-course.selectors';
 
 import './course-instructor.styles.scss';
@@ -27,21 +27,25 @@ const CourseInstructor = ({ instructors, instructorCourse, handleChange }) => {
           <div className="clp-component-render">
             <div className="ud-component--course-landing-page-udlite--instructors">
               <div className="styles--instructors--2JsS3">
-                <h2 className="udlite-heading-xl styles--instructors__header--16F_8">Instructor</h2>
+                {
+                  <h2 className="udlite-heading-xl styles--instructors__header--16F_8">Instructor</h2>
+                }
                 <div className="instructor--instructor--1wSOF" data-purpose="instructor-bio">
                   <span className="in-page-offset-anchor" id="instructor-1"></span>
-                  <select value={instructorCourse?.instructorId} onChange={handleChange}>
-                    <option defaultValue hidden>Select an Instructor</option>
-                    { 
-                      Object.entries(instructors).map(([index, instructor]) => (
-                        <option key={index} value={JSON.stringify(instructor)}>
-                          {
-                            instructor.userName
-                          } 
-                        </option>
-                      ))
-                    }
-                  </select>
+                  {
+                    <select value={instructorCourse.instructorId} onChange={(e) => handleChange(e, instructors)}>
+                      <option defaultValue hidden>Select an Instructor</option>
+                      { 
+                        Object.values(instructors).map((instructor, index) => (
+                          <option key={instructor.instructorId} value={instructor.instructorId}>
+                            {
+                              instructor.userName
+                            } 
+                          </option>
+                        ))
+                      }
+                    </select>
+                  }
                   {
                     !isObjectEmpty(instructorCourse) && (
                       <Fragment>
@@ -107,7 +111,7 @@ const CourseInstructor = ({ instructors, instructorCourse, handleChange }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-  instructors: selectCourseInstructors,
+  instructors: instructors,
   instructorCourse: instructorCourse,
 });
 

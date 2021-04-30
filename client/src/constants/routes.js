@@ -18,7 +18,7 @@ export const PAYMENT = '/payment-history/:userId';
 export const COURSES = '/courses';
 export const CREATE_COURSE = '/course/new';
 export const UPDATE_COURSE = '/course/:courseId';
-export const DETAILS_COURSE = '/course/details/:courseId';
+export const DETAILS_COURSE = '/course/details/:courseId/:level';
 
 export const INSTRUCTOR = '/instructor';
 export const CREATE_INSTRUCTOR_COURSE = '/instructor/course/new';
@@ -27,6 +27,7 @@ export const CREATE_LESSON = '/instructor/course/:courseId/lesson/new';
 export const UPDATE_LESSON = '/instructor/course/:courseId/lesson/:lessonId';
 export const PREVIEW_VIDEO = '/preview-video/:videoId';
 export const VIDEO_CONFERENCE = '/video-conference/:conferenceId';
+export const NOTIFICATIONS = '/notifications';
 
 export const STUDENT = '/student';
 export const STUDENT_COURSE = '/student/course/:courseId';

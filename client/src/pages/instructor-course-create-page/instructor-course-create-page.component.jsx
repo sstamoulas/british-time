@@ -24,8 +24,8 @@ const InstructorCourseCreatePage = ({ history, isSubLoading, fetchCoursesStart, 
   }, [isSubLoading, fetchCoursesStart]);
 
   const handleSubmit = (event, courseDetails) => {
-    const { id, courseName, totalStudents, rating, isVisible } = courseDetails;
-    createInstructorCourseDetailsStart({ id, courseName, totalStudents, rating, isVisible });
+    const { id, courseName, totalStudents, rating, isVisible, levelId } = courseDetails;
+    createInstructorCourseDetailsStart({ id, courseName, totalStudents, rating, isVisible, levelId });
     history.push(ROUTES.INSTRUCTOR);
     event.preventDefault();
   }

@@ -122,11 +122,18 @@ const Navigation = ({ currentUser, isSubLoading }) => {
                     currentUser && 
                     currentUser.role === ROLES.INSTRUCTOR && 
                     (
-                      <li>
-                        <Link to={ROUTES.INSTRUCTOR} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
-                          <span className="udlite-block-list-item-content">Instructor</span>
-                        </Link>
-                      </li>
+                      <Fragment>
+                        <li>
+                          <Link to={ROUTES.NOTIFICATIONS} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                            <span className="udlite-block-list-item-content">Notifications</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to={ROUTES.INSTRUCTOR} onClick={clickHandler} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+                            <span className="udlite-block-list-item-content">Instructor</span>
+                          </Link>
+                        </li>
+                      </Fragment>
                     )
                   }
                   {
@@ -218,6 +225,11 @@ const InstructorNavigation = () => (
       </Link>
     </li>
     <li>
+      <Link to={ROUTES.NOTIFICATIONS} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+        <span className="udlite-block-list-item-content">Notifications</span>
+      </Link>
+    </li>
+    <li>
       <Link to={ROUTES.INSTRUCTOR} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
         <span className="udlite-block-list-item-content">Instructor</span>
       </Link>
@@ -250,11 +262,13 @@ const StudentNavigation = () => (
         <span className="udlite-block-list-item-content">Courses</span>
       </Link>
     </li>
-    <li>
-      <Link to={ROUTES.CHAT_ROOMS} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
-        <span className="udlite-block-list-item-content">Chat Rooms</span>
-      </Link>
-    </li>
+    {
+      // <li>
+      //   <Link to={ROUTES.CHAT_ROOMS} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
+      //     <span className="udlite-block-list-item-content">Chat Rooms</span>
+      //   </Link>
+      // </li>
+    }
     <li>
       <Link to={ROUTES.STUDENT} className="udlite-btn udlite-btn-large udlite-btn-ghost udlite-text-md mobile-nav--nav-item udlite-block-list-item udlite-block-list-item-large udlite-block-list-item-link">
         <span className="udlite-block-list-item-content">Student</span>

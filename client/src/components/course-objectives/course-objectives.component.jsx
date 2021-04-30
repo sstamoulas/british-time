@@ -8,8 +8,8 @@ import { courseInfo } from './../../constants/constants';
 
 import './course-objectives.styles.scss';
 
-const CourseObjectives = ({ courseDetails }) => {
-  const objectives = courseInfo.filter((courseInfo) => courseInfo.level == courseDetails.level)[0]?.objectives;
+const CourseObjectives = ({ level, courseDetails }) => {
+  const objectives = courseInfo.filter((courseInfo) => courseInfo.level == level)[0]?.objectives;
 
   return (
     <div className="course-landing-page__main-content component-margin">
@@ -20,8 +20,7 @@ const CourseObjectives = ({ courseDetails }) => {
              <h2 className="udlite-heading-xl what-you-will-learn--title--hropy">What you'll learn</h2>
               <div className="what-you-will-learn--content-spacing--3btHJ">
                 <ul className="unstyled-list udlite-block-list what-you-will-learn--objectives-list--2cWZN">
-                  { courseDetails.level &&
-                    objectives.map((courseObjective) => (
+                  { objectives.map((courseObjective) => (
                       <li key={courseObjective}>
                         <div data-purpose="objective" className="udlite-block-list-item udlite-blok-list-item-small udlite-block-list-item-tight udlie-block-list-item-neutral udlite-text-sm">
                           <span className='udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon'></span>

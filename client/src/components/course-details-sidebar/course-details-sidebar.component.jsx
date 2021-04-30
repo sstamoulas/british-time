@@ -55,14 +55,14 @@ const CourseDetailsPage = ({
       const courseInfo = {
         title: `${courseDetails.courseName} By ${instructor.userName}`,
         type: 'Credit',
-        amount: "30",
+        amount: "1000",
         date: (new Date()).toString(),
         transactionId: courseDetails.id,
       }
 
       batch(() => {
         createStudentCourseStart({ 
-          courseId: courseId, 
+          courseId, 
           instructorId: instructor.instructorId, 
           instructorCourseId: instructor.instructorCourseId,
         });
@@ -71,7 +71,7 @@ const CourseDetailsPage = ({
         courseInfo.type = 'Pending Debit'
 
         addPaymentHistoryTransactionStart(instructor.instructorId, courseInfo);
-        updateStudentFundsStart(currentUser.id, currentUser.funds - 30);
+        updateStudentFundsStart(currentUser.id, currentUser.funds - 1000);
       })
 
       history.push(ROUTES.STUDENT);
@@ -121,7 +121,7 @@ const CourseDetailsPage = ({
                                     hasTakenCourse ? (
                                       <span>Paid</span>
                                     ) : (
-                                      <span>₺30</span>
+                                      <span>₺1000</span>
                                     )
                                   }
                                   </span>
@@ -134,7 +134,7 @@ const CourseDetailsPage = ({
                             hasTakenCourse ?
                               <div data-purpose="add-to-cart"><Link to={`/student/course/${instructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart" style={{width: '100%'}}>Go to Course</Link></div>
                             :
-                              <div data-purpose="add-to-cart"><button type="button" className={`udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart ${(currentUser?.funds < 30 || isObjectEmpty(instructor)) ? 'udlite-btn-disabled' : ''}`} style={{width: '100%'}} onClick={handleClick} disabled={(currentUser?.funds < 30 || isObjectEmpty(instructor)) ? true : false}>{ isObjectEmpty(instructor) ?  'Not Available' : (currentUser?.funds < 30 ? 'Insufficient Funds' : 'Add to Cart') }</button></div>
+                              <div data-purpose="add-to-cart"><button type="button" className={`udlite-btn udlite-btn-large udlite-btn-brand udlite-heading-md add-to-cart ${(isNaN(currentUser?.funds) || currentUser?.funds < 1000 || isObjectEmpty(instructor)) ? 'udlite-btn-disabled' : ''}`} style={{width: '100%'}} onClick={handleClick} disabled={(isNaN(currentUser?.funds) || currentUser?.funds < 1000 || isObjectEmpty(instructor)) ? true : false}>{ isObjectEmpty(instructor) ? 'Not Available' : (isNaN(currentUser?.funds) || currentUser?.funds < 1000 ? 'Insufficient Funds' : 'Add to Cart') }</button></div>
                           }
                           </div>
                         </div>
@@ -152,7 +152,19 @@ const CourseDetailsPage = ({
                           <li>
                             <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
                               <span className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon"></span>
-                              <div className="udlite-block-list-item-content"><span data-purpose="video-content-length">77 hours on-demand video</span></div>
+                              <div className="udlite-block-list-item-content"><span data-purpose="video-content-length">Speaking, listening, reading and writing excercises</span></div>
+                            </div>
+                          </li>
+                          <li>
+                            <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
+                              <span className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon"></span>
+                              <div className="udlite-block-list-item-content"><span data-purpose="video-content-length">Private instructor responds to any questions, comments or concerns with-in 24 hours</span></div>
+                            </div>
+                          </li>
+                          <li>
+                            <div className="udlite-block-list-item udlite-block-list-item-small udlite-block-list-item-tight udlite-block-list-item-neutral udlite-text-sm">
+                              <span className="udlite-icon udlite-icon-xsmall udlite-icon-color-neutral udlite-block-list-item-icon"></span>
+                              <div className="udlite-block-list-item-content"><span data-purpose="video-content-length">(10) 15-30 minute one-to-one sessions with a native speaker</span></div>
                             </div>
                           </li>
                           <li>
@@ -183,7 +195,7 @@ const CourseDetailsPage = ({
                             hasTakenCourse ? (
                               <span>Paid</span>
                             ) : (
-                              <span>₺30</span>
+                              <span>₺1000</span>
                             )
                           }
                         </span>
@@ -197,8 +209,8 @@ const CourseDetailsPage = ({
                       hasTakenCourse ? (
                         <Link to={`/student/course/${instructor.instructorCourseId}`} className="udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4">Go to Course</Link>
                       ) : (
-                        <button type="button" className={`udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4 ${(currentUser?.funds < 30 || isObjectEmpty(instructor)) ? 'udlite-btn-disabled' : ''}`} onClick={handleClick} disabled={(currentUser?.funds < 30 || isObjectEmpty(instructor)) ? true : false}>
-                          <span>{ isObjectEmpty(instructor) ? 'Not Available' : (currentUser?.funds < 30 ? 'Insufficient Funds' : 'Add to Cart') }</span>
+                        <button type="button" className={`udlite-btn udlite-btn-large udlite-btn-primary udlite-heading-md styles--btn--express-checkout--28jN4 ${(isNaN(currentUser?.funds) || currentUser?.funds < 1000 || isObjectEmpty(instructor)) ? 'udlite-btn-disabled' : ''}`} onClick={handleClick} disabled={(isNaN(currentUser?.funds) || currentUser?.funds < 1000 || isObjectEmpty(instructor)) ? true : false}>
+                          <span>{ isObjectEmpty(instructor) ? 'Not Available' : (isNaN(currentUser?.funds) || currentUser?.funds < 1000 ? 'Insufficient Funds' : 'Add to Cart') }</span>
                         </button>
                       )
                     }

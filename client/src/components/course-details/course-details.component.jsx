@@ -11,13 +11,16 @@ import CourseImage from './../../components/course-image/course-image.component'
 import { updateInstructorCourseSuccess } from './../../redux/instructor-course/instructor-course.actions';
 
 import { selectCurrentCourse } from '../../redux/course/course.selectors';
-import { instructorCourse } from './../../redux/instructor-course/instructor-course.selectors';
+
+import { levels } from './../../constants/constants';
 
 import './course-details.styles.scss';
 
-const CourseDetails = ({ courseDetails, instructorCourse, updateInstructorCourseSuccess }) => {
-  const onInstructorChangeCallback = (event) => {
-    const instructorCourse = JSON.parse(event.target.value);
+const CourseDetails = ({ level, courseDetails, updateInstructorCourseSuccess }) => {
+  const onInstructorChangeCallback = (event, instructors) => {
+    const instructorCourse = Object.values(instructors)
+      .map((instructor, index) => instructor)
+      .filter((instructor) => instructor.instructorId === event.target.value)[0];
 
     updateInstructorCourseSuccess(instructorCourse);
   }
@@ -55,10 +58,10 @@ const CourseDetails = ({ courseDetails, instructorCourse, updateInstructorCourse
                 <div className="udlite-text-sm clp-lead">
                   <div className="clp-component-render">
                     <h1 className="udlite-heading-xl clp-lead__title clp-lead__title--small" data-purpose="lead-title">
-                      {courseDetails.courseName}
+                      {courseDetails.courseName} {levels[level].text} - {levels[level].headline}
                     </h1>
                     <div className="udlite-text-md clp-lead__headline" data-purpose="lead-headline">{courseDetails.headline}&nbsp;
-                      English speaking course. 77 Hours of English language speaking, English listening practice. 1000 English language words
+                      Speaking, Listening, Reading and Writing Excercises. (10) 15-30 minute one-to-one sessions with a native speaker. Full lifetime access. Private instructor responds to any questions, comments or concerns with-in 24 hours.
                     </div>
                   </div>
                 </div>
@@ -68,8 +71,8 @@ const CourseDetails = ({ courseDetails, instructorCourse, updateInstructorCourse
         </div>
       </div>
       <div className="bottom-container">
-        <CourseObjectives />
-        <CourseRequirements />
+        <CourseObjectives level={level} />
+        <CourseRequirements level={level} />
         <CourseInstructor handleChange={onInstructorChangeCallback} />
       </div>
     </div>
@@ -78,7 +81,6 @@ const CourseDetails = ({ courseDetails, instructorCourse, updateInstructorCourse
 
 const mapStateToProps = createStructuredSelector({
   courseDetails: selectCurrentCourse,
-  instructorCourse: instructorCourse,
 });
 
 const mapDispatchToProps = (dispatch) => ({

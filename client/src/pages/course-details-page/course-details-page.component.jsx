@@ -19,7 +19,7 @@ const CourseDetailsPage = ({
   fetchInstructorsByCourseIdStart, 
 }) => {
   const isMounted = useRef(false);
-  const { courseId } = useParams();
+  const { courseId, level } = useParams();
 
   useEffect(() => {
     if (!isMounted.current) {
@@ -33,7 +33,7 @@ const CourseDetailsPage = ({
   }, [courseId, isSubLoading, fetchCourseByIdStart, fetchInstructorsByCourseIdStart]);
 
   return isMounted.current && !isSubLoading ? (
-    <CourseDetails />
+    <CourseDetails level={level} />
   ) : (
     <CustomLoader message={'Loading'} />
   )

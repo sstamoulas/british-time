@@ -6,7 +6,7 @@ const StudentCourseCurriculum = ({ instructorLessons, loadNewContent }) => (
   <div data-purpose="curriculum-section-container">
     {
       instructorLessons.map((instructorLesson, index) => (
-        <div key={instructorLesson.id} className="section--section--BukKG" data-purpose="section-panel-0">
+        <div key={index} className="section--section--BukKG" data-purpose="section-panel-0">
           <div role="button" tabIndex="0" className="section--section-heading--2k6aW" data-purpose="section-heading">
              <div className="section--title--eCwjX" data-purpose="section-label"><span width="0"><span><span>Section {index + 1}: {instructorLesson.chapterTitle}</span></span><span style={{position: 'fixed', visibility: 'hidden', top: '0px', left: '0px'}}>…</span></span></div>
              <span aria-hidden="true" className='section--section-chevron--tJ4mD udi udi-angle-down'></span>

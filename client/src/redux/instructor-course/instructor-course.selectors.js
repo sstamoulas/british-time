@@ -7,6 +7,11 @@ export const instructorCourses = createSelector(
   instructorCourses => instructorCourses.instructorCourses
 );
 
+export const instructors = createSelector(
+  [selectInstructorCourses],
+  instructorCourses => instructorCourses.instructors
+);
+
 export const selectInstructorCoursesForManaging = createSelector(
   [instructorCourses],
   courses =>
@@ -16,11 +21,6 @@ export const selectInstructorCoursesForManaging = createSelector(
 export const selectedCourseDetails = createSelector(
   [selectInstructorCourses],
   instructorCourses => instructorCourses.courseDetails
-);
-
-export const selectCourseInstructors = createSelector(
-  [selectInstructorCourses],
-  instructorCourses => instructorCourses.instructors
 );
 
 export const instructorCourse = createSelector(

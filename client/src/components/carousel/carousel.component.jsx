@@ -76,7 +76,7 @@ const Carousel = ({ type, course }) => {
               <div key={level.text} data-index="0" className={`carousel__item slick-slide slick-active slick-current js-carousel-item-${type}`} tabIndex="-1" aria-hidden="false" style={{outline: 'none', width: '231px'}}>
                 <div>
                   <div data-courseid="637930" className="course-discovery-unit--card-margin--2TVw4 merchandising-course-card--card--2UfMa">
-                    <Link to={`/course/details/${course.id}`} data-purpose="merchandising-course-card-body-637930" target="_self" className="merchandising-course-card--mask--2-b-d">
+                    <Link to={`/course/details/${course.id}/${level.level}`} data-purpose="merchandising-course-card-body-637930" target="_self" className="merchandising-course-card--mask--2-b-d">
                       <div className="merchandising-course-card--card-header--89z8L">
                         <CourseImage className="merchandising-course-card--course-image--3G7Kh" courseId={course.courseName}  alt="" width="240" height="135" />
                         <div className="text">{level.text}</div>
@@ -91,7 +91,7 @@ const Carousel = ({ type, course }) => {
                             <div className="course-price-text price-text--base-price__discount--1J7vF price-text--black--1qJbH price-text--medium--2clK9 price-text--semibold--DLyJV" data-purpose="course-price-text">
                               <span className="sr-only">Current price</span>
                               <span>
-                                <span>₺30</span>
+                                <span>₺1000</span>
                               </span>
                             </div>
                           </div>

@@ -4,6 +4,8 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/analytics';
 
+import { courses } from './../constants/constants';
+
 const config = process.env.NODE_ENV === 'production' ? 
   {
     apiKey: process.env.REACT_APP_PRODUCTION_API_KEY,
@@ -224,15 +226,19 @@ export const getCoursesByInstructorId = async (instructorId) => {
         console.log("Error getting documents: ", error);
     });
 
-  const coursesByInstructorId = await snapShot.map(async (instructorCourse) => {
-    const snapShot = await getCourseById(instructorCourse.courseId);
-    return { ...instructorCourse, courseName: snapShot.courseName };
-  })
+  // console.log(snapShot)
 
-  return Promise.all(coursesByInstructorId);
+  // const coursesByInstructorId = await snapShot.map(async (instructorCourse) => {
+  //   const snapShot = await getCourseById(instructorCourse.courseId);
+  //   return { ...instructorCourse, courseName: snapShot.courseName };
+  // })
+
+  return Promise.all(snapShot);
 }
 
 export const getInstructorsByCourseId = async (courseId) => {
+  console.log(courseId)
+
   const docRef = firestore.collection('instructor-courses')
     .where("courseId", "==", courseId)
     .where("isVisible", "==", true);
@@ -253,6 +259,7 @@ export const getInstructorsByCourseId = async (courseId) => {
 
   const instructorsByCourseId = await snapShot.map(async (instructorCourse) => {
     const snapShot = await fetchCurrentInstructor(instructorCourse.instructorId);
+
     return { 
       ...instructorCourse, 
       userName: snapShot.userName, 
@@ -290,6 +297,22 @@ export const createInstructorCourseDetailsDocument = async ({id, userName}, cour
     } catch(error) {
       console.log('error creating instructor course details', error.message);
     }
+  }
+
+  createCourseChaptersDocument(docRef.id);
+
+  return docRef;
+}
+
+export const createCourseChaptersDocument = async (instructorCourseId) => {
+  const docRef = firestore.collection('lessons').doc(instructorCourseId);
+
+  try {
+    await docRef.set({
+      'chapters': [],
+    });
+  } catch(error) {
+    console.log('error creating course chapters', error.message);
   }
 
   return docRef;
@@ -434,10 +457,10 @@ export const convertCoursesCollectionsSnapshotToMap = (collections) => {
   // *** Lesson API ***
 
 export const getLessonsByCourseId = async (instructorCourseId) => {
-  const docRef = firestore.collection('lessons').where("courseId", "==", instructorCourseId);
+  const docRef = firestore.collection('lessons').doc(instructorCourseId);
   const snapShot = await docRef.get();
 
-  return convertLessonsDocSnapshotToMap(snapShot);
+  return snapShot.data();
 }
 
 export const getLessonByLessonId = async (lessonId) => {
@@ -448,13 +471,11 @@ export const getLessonByLessonId = async (lessonId) => {
 }
 
 export const createLessonDocument = async (lesson) => {
-  const docRef = firestore.collection('lessons/').doc();
-  const createdAt = new Date();
+  const docRef = firestore.collection('lessons/').doc(lesson.courseId);
 
   try {
-    await docRef.set({
-      ...lesson,
-      createdAt,
+    await docRef.update({
+      chapters: lesson.chapters,
     });
   } catch(error) {
     console.log('error creating lesson', error.message);
@@ -598,15 +619,13 @@ export const getCoursesByStudentId = async (studentId) => {
     });
 
   const coursesByStudentId = await snapShot.map(async (studentCourse) => {
-    const courseSnapShot = await getCourseById(studentCourse.courseId);
     const instructorCourseSnapShot = await getInstructorCourseByCourseId(studentCourse.instructorCourseId);
-    const instructor = await fetchCurrentInstructor(studentCourse.instructorId);
 
     return { 
       ...studentCourse, 
       ...instructorCourseSnapShot, 
-      instructorName: instructor.userName, 
-      courseName: courseSnapShot.courseName, 
+      instructorName: instructorCourseSnapShot.userName, 
+      courseName: courses.filter((course) => course.id === studentCourse.courseId)[0].courseName,
     };
   })
 
@@ -624,6 +643,8 @@ export const createStudentCourseDetailsDocument = async (studentId, courseDetail
   const docRef = firestore.collection('student-courses').doc();
   const snapShot = await docRef.get();
   const createdAt = new Date();
+
+    console.log('createStudentCourseDetailsDocument', courseDetails)
 
   if(!snapShot.exists) {
     const { courseId, instructorId, instructorCourseId } = courseDetails;

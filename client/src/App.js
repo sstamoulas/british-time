@@ -14,6 +14,7 @@ import AccountPage from './pages/account-page/account-page.component';
 import CoursesPage from './pages/courses-page/courses-page.component';
 import AdminPage from './pages/admin-page/admin-page.component';
 import InstructorPage from './pages/instructor-page/instructor-page.component';
+import NotificationsPage from './pages/notifications-page/notifications-page.component';
 import StudentPage from './pages/student-page/student-page.component';
 import CourseCreatePage from './pages/course-create-page/course-create-page.component';
 import CourseUpdatePage from './pages/course-update-page/course-update-page.component';
@@ -22,7 +23,7 @@ import LessonUpdatePage from './pages/lesson-update-page/lesson-update-page.comp
 import CourseDetailsPage from './pages/course-details-page/course-details-page.component';
 import StudentCoursePage from './pages/student-course-page/student-course-page.component';
 import CourseRatingPage from './pages/course-rating-page/course-rating-page.component';
-import ChatRoomPage from './pages/chat-room-page/chat-room-page.component';
+//import ChatRoomPage from './pages/chat-room-page/chat-room-page.component';
 import PaymentPage from './pages/payment-page/payment-page.component';
 import PreviewVideoPage from './pages/preview-video-page/preview-video-page.component';
 import InstructorCourseCreatePage from './pages/instructor-course-create-page/instructor-course-create-page.component';
@@ -129,6 +130,12 @@ const App = ({ currentUser, isLoading, checkUserSessionStart }) => {
             />
             <PrivateRoute 
               exact
+              path={ROUTES.NOTIFICATIONS}
+              condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
+              component={NotificationsPage}
+            />
+            <PrivateRoute 
+              exact
               path={ROUTES.CREATE_INSTRUCTOR_COURSE}
               condition={currentUser && currentUser.role === ROLES.INSTRUCTOR}
               component={InstructorCourseCreatePage}
@@ -193,12 +200,14 @@ const App = ({ currentUser, isLoading, checkUserSessionStart }) => {
               condition={currentUser && currentUser.role === ROLES.STUDENT}
               component={CourseRatingPage}
             />
-            <PrivateRoute
-              exact
-              path={ROUTES.CHAT_ROOMS}
-              condition={currentUser && currentUser.role === ROLES.STUDENT}
-              component={ChatRoomPage}
-            />
+            {
+            // <PrivateRoute
+            //   exact
+            //   path={ROUTES.CHAT_ROOMS}
+            //   condition={currentUser && currentUser.role === ROLES.STUDENT}
+            //   component={ChatRoomPage}
+            // />
+            }
             <Route
               path='/*' 
               component={NotFoundPage}
