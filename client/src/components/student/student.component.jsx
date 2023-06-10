@@ -16,8 +16,8 @@ const INITIAL_STATE = {
 }
 
 const Student = ({ currentUser, studentDetails, error, handleSubmit }) => {
-  const [state, setState] = useState({ ...INITIAL_STATE, ...studentDetails });
-  const { bio } = state;
+  const [state, setState] = useState({ ...INITIAL_STATE, ...studentDetails, selectedOption: null });
+  const { bio, selectedOption } = state;
   const isInvalid = bio === '';
  
   const onChange = event => {
@@ -27,12 +27,12 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit }) => {
 
   useEffect(() => {
     const btn = document.querySelector('.live-session-link');
-    const ripple = document.createElement("span"); 
+    const ripple = document.createElement('span'); 
 
     const addRipple = () => {
 
       // Add ripple class to span 
-      ripple.classList.add("ripple"); 
+      ripple.classList.add('ripple'); 
 
       // Add span to the button  
       btn.appendChild(ripple); 
@@ -51,6 +51,11 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit }) => {
     addRipple();
   }, [])
 
+  const handleOptionChange = (event) => {
+    const { value } = event.target;
+    setState(prevState => ({ ...prevState, selectedOption: value }));
+  };
+
   return (
     <div>
       <Link to={`/payment-history/${currentUser.id}`}>See Payment History</Link>
@@ -67,6 +72,52 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit }) => {
           <Link to={`/video-conference/${studentDetails.sessionId}`}>Launch Live Session</Link>
         )
       }
+      <fieldset>
+          <legend>What is 1 + 1?</legend>
+
+          <div>
+            <input
+              type='radio'
+              id='0'
+              value='0'
+              checked={selectedOption === '0'} 
+              onChange={handleOptionChange}
+            />
+            <label htmlFor='0'>0</label>
+          </div>
+
+          <div>
+            <input
+              type='radio'
+              id='1'
+              value='1'
+              checked={selectedOption === '1'} 
+              onChange={handleOptionChange}
+            />
+            <label htmlFor='1'>1</label>
+          </div>
+
+          <div>
+            <input
+              type='radio'
+              id='2'
+              value='2'
+              checked={selectedOption === '2'} 
+              onChange={handleOptionChange}
+            />
+            <label htmlFor='2'>2</label>
+          </div>
+      </fieldset>
+      {
+        selectedOption ?
+        (
+          selectedOption == '2' ?
+            <div>That is the correct answer</div> :
+            <div>I'm sorry the correct answer is 2.</div>
+        ) :
+
+          null
+      }
       <form onSubmit={(e) => handleSubmit(e, state)} className='student-form d-flex flex-column m-default'>
         <textarea 
           name='bio' 
@@ -80,7 +131,7 @@ const Student = ({ currentUser, studentDetails, error, handleSubmit }) => {
         </textarea>
         <button 
           disabled={isInvalid} 
-          type="submit"
+          type='submit'
           className='m-default mx-7 p-2 cursor-pointer'
         >
           Submit Details
